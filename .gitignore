@@ -1,0 +1,17 @@
+# dependencies
+node_modules/
+/.pnp
+.pnp.js
+
+# production
+/.next/
+/out/
+
+# environment — NEVER commit your API key
+.env.local
+.env
+
+# misc
+.DS_Store
+*.pem
+npm-debug.log*

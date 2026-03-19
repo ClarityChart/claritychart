@@ -156,7 +156,7 @@ CRITICAL REQUIREMENTS:
 6. Use precise, hospice-appropriate clinical language throughout
 7. Preserve all specific numbers, measurements, dates, and clinical observations exactly as provided
 8. Give the most detailed documentation to the section most relevant to the visit scenario type
-9. Do NOT include any conclusion about hospice eligibility, appropriateness, or prognosis
+9. Do NOT include any conclusion about hospice eligibility, appropriateness, prognosis, or anticipated time of death — these belong exclusively in the CTI and Physician Recertification Note, never in a visit note
 10. Do NOT add disclaimers, meta-commentary, or AI-generated notices
 11. The note must read as if written by a skilled hospice RN immediately following the visit`;
 

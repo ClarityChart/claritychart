@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { C } from './tokens';
 import AdmissionEngine from './AdmissionEngine';
 import RNVisitNote from './RNVisitNote';
+import RecertSuite from './RecertSuite';
 
 function ModCard({ mod, onClick }) {
   const [hov, setHov] = useState(false);
@@ -53,6 +54,7 @@ export default function ClarityChart() {
 
   if (view === 'admission-engine') return <AdmissionEngine onBack={() => setView('home')} />;
   if (view === 'rn-visit-note') return <RNVisitNote onBack={() => setView('home')} />;
+  if (view === 'recert-suite') return <RecertSuite onBack={() => setView('home')} />;
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: C.bg, fontFamily: C.serif, color: C.text }}>
@@ -118,9 +120,9 @@ export default function ClarityChart() {
             <div style={{ padding: '10px 12px' }}>
               {[
                 { label: 'RN Visit Note', desc: '10 clinical scenarios, voice or text', status: 'complete', outputs: ['Structured Visit Note'] },
-                { label: 'Recertification Suite', desc: 'RN → MD sequential pipeline', status: 'soon', outputs: ['RN Recert', 'Physician Recert'] },
+                { label: 'Recertification Suite', desc: 'RN → MD sequential pipeline', status: 'complete', outputs: ['RN Recert', 'Physician Recert'] },
                 { label: 'Face-to-Face Note', desc: 'Physician attestation document', status: 'queued', outputs: ['F2F Visit Note'] },
-              ].map(mod => <ModCard key={mod.label} mod={mod} onClick={mod.status === 'complete' ? () => setView(mod.label === 'RN Visit Note' ? 'rn-visit-note' : null) : null} />)}
+              ].map(mod => <ModCard key={mod.label} mod={mod} onClick={mod.status === 'complete' ? () => setView(mod.label === 'RN Visit Note' ? 'rn-visit-note' : mod.label === 'Recertification Suite' ? 'recert-suite' : null) : null} />)}
               <div style={{ fontSize: '10px', color: 'rgba(196,168,130,0.25)', fontFamily: C.mono, letterSpacing: '1px', padding: '6px 14px 4px' }}>VISIT NOTES → RN RECERT → MD RECERT</div>
             </div>
           </div>

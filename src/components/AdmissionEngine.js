@@ -61,7 +61,7 @@ export default function AdmissionEngine({ onBack }) {
         }),
       });
       const d1 = await r1.json();
-      const narr = d1.content?.[0]?.text || '';
+      const narr = (d1.content?.[0]?.text || '').replace(/\*\*/g, '').replace(/\*/g, '');
       if (!narr) throw new Error('Empty narrative response');
       setNarrative(narr);
 

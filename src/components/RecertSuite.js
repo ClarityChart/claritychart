@@ -84,7 +84,7 @@ export default function RecertSuite({ onBack }) {
       const d = await r.json();
       const text = d.content?.[0]?.text || '';
       if (!text) throw new Error('Empty response');
-      setRnNarrative(text); setStage(2);
+      setRnNarrative(text.replace(/\*\*/g, '')); setStage(2);
     } catch (e) {
       setError('Generation failed. Please try again.');
     } finally { setLoading(false); setLoadingMsg(''); }

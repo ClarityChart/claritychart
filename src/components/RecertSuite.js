@@ -12,7 +12,7 @@ const EMPTY_INPUTS = {
 };
 
 const EMPTY_MD = {
-  mdObservations: '', f2fCompleted: false, f2fDate: '', f2fFindings: '',
+  mdObservations: '', f2fCompleted: false, f2fDate: '', f2fFindings: '', priorMDNote: '',
 };
 
 export default function RecertSuite({ onBack }) {
@@ -286,8 +286,10 @@ export default function RecertSuite({ onBack }) {
             <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <Btn variant="secondary" onClick={() => setStage(1)}>← Edit Assessment</Btn>
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                <div style={{ fontSize: '11px', color: C.goldDim, fontFamily: C.mono, fontStyle: 'italic' }}>Review complete?</div>
-                <Btn onClick={() => setStage(3)} style={{ padding: '12px 32px' }}>Confirmed — Proceed to Physician →</Btn>
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                  <Btn variant="secondary" onClick={() => { navigator.clipboard.writeText(rnNarrative); onBack(); }}>Done — RN Note Complete</Btn>
+                  <Btn onClick={() => setStage(3)} style={{ padding: '12px 32px' }}>Proceed to Physician →</Btn>
+                </div>
               </div>
             </div>
           </div>
@@ -324,6 +326,14 @@ export default function RecertSuite({ onBack }) {
                 </Field>
               </div>
             )}
+
+            <SectionLabel>Prior Physician Recertification Note</SectionLabel>
+            <div style={{ marginBottom: '24px' }}>
+              <div style={{ fontSize: '12px', color: C.goldDim, marginBottom: '8px', fontStyle: 'italic' }}>
+                Optional — paste the prior physician recert note to strengthen interval comparison language.
+              </div>
+              <Textarea value={mdInputs.priorMDNote} onChange={v => setMdField('priorMDNote', v)} placeholder="Paste the prior Physician Recertification Note here..." rows={6} />
+            </div>
 
             <SectionLabel>Additional Clinical Observations</SectionLabel>
             <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '28px' }}>

@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { C } from './tokens';
 import { Textarea, Input, Btn, VoiceBtn, DocOutput } from './ui';
-import { DECLINE_DOMAINS, buildRNRecertSystem, buildMDRecertSystem } from './recertPrompts';
+import { DECLINE_DOMAINS, buildPriorExtractionSystem, buildRNRecertSystem, buildMDRecertSystem } from './recertPrompts';
 
 const EMPTY_INPUTS = {
   diagnosis: '', patientId: '', certPeriod: '', lastBaseline: '',
@@ -16,7 +16,10 @@ const EMPTY_MD = {
 };
 
 export default function RecertSuite({ onBack }) {
-  const [stage, setStage] = useState(1);
+  const [stage, setStage] = useState(0);
+  const [priorNote, setPriorNote] = useState('');
+  const [priorSummaries, setPriorSummaries] = useState(null);
+  const [extracting, setExtracting] = useState(false);
   const [inputs, setInputs] = useState(EMPTY_INPUTS);
   const [mdInputs, setMdInputs] = useState(EMPTY_MD);
   const [rnNarrative, setRnNarrative] = useState('');
@@ -30,8 +33,37 @@ export default function RecertSuite({ onBack }) {
   const filledDomains = DECLINE_DOMAINS.filter(d => inputs[d.key]?.trim()).length;
 
   const reset = () => {
-    setStage(1); setInputs(EMPTY_INPUTS); setMdInputs(EMPTY_MD);
+    setStage(0); setPriorNote(''); setPriorSummaries(null);
+    setInputs(EMPTY_INPUTS); setMdInputs(EMPTY_MD);
     setRnNarrative(''); setMdNote(''); setError('');
+  };
+
+  const extractPriorSummaries = async () => {
+    if (!priorNote.trim()) { setStage(1); return; }
+    setExtracting(true); setError('');
+    try {
+      const r = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          system: buildPriorExtractionSystem(),
+          messages: [{ role: 'user', content: 'Extract domain summaries from this prior RN Recertification Narrative:\n\n' + priorNote }],
+        }),
+      });
+      const d = await r.json();
+      const text = d.content?.[0]?.text || '';
+      const clean = text.replace(/```json|```/g, '').trim();
+      const parsed = JSON.parse(clean);
+      setPriorSummaries(parsed);
+      setStage(1);
+    } catch (e) {
+      setError('Could not extract prior note summaries. You can still proceed — prior context will not be shown.');
+      setStage(1);
+    } finally {
+      setExtracting(false);
+    }
   };
 
   const generateRNNarrative = async () => {
@@ -40,10 +72,14 @@ export default function RecertSuite({ onBack }) {
     setError(''); setLoading(true); setLoadingMsg('Generating RN Recertification Narrative...');
     try {
       const r = await fetch('/api/generate', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 4000,
-          system: buildRNRecertSystem(inputs),
-          messages: [{ role: 'user', content: 'Generate the RN Recertification Narrative now.' }] }),
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 4000,
+          system: buildRNRecertSystem(inputs, priorSummaries),
+          messages: [{ role: 'user', content: 'Generate the RN Recertification Narrative now.' }],
+        }),
       });
       const d = await r.json();
       const text = d.content?.[0]?.text || '';
@@ -59,10 +95,14 @@ export default function RecertSuite({ onBack }) {
     setLoadingMsg('Generating Physician Recertification Note...');
     try {
       const r = await fetch('/api/generate', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 4000,
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 4000,
           system: buildMDRecertSystem({ ...inputs, ...mdInputs }, rnNarrative),
-          messages: [{ role: 'user', content: 'Generate the Physician Recertification Note now.' }] }),
+          messages: [{ role: 'user', content: 'Generate the Physician Recertification Note now.' }],
+        }),
       });
       const d = await r.json();
       const text = d.content?.[0]?.text || '';
@@ -73,7 +113,7 @@ export default function RecertSuite({ onBack }) {
     } finally { setLoading(false); setLoadingMsg(''); }
   };
 
-  const stageLabels = ['RN Assessment', 'RN Review', 'Physician Input'];
+  const stageLabels = ['Prior Note', 'RN Assessment', 'RN Review', 'Physician Input'];
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: C.bg, fontFamily: C.serif, color: C.text }}>
@@ -84,18 +124,20 @@ export default function RecertSuite({ onBack }) {
         ::-webkit-scrollbar-thumb { background: rgba(196,168,130,0.2); border-radius: 3px; }
         @keyframes bounce { 0%,80%,100%{transform:scale(0.6);opacity:0.4} 40%{transform:scale(1);opacity:1} }
       `}</style>
+
       <div style={{ maxWidth: '860px', margin: '0 auto', padding: '0 28px 80px' }}>
 
         <div style={{ padding: '28px 0 24px', borderBottom: `1px solid ${C.border}`, marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
           <div>
             <button onClick={onBack} style={{ background: 'none', border: 'none', color: C.goldDim, cursor: 'pointer', fontFamily: C.mono, fontSize: '10px', letterSpacing: '2px', padding: 0, marginBottom: '12px', display: 'block' }}>
-              ‹ PLATFORM HOME
+              PLATFORM HOME
             </button>
             <div style={{ fontSize: '10px', letterSpacing: '3px', color: C.goldDim, fontFamily: C.mono, marginBottom: '4px' }}>RECERTIFICATION SUITE</div>
             <div style={{ fontSize: '20px', color: C.text }}>
-              {stage === 1 ? 'RN Assessment Input' : stage === 2 ? 'RN Narrative Review' : stage === 3 ? 'Physician Input' : 'Recertification Documents'}
+              {stage === 0 ? 'Prior Recertification Note' : stage === 1 ? 'RN Assessment Input' : stage === 2 ? 'RN Narrative Review' : stage === 3 ? 'Physician Input' : 'Recertification Documents'}
             </div>
             <div style={{ fontSize: '12px', color: C.goldDim, marginTop: '4px', fontStyle: 'italic' }}>
+              {stage === 0 && 'Paste the prior RN Recert note to enable interval comparison — or skip for first certifications'}
               {stage === 1 && 'Complete decline domains to generate RN narrative'}
               {stage === 2 && 'Review and edit before advancing to physician stage'}
               {stage === 3 && 'Add physician observations to generate recertification note'}
@@ -109,8 +151,8 @@ export default function RecertSuite({ onBack }) {
           <div style={{ display: 'flex', gap: '8px', marginBottom: '32px' }}>
             {stageLabels.map((label, i) => (
               <div key={i} style={{ flex: 1 }}>
-                <div style={{ height: '2px', background: i + 1 <= stage ? C.gold : C.border, marginBottom: '5px' }} />
-                <div style={{ fontSize: '10px', letterSpacing: '2px', fontFamily: C.mono, color: i + 1 === stage ? C.gold : i + 1 < stage ? C.goldDim : 'rgba(196,168,130,0.25)' }}>
+                <div style={{ height: '2px', background: i <= stage ? C.gold : C.border, marginBottom: '5px', transition: 'background 0.2s' }} />
+                <div style={{ fontSize: '10px', letterSpacing: '2px', fontFamily: C.mono, color: i === stage ? C.gold : i < stage ? C.goldDim : 'rgba(196,168,130,0.25)' }}>
                   {i + 1}. {label.toUpperCase()}
                 </div>
               </div>
@@ -118,31 +160,57 @@ export default function RecertSuite({ onBack }) {
           </div>
         )}
 
-        {stage === 2 && (
-          <div style={{ background: 'rgba(196,168,130,0.05)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '12px 18px', marginBottom: '24px', fontSize: '12px', color: C.goldDim, fontFamily: C.mono, lineHeight: 1.6 }}>
-            ⚠ Review and edit the RN narrative below before proceeding. The physician note cannot be generated until this step is confirmed.
-          </div>
-        )}
-
         {error && (
           <div style={{ background: 'rgba(224,112,112,0.08)', border: '1px solid rgba(224,112,112,0.3)', borderRadius: '2px', padding: '10px 16px', color: '#e07070', fontSize: '12px', fontFamily: C.mono, marginBottom: '20px' }}>
-            ⚠ {error}
+            {error}
           </div>
         )}
 
-        {loading && (
+        {(loading || extracting) && (
           <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: '2px', padding: '40px', textAlign: 'center', marginBottom: '28px' }}>
-            <div style={{ fontSize: '11px', letterSpacing: '3px', color: C.gold, fontFamily: C.mono, marginBottom: '20px' }}>{loadingMsg}</div>
+            <div style={{ fontSize: '11px', letterSpacing: '3px', color: C.gold, fontFamily: C.mono, marginBottom: '20px' }}>
+              {extracting ? 'ANALYZING PRIOR NOTE...' : loadingMsg}
+            </div>
             <div style={{ display: 'flex', justifyContent: 'center', gap: '8px' }}>
               {[0, 1, 2].map(i => (
                 <div key={i} style={{ width: '8px', height: '8px', borderRadius: '50%', background: C.gold, animation: `bounce 1.2s ${i * 0.2}s infinite ease-in-out` }} />
               ))}
+            </div>
+            {extracting && (
+              <div style={{ fontSize: '11px', color: C.goldDim, marginTop: '16px', fontFamily: C.mono }}>
+                Extracting domain summaries from prior certification period
+              </div>
+            )}
+          </div>
+        )}
+
+        {stage === 0 && !extracting && (
+          <div>
+            <div style={{ background: 'rgba(196,168,130,0.05)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '14px 18px', marginBottom: '24px', fontSize: '12px', color: C.goldDim, fontFamily: C.mono, lineHeight: 1.6 }}>
+              Pasting the prior RN Recert narrative enables ClarityChart to display last period status above each domain field, strengthening interval comparison in the generated note. Skip for first recertifications.
+            </div>
+            <div style={{ fontSize: '11px', color: C.gold, fontFamily: C.mono, letterSpacing: '2px', marginBottom: '8px' }}>
+              PRIOR RN RECERTIFICATION NARRATIVE
+            </div>
+            <Textarea value={priorNote} onChange={setPriorNote} placeholder="Paste the prior period RN Recertification Narrative here..." rows={14} />
+            <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Btn variant="ghost" onClick={() => setStage(1)}>Skip — No Prior Note</Btn>
+              <Btn onClick={extractPriorSummaries} disabled={!priorNote.trim()} style={{ padding: '12px 32px' }}>
+                Analyze Prior Note →
+              </Btn>
             </div>
           </div>
         )}
 
         {stage === 1 && !loading && (
           <div>
+            {priorSummaries && (
+              <div style={{ background: 'rgba(76,175,130,0.06)', border: `1px solid ${C.greenBorder}`, borderRadius: '2px', padding: '12px 18px', marginBottom: '24px', fontSize: '12px', color: C.green, fontFamily: C.mono, display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span>✓</span>
+                <span>Prior note analyzed — last period status shown above each domain for interval comparison</span>
+              </div>
+            )}
+
             <SectionLabel>Patient Information</SectionLabel>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '8px' }}>
               <Field label="Physician Admitting Diagnosis *">
@@ -152,12 +220,13 @@ export default function RecertSuite({ onBack }) {
                 <Input value={inputs.patientId} onChange={v => setField('patientId', v)} placeholder="e.g., initials or MRN" />
               </Field>
               <Field label="Certification Period">
-                <Input value={inputs.certPeriod} onChange={v => setField('certPeriod', v)} placeholder="e.g., 02/15/2026 - 04/15/2026" />
+                <Input value={inputs.certPeriod} onChange={v => setField('certPeriod', v)} placeholder="e.g., 04/16/2026 - 06/15/2026" />
               </Field>
               <Field label="Last Recert Baseline">
                 <Input value={inputs.lastBaseline} onChange={v => setField('lastBaseline', v)} placeholder="e.g., FAST 6d, PPS 40%, wt 118 lbs" />
               </Field>
             </div>
+
             <SectionLabel>Objective Data</SectionLabel>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '16px', marginBottom: '16px' }}>
               <Field label="FAST Score"><Input value={inputs.fast} onChange={v => setField('fast', v)} placeholder="e.g., 6e" /></Field>
@@ -165,9 +234,10 @@ export default function RecertSuite({ onBack }) {
               <Field label="KPS %"><Input value={inputs.kps} onChange={v => setField('kps', v)} placeholder="e.g., 40%" /></Field>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '28px' }}>
-              <Field label="Weight / Trend"><Input value={inputs.weight} onChange={v => setField('weight', v)} placeholder="e.g., 106 lbs, down 4 lbs from last period" /></Field>
+              <Field label="Weight / Trend"><Input value={inputs.weight} onChange={v => setField('weight', v)} placeholder="e.g., 112 lbs, down 6 lbs from last period" /></Field>
               <Field label="Vitals"><Input value={inputs.vitals} onChange={v => setField('vitals', v)} placeholder="e.g., BP 98/60, HR 72, RR 18, O2 94% RA" /></Field>
             </div>
+
             <SectionLabel>Decline Domain Assessment</SectionLabel>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px' }}>
               <div style={{ flex: 1, height: '2px', background: C.border, borderRadius: '1px', overflow: 'hidden' }}>
@@ -175,18 +245,31 @@ export default function RecertSuite({ onBack }) {
               </div>
               <div style={{ fontSize: '11px', fontFamily: C.mono, color: C.goldDim }}>{filledDomains}/{DECLINE_DOMAINS.length} domains</div>
             </div>
-            {DECLINE_DOMAINS.map((domain) => (
-              <div key={domain.key} style={{ marginBottom: '20px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                  <div style={{ fontSize: '11px', fontFamily: C.mono, letterSpacing: '1.5px', color: inputs[domain.key]?.trim() ? C.gold : C.textDim }}>
-                    {inputs[domain.key]?.trim() ? '✓ ' : '○ '}{domain.label.toUpperCase()}
+
+            {DECLINE_DOMAINS.map((domain) => {
+              const prior = priorSummaries?.[domain.key];
+              const hasPrior = prior && prior !== 'Not documented in prior note.';
+              return (
+                <div key={domain.key} style={{ marginBottom: '24px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: hasPrior ? '6px' : '8px' }}>
+                    <div style={{ fontSize: '11px', fontFamily: C.mono, letterSpacing: '1.5px', color: inputs[domain.key]?.trim() ? C.gold : C.textDim }}>
+                      {inputs[domain.key]?.trim() ? '✓ ' : '○ '}{domain.label.toUpperCase()}
+                    </div>
+                    <VoiceBtn onTranscript={t => setField(domain.key, inputs[domain.key] ? inputs[domain.key] + ' ' + t : t)} />
                   </div>
-                  <VoiceBtn onTranscript={t => setField(domain.key, inputs[domain.key] ? inputs[domain.key] + ' ' + t : t)} />
+                  {hasPrior && (
+                    <div style={{ background: 'rgba(74,144,164,0.08)', border: `1px solid ${C.blueBorder}`, borderRadius: '2px', padding: '8px 12px', marginBottom: '8px', fontSize: '12px', color: C.blue, fontFamily: C.mono, lineHeight: 1.5 }}>
+                      <span style={{ fontSize: '10px', letterSpacing: '1px', opacity: 0.7 }}>LAST PERIOD: </span>
+                      {prior}
+                    </div>
+                  )}
+                  <Textarea value={inputs[domain.key] || ''} onChange={v => setField(domain.key, v)} placeholder={domain.placeholder} rows={inputs[domain.key]?.trim() ? 3 : 2} />
                 </div>
-                <Textarea value={inputs[domain.key] || ''} onChange={v => setField(domain.key, v)} placeholder={domain.placeholder} rows={inputs[domain.key]?.trim() ? 3 : 2} />
-              </div>
-            ))}
-            <div style={{ marginTop: '28px', display: 'flex', justifyContent: 'flex-end' }}>
+              );
+            })}
+
+            <div style={{ marginTop: '28px', display: 'flex', justifyContent: 'space-between' }}>
+              <Btn variant="secondary" onClick={() => setStage(0)}>← Prior Note</Btn>
               <Btn onClick={generateRNNarrative} disabled={!inputs.diagnosis.trim() || filledDomains === 0} style={{ padding: '12px 32px' }}>
                 Generate RN Narrative →
               </Btn>
@@ -196,8 +279,8 @@ export default function RecertSuite({ onBack }) {
 
         {stage === 2 && !loading && (
           <div>
-            <div style={{ marginBottom: '8px', fontSize: '12px', color: C.goldDim }}>
-              Edit the narrative below as needed. All changes will carry forward to the physician note.
+            <div style={{ background: 'rgba(196,168,130,0.05)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '12px 18px', marginBottom: '20px', fontSize: '12px', color: C.goldDim, fontFamily: C.mono, lineHeight: 1.6 }}>
+              Review and edit the RN narrative below before proceeding. The physician note cannot be generated until this step is confirmed.
             </div>
             <Textarea value={rnNarrative} onChange={setRnNarrative} rows={20} />
             <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -234,8 +317,8 @@ export default function RecertSuite({ onBack }) {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '16px', marginBottom: '20px' }}>
                 <Field label="F2F Date"><Input value={mdInputs.f2fDate} onChange={v => setMdField('f2fDate', v)} placeholder="e.g., 03/10/2026" /></Field>
                 <Field label="F2F Clinical Findings">
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <div style={{ flex: 1 }}><Textarea value={mdInputs.f2fFindings} onChange={v => setMdField('f2fFindings', v)} placeholder="Describe clinical findings..." rows={3} /></div>
+                  <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
+                    <div style={{ flex: 1 }}><Textarea value={mdInputs.f2fFindings} onChange={v => setMdField('f2fFindings', v)} placeholder="Describe clinical findings from the face-to-face encounter..." rows={3} /></div>
                     <VoiceBtn onTranscript={t => setMdField('f2fFindings', mdInputs.f2fFindings ? mdInputs.f2fFindings + ' ' + t : t)} />
                   </div>
                 </Field>
@@ -283,11 +366,11 @@ function SectionLabel({ children }) {
   );
 }
 
-function Field({ label, children }) {
+function Field({ label, children, required }) {
   return (
     <div>
       <div style={{ fontSize: '11px', fontFamily: C.mono, letterSpacing: '1px', color: C.goldDim, marginBottom: '6px' }}>
-        {label.toUpperCase()}
+        {label.toUpperCase()}{required && <span style={{ color: '#e07070', marginLeft: '4px' }}>*</span>}
       </div>
       {children}
     </div>

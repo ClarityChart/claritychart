@@ -108,6 +108,7 @@ export function DocOutput({ title, content }) {
       </div>
       <div style={{ padding: '20px 24px', maxHeight: '480px', overflowY: 'auto', fontFamily: C.serif }}>
         {content.split('\n').map((line, i) => {
+          line = line.replace(/\*\*/g, '');
           const isHeader = /^[A-Z][A-Z\s\/\(\)\-,]{4,}$/.test(line.trim()) && line.trim().length > 3;
           if (isHeader) return (
             <div key={i} style={{ color: C.gold, fontFamily: C.mono, fontSize: '11px', letterSpacing: '2px', marginTop: '22px', marginBottom: '6px', paddingBottom: '4px', borderBottom: `1px solid ${C.goldFaint}` }}>

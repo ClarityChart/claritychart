@@ -33,17 +33,7 @@ RULES:
 }
 
 export function buildRNRecertSystem(inputs, priorSummaries) {
-  const domainText = [
-    {key:"nutritional",label:"Nutritional / Weight"},
-    {key:"functional",label:"Functional / ADL Dependence"},
-    {key:"cognitive",label:"Cognitive / Behavioral"},
-    {key:"mobility",label:"Mobility / Falls"},
-    {key:"cardiopulmonary",label:"Cardiopulmonary / Respiratory"},
-    {key:"skin",label:"Skin / Integumentary"},
-    {key:"pain",label:"Pain / Symptom Burden"},
-    {key:"sleep",label:"Sleep / Energy / Fatigue"},
-    {key:"psychosocial",label:"Psychosocial / Family"},
-  ]
+  const domainText = DECLINE_DOMAINS
     .filter(d => inputs[d.key]?.trim())
     .map(d => {
       const prior = priorSummaries?.[d.key];
@@ -52,9 +42,41 @@ export function buildRNRecertSystem(inputs, priorSummaries) {
     })
     .join("\n\n");
 
-  return "You are a clinical documentation specialist generating a hospice RN Recertification Narrative.\n\nRULES:\n- Third-person clinical narrative. NEVER use I.\n- Preserve ALL numbers, measurements, weights, dates, fall counts, percentages EXACTLY.\n- Never fabricate.\n- Interval framing MANDATORY — use since last certification, this certification period, compared to prior period.\n- Where prior period data is provided, explicitly compare current findings to prior.\n- Quantify decline wherever possible.\n- MAC measurements are clinically significant — always include when provided.\n- No disclaimers. Clean clinical text only.
-- Do NOT include hospice eligibility conclusions.\n- ALL CAPS section headers for each domain. Only include sections with data.\n\nPATIENT INFORMATION:\nDiagnosis: " + (inputs.diagnosis || "Not provided") + "\nPatient Identifier: " + (inputs.patientId || "Not provided") + "\nCertification Period: " + (inputs.certPeriod || "Not provided") + "\nLast Recert Baseline: " + (inputs.lastBaseline || "Not provided") + "\n\nOBJECTIVE DATA:\nFAST: " + (inputs.fast || "Not provided") + "\nPPS: " + (inputs.pps || "Not provided") + "\nKPS: " + (inputs.kps || "Not provided") + "\nWeight / Trend: " + (inputs.weight || "Not provided") + "\nVitals: " + (inputs.vitals || "Not provided") + "\n\nDECLINE DOMAIN ASSESSMENTS (prior period shown where available):\n" + (domainText || "No domain data provided");
+  const rules = [
+    "You are a clinical documentation specialist generating a hospice RN Recertification Narrative.",
+    "",
+    "RULES:",
+    "- Third-person clinical narrative. NEVER use I.",
+    "- Preserve ALL numbers, measurements, weights, dates, fall counts, percentages EXACTLY.",
+    "- Never fabricate.",
+    "- Interval framing MANDATORY throughout.",
+    "- Where prior period data is provided, explicitly compare current findings to prior.",
+    "- Quantify decline wherever possible.",
+    "- MAC measurements are clinically significant — always include when provided.",
+    "- No disclaimers. Clean clinical text only.",
+    "- Do NOT include hospice eligibility conclusions.",
+    "- ALL CAPS section headers for each domain. Only include sections with data.",
+    "",
+    "PATIENT INFORMATION:",
+    "Diagnosis: " + (inputs.diagnosis || "Not provided"),
+    "Patient Identifier: " + (inputs.patientId || "Not provided"),
+    "Certification Period: " + (inputs.certPeriod || "Not provided"),
+    "Last Recert Baseline: " + (inputs.lastBaseline || "Not provided"),
+    "",
+    "OBJECTIVE DATA:",
+    "FAST: " + (inputs.fast || "Not provided"),
+    "PPS: " + (inputs.pps || "Not provided"),
+    "KPS: " + (inputs.kps || "Not provided"),
+    "Weight / Trend: " + (inputs.weight || "Not provided"),
+    "Vitals: " + (inputs.vitals || "Not provided"),
+    "",
+    "DECLINE DOMAIN ASSESSMENTS (prior period shown where available):",
+    domainText || "No domain data provided"
+  ].join("\n");
+
+  return rules;
 }
+
 
 export function buildMDRecertSystem(inputs, rnNarrative) {
   const priorMDSection = inputs.priorMDNote?.trim()

@@ -78,63 +78,92 @@ export function buildRNRecertSystem(inputs, priorSummaries) {
 }
 
 
-export function buildMDRecertSystem(inputs, rnNarrative) {
+export function buildMDRecertSystem(inputs, rnNarrative, f2fNote) {
   const priorMDSection = inputs.priorMDNote?.trim()
     ? "\nPRIOR PHYSICIAN RECERTIFICATION NOTE (for interval reference — use to frame what has further declined this period):\n" + inputs.priorMDNote
     : '';
 
-  const f2fSection = inputs.f2fCompleted
-    ? "\nFACE-TO-FACE EXAM FINDINGS (incorporate selectively into decline bullets only where they directly evidence a specific decline — do NOT create a separate section):\nDate: " + (inputs.f2fDate || "not provided") + "\n" + (inputs.f2fFindings || "not documented")
+  const f2fSection = f2fNote?.trim()
+    ? "\nFACE-TO-FACE ENCOUNTER NOTE (already generated — synthesize key clinical findings from this into the decline evidence and clinical impression):\n" + f2fNote
     : '';
 
-  const system = `You are a hospice medical director generating a Physician Recertification Note. You must follow the exact format shown in the example below. Do not deviate from this structure under any circumstances.
+  const system = [
+    "You are a hospice medical director generating a Physician Recertification Note.",
+    "",
+    "RULES:",
+    "- Authoritative physician voice. Third-person. Never 'I.'",
+    "- Preserve ALL numbers, measurements, dates, weights, fall counts EXACTLY.",
+    "- Never fabricate.",
+    "- This note synthesizes the RN Recertification Narrative and the Face-to-Face Encounter Note (if provided) into the authoritative physician recertification argument.",
+    "- Focus exclusively on what has worsened this certification period.",
+    "- Do NOT use markdown — no asterisks, no bold. Clean clinical text only.",
+    "- No disclaimers.",
+    "",
+    "STRUCTURE (follow exactly — do not add extra sections or headers):",
+    "",
+    "1. OPENING — One sentence: patient identifier, age and sex if provided, primary diagnosis, brief admission context.",
+    "",
+    "2. RELEVANT HISTORY — One sentence listing significant comorbidities.",
+    "",
+    "3. DECLINE EVIDENCE — Write exactly: 'Patient shows signs of progressive functional, cognitive, and physical decline as evidenced by:' then list em-dash (–) bullets. Rules:",
+    "   - Each bullet is one to two sentences of clinical narrative",
+    "   - Weight and MAC values woven into narrative bullets — never standalone data lines",
+    "   - Functional scores explained clinically, not just stated",
+    "   - Incorporate F2F clinical findings selectively where they directly evidence decline",
+    "   - No ALL CAPS headers within this section",
+    "",
+    "4. SCORES LINE — One line, no header: 'FAST: [value]. PPS: [value]%. KPS: [value]%.'",
+    "",
+    "5. CLINICAL IMPRESSION — Two to three concise sentences synthesizing overall decline trajectory.",
+    "",
+    "6. CLOSING — Exactly: 'Based on the clinical findings documented above, [identifier] remains appropriate for hospice recertification with a life expectancy of less than six months if the terminal illness runs its expected course.'",
+    "",
+    "PATIENT INFORMATION:",
+    "Diagnosis: " + (inputs.diagnosis || "Not provided"),
+    "Patient Identifier: " + (inputs.patientId || "Not provided"),
+    "Certification Period: " + (inputs.certPeriod || "Not provided"),
+    "",
+    "PHYSICIAN ADDITIONAL OBSERVATIONS:",
+    inputs.mdObservations || "None provided"
+  ].join("\n");
 
-RULES:
-- Third-person authoritative physician voice. Never "I."
-- Preserve ALL numbers exactly as provided.
-- Never fabricate.
-- Do NOT use markdown — no asterisks, no bold, no ** symbols. No ALL CAPS section headers except where shown in example.
-- Do NOT add sections not shown in the example format.
-
-EXAMPLE OUTPUT FORMAT (follow this exactly):
-
-[identifier] is a [age]-year-old [sex] with [primary diagnosis], originally admitted to hospice due to [brief context].
-
-Relevant history includes [comorbidities].
-
-Patient shows signs of progressive functional, cognitive, and physical decline as evidenced by:
-– [Decline bullet 1 — one to two sentences of clinical narrative with specific numbers woven in naturally]
-– [Decline bullet 2]
-– [Decline bullet 3]
-– [Additional bullets as warranted by clinical data]
-
-FAST: [value]. PPS: [value]%. KPS: [value]%.
-
-[Two to three sentence clinical impression synthesizing the overall trajectory.]
-
-Based on the clinical findings documented above, [identifier] remains appropriate for hospice recertification with a life expectancy of less than six months if the terminal illness runs its expected course.
-
-END OF EXAMPLE FORMAT
-
-CRITICAL FORMATTING RULES derived from example:
-1. Opening line: identifier + age + sex + diagnosis + admission context. One sentence.
-2. Relevant history: one sentence, comorbidities only.
-3. Decline section intro line is always exactly: "Patient shows signs of progressive functional, cognitive, and physical decline as evidenced by:"
-4. Decline bullets use em-dash (–) not bullet points (•). Each is narrative, not a data label.
-5. Weight and MAC values are woven INTO narrative bullets — never listed as standalone lines like "Weight: X lbs" or "Left MAC: X cm"
-6. Scores line: "FAST: [value]. PPS: [value]%. KPS: [value]%." — one line, no header, no prior period comparison
-7. Clinical impression: no header, flows directly after scores line
-8. Closing statement: exact wording as shown
-9. No DECLINE SUMMARY header, no OBJECTIVE FUNCTIONAL DATA header, no CLINICAL IMPRESSION header
-
-PATIENT INFORMATION:
-Diagnosis: \${inputs.diagnosis || 'Not provided'}
-Patient Identifier: \${inputs.patientId || 'Not provided'}
-Certification Period: \${inputs.certPeriod || 'Not provided'}
-
-PHYSICIAN ADDITIONAL OBSERVATIONS:
-\${inputs.mdObservations || 'None provided'}`;
-
-  return system + f2fSection + priorMDSection + "\n\nRN RECERTIFICATION NARRATIVE (this is your source data — extract decline evidence from it and format according to the structure above):\n" + rnNarrative;
+  return system + f2fSection + priorMDSection + "\n\nRN RECERTIFICATION NARRATIVE (primary source — extract decline evidence and frame into the structure above):\n" + rnNarrative;
 }
 
+
+export function buildF2FSystem(inputs) {
+  return [
+    "You are generating a Face-to-Face Encounter Note for Medicare hospice recertification. This note may be written by a physician, nurse practitioner, or physician assistant.",
+    "",
+    "RULES:",
+    "- Authoritative clinical voice. Third-person. Never 'I.'",
+    "- Preserve ALL numbers, measurements, dates, scores EXACTLY.",
+    "- Never fabricate.",
+    "- Do NOT use markdown — no asterisks, no bold. Clean clinical text only.",
+    "- This document must explicitly attest that clinical findings confirm continued decline RELATED TO THE TERMINAL DIAGNOSIS — not an unrelated condition. This is the Medicare-specific requirement that makes this document hospice-native.",
+    "",
+    "STRUCTURE (follow exactly):",
+    "1. PATIENT IDENTIFICATION — one sentence: identifier, age and sex if provided, primary terminal diagnosis, certification period, date of face-to-face encounter, and who conducted it (physician/NP/PA).",
+    "2. CLINICAL FINDINGS — narrative summary of findings from the face-to-face visit. Include functional status, relevant systems findings, objective scales (FAST, PPS, KPS, weight if obtained), and significant clinical observations. Two to four sentences.",
+    "3. DECLINE ATTESTATION — one to two sentences explicitly stating that the clinical findings confirm continued decline consistent with the terminal diagnosis, and that this decline is attributable to the terminal illness rather than an unrelated condition.",
+    "4. ATTESTATION STATEMENT — close with exactly: 'The undersigned certifies that a face-to-face encounter was conducted with this patient on [F2F date]. The clinical findings from this encounter confirm that the patient continues to have a life expectancy of six months or less if the terminal illness runs its expected course, and that the documented decline is related to the terminal diagnosis.'",
+    "",
+    "PATIENT INFORMATION:",
+    "Diagnosis: " + (inputs.diagnosis || "Not provided"),
+    "Patient Identifier: " + (inputs.patientId || "Not provided"),
+    "Age: " + (inputs.age || "Not provided"),
+    "Sex: " + (inputs.sex || "Not provided"),
+    "Certification Period: " + (inputs.certPeriod || "Not provided"),
+    "Face-to-Face Date: " + (inputs.f2fDate || "Not provided"),
+    "Conducted by: " + (inputs.f2fConductedBy || "Not provided"),
+    "",
+    "FUNCTIONAL SCALES:",
+    "FAST: " + (inputs.fast || "Not provided"),
+    "PPS: " + (inputs.pps || "Not provided"),
+    "KPS: " + (inputs.kps || "Not provided"),
+    "Weight: " + (inputs.weight || "Not provided"),
+    "",
+    "CLINICAL FINDINGS FROM FACE-TO-FACE ENCOUNTER:",
+    inputs.f2fFindings || "Not provided"
+  ].join("\n");
+}

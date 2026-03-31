@@ -2,17 +2,21 @@
 import { useState } from 'react';
 import { C } from './tokens';
 import { Textarea, Input, Btn, VoiceBtn, DocOutput } from './ui';
-import { DECLINE_DOMAINS, buildPriorExtractionSystem, buildRNRecertSystem, buildMDRecertSystem } from './recertPrompts';
+import { DECLINE_DOMAINS, buildPriorExtractionSystem, buildRNRecertSystem, buildF2FSystem, buildMDRecertSystem } from './recertPrompts';
 
 const EMPTY_INPUTS = {
-  diagnosis: '', patientId: '', certPeriod: '', lastBaseline: '',
+  diagnosis: '', patientId: '', age: '', sex: '', certPeriod: '', lastBaseline: '',
   fast: '', pps: '', kps: '', weight: '', vitals: '',
   nutritional: '', functional: '', cognitive: '', mobility: '',
   cardiopulmonary: '', skin: '', pain: '', sleep: '', psychosocial: '',
 };
 
 const EMPTY_MD = {
-  mdObservations: '', f2fCompleted: false, f2fDate: '', f2fFindings: '', priorMDNote: '',
+  mdObservations: '', priorMDNote: '',
+};
+
+const EMPTY_F2F = {
+  f2fDate: '', f2fConductedBy: '', f2fFindings: '',
 };
 
 export default function RecertSuite({ onBack }) {
@@ -22,7 +26,9 @@ export default function RecertSuite({ onBack }) {
   const [extracting, setExtracting] = useState(false);
   const [inputs, setInputs] = useState(EMPTY_INPUTS);
   const [mdInputs, setMdInputs] = useState(EMPTY_MD);
+  const [f2fInputs, setF2fInputs] = useState(EMPTY_F2F);
   const [rnNarrative, setRnNarrative] = useState('');
+  const [f2fNote, setF2fNote] = useState('');
   const [mdNote, setMdNote] = useState('');
   const [loading, setLoading] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState('');
@@ -30,12 +36,13 @@ export default function RecertSuite({ onBack }) {
 
   const setField = (key, val) => setInputs(p => ({ ...p, [key]: val }));
   const setMdField = (key, val) => setMdInputs(p => ({ ...p, [key]: val }));
+  const setF2fField = (key, val) => setF2fInputs(p => ({ ...p, [key]: val }));
   const filledDomains = DECLINE_DOMAINS.filter(d => inputs[d.key]?.trim()).length;
 
   const reset = () => {
     setStage(0); setPriorNote(''); setPriorSummaries(null);
-    setInputs(EMPTY_INPUTS); setMdInputs(EMPTY_MD);
-    setRnNarrative(''); setMdNote(''); setError('');
+    setInputs(EMPTY_INPUTS); setMdInputs(EMPTY_MD); setF2fInputs(EMPTY_F2F);
+    setRnNarrative(''); setF2fNote(''); setMdNote(''); setError('');
   };
 
   const extractPriorSummaries = async () => {
@@ -43,11 +50,9 @@ export default function RecertSuite({ onBack }) {
     setExtracting(true); setError('');
     try {
       const r = await fetch('/api/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
+          model: 'claude-sonnet-4-20250514', max_tokens: 1000,
           system: buildPriorExtractionSystem(),
           messages: [{ role: 'user', content: 'Extract domain summaries from this prior RN Recertification Narrative:\n\n' + priorNote }],
         }),
@@ -56,14 +61,11 @@ export default function RecertSuite({ onBack }) {
       const text = d.content?.[0]?.text || '';
       const clean = text.replace(/```json|```/g, '').trim();
       const parsed = JSON.parse(clean);
-      setPriorSummaries(parsed);
-      setStage(1);
+      setPriorSummaries(parsed); setStage(1);
     } catch (e) {
-      setError('Could not extract prior note summaries. You can still proceed — prior context will not be shown.');
+      setError('Could not extract prior note summaries. Proceeding without prior context.');
       setStage(1);
-    } finally {
-      setExtracting(false);
-    }
+    } finally { setExtracting(false); }
   };
 
   const generateRNNarrative = async () => {
@@ -72,48 +74,66 @@ export default function RecertSuite({ onBack }) {
     setError(''); setLoading(true); setLoadingMsg('Generating RN Recertification Narrative...');
     try {
       const r = await fetch('/api/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 4000,
+          model: 'claude-sonnet-4-20250514', max_tokens: 4000,
           system: buildRNRecertSystem(inputs, priorSummaries),
           messages: [{ role: 'user', content: 'Generate the RN Recertification Narrative now.' }],
         }),
       });
       const d = await r.json();
-      const text = d.content?.[0]?.text || '';
+      const text = (d.content?.[0]?.text || '').replace(/\*\*/g, '').replace(/\*/g, '');
       if (!text) throw new Error('Empty response');
-      setRnNarrative(text.replace(/\*\*/g, '').replace(/\*/g, '')); setStage(2);
+      setRnNarrative(text); setStage(2);
+    } catch (e) {
+      setError('Generation failed. Please try again.');
+    } finally { setLoading(false); setLoadingMsg(''); }
+  };
+
+  const generateF2FNote = async () => {
+    if (!f2fInputs.f2fDate.trim()) { setError('Face-to-face date is required.'); return; }
+    if (!f2fInputs.f2fFindings.trim()) { setError('Clinical findings are required.'); return; }
+    setError(''); setLoading(true); setLoadingMsg('Generating Face-to-Face Encounter Note...');
+    try {
+      const r = await fetch('/api/generate', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514', max_tokens: 2000,
+          system: buildF2FSystem({ ...inputs, ...f2fInputs }),
+          messages: [{ role: 'user', content: 'Generate the Face-to-Face Encounter Note now.' }],
+        }),
+      });
+      const d = await r.json();
+      const text = (d.content?.[0]?.text || '').replace(/\*\*/g, '').replace(/\*/g, '');
+      if (!text) throw new Error('Empty response');
+      setF2fNote(text); setStage(4);
     } catch (e) {
       setError('Generation failed. Please try again.');
     } finally { setLoading(false); setLoadingMsg(''); }
   };
 
   const generateMDNote = async () => {
-    setError(''); setLoading(true); setStage(4); setMdNote('');
+    setError(''); setLoading(true); setStage(5); setMdNote('');
     setLoadingMsg('Generating Physician Recertification Note...');
     try {
       const r = await fetch('/api/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 4000,
-          system: buildMDRecertSystem({ ...inputs, ...mdInputs }, rnNarrative),
+          model: 'claude-sonnet-4-20250514', max_tokens: 4000,
+          system: buildMDRecertSystem({ ...inputs, ...mdInputs, ...f2fInputs }, rnNarrative, f2fNote),
           messages: [{ role: 'user', content: 'Generate the Physician Recertification Note now.' }],
         }),
       });
       const d = await r.json();
-      const text = d.content?.[0]?.text || '';
+      const text = (d.content?.[0]?.text || '').replace(/\*\*/g, '').replace(/\*/g, '');
       if (!text) throw new Error('Empty response');
       setMdNote(text);
     } catch (e) {
-      setError('Generation failed. Please try again.'); setStage(3);
+      setError('Generation failed. Please try again.'); setStage(4);
     } finally { setLoading(false); setLoadingMsg(''); }
   };
 
-  const stageLabels = ['Prior Note', 'RN Assessment', 'RN Review', 'Physician Input'];
+  const stageLabels = ['Prior Note', 'RN Assessment', 'RN Review', 'F2F Encounter', 'Physician Input'];
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: C.bg, fontFamily: C.serif, color: C.text }}>
@@ -134,25 +154,31 @@ export default function RecertSuite({ onBack }) {
             </button>
             <div style={{ fontSize: '10px', letterSpacing: '3px', color: C.goldDim, fontFamily: C.mono, marginBottom: '4px' }}>RECERTIFICATION SUITE</div>
             <div style={{ fontSize: '20px', color: C.text }}>
-              {stage === 0 ? 'Prior Recertification Note' : stage === 1 ? 'RN Assessment Input' : stage === 2 ? 'RN Narrative Review' : stage === 3 ? 'Physician Input' : 'Recertification Documents'}
+              {stage === 0 && 'Prior Recertification Note'}
+              {stage === 1 && 'RN Assessment Input'}
+              {stage === 2 && 'RN Narrative Review'}
+              {stage === 3 && 'Face-to-Face Encounter'}
+              {stage === 4 && 'Physician Input'}
+              {stage === 5 && 'Recertification Documents'}
             </div>
             <div style={{ fontSize: '12px', color: C.goldDim, marginTop: '4px', fontStyle: 'italic' }}>
-              {stage === 0 && 'Paste the prior RN Recert note to enable interval comparison — or skip for first certifications'}
+              {stage === 0 && 'Paste prior RN Recert note to enable interval comparison — or skip'}
               {stage === 1 && 'Complete decline domains to generate RN narrative'}
-              {stage === 2 && 'Review and edit before advancing to physician stage'}
-              {stage === 3 && 'Add physician observations to generate recertification note'}
-              {stage === 4 && 'RN Recert Narrative + Physician Recertification Note'}
+              {stage === 2 && 'Review and edit before advancing'}
+              {stage === 3 && 'Enter face-to-face findings — or skip if not completed this period'}
+              {stage === 4 && 'RN narrative and F2F note inform the physician recertification'}
+              {stage === 5 && 'RN Recert · Face-to-Face Note · Physician Recertification'}
             </div>
           </div>
           <Btn variant="ghost" onClick={reset}>Reset</Btn>
         </div>
 
-        {stage < 4 && (
-          <div style={{ display: 'flex', gap: '8px', marginBottom: '32px' }}>
+        {stage < 5 && (
+          <div style={{ display: 'flex', gap: '6px', marginBottom: '32px' }}>
             {stageLabels.map((label, i) => (
               <div key={i} style={{ flex: 1 }}>
                 <div style={{ height: '2px', background: i <= stage ? C.gold : C.border, marginBottom: '5px', transition: 'background 0.2s' }} />
-                <div style={{ fontSize: '10px', letterSpacing: '2px', fontFamily: C.mono, color: i === stage ? C.gold : i < stage ? C.goldDim : 'rgba(196,168,130,0.25)' }}>
+                <div style={{ fontSize: '9px', letterSpacing: '1.5px', fontFamily: C.mono, color: i === stage ? C.gold : i < stage ? C.goldDim : 'rgba(196,168,130,0.25)' }}>
                   {i + 1}. {label.toUpperCase()}
                 </div>
               </div>
@@ -176,28 +202,19 @@ export default function RecertSuite({ onBack }) {
                 <div key={i} style={{ width: '8px', height: '8px', borderRadius: '50%', background: C.gold, animation: `bounce 1.2s ${i * 0.2}s infinite ease-in-out` }} />
               ))}
             </div>
-            {extracting && (
-              <div style={{ fontSize: '11px', color: C.goldDim, marginTop: '16px', fontFamily: C.mono }}>
-                Extracting domain summaries from prior certification period
-              </div>
-            )}
           </div>
         )}
 
         {stage === 0 && !extracting && (
           <div>
             <div style={{ background: 'rgba(196,168,130,0.05)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '14px 18px', marginBottom: '24px', fontSize: '12px', color: C.goldDim, fontFamily: C.mono, lineHeight: 1.6 }}>
-              Pasting the prior RN Recert narrative enables ClarityChart to display last period status above each domain field, strengthening interval comparison in the generated note. Skip for first recertifications.
+              Pasting the prior RN Recert narrative enables ClarityChart to display last period status above each domain field. Skip for first recertifications.
             </div>
-            <div style={{ fontSize: '11px', color: C.gold, fontFamily: C.mono, letterSpacing: '2px', marginBottom: '8px' }}>
-              PRIOR RN RECERTIFICATION NARRATIVE
-            </div>
+            <div style={{ fontSize: '11px', color: C.gold, fontFamily: C.mono, letterSpacing: '2px', marginBottom: '8px' }}>PRIOR RN RECERTIFICATION NARRATIVE</div>
             <Textarea value={priorNote} onChange={setPriorNote} placeholder="Paste the prior period RN Recertification Narrative here..." rows={14} />
-            <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'space-between' }}>
               <Btn variant="ghost" onClick={() => setStage(1)}>Skip — No Prior Note</Btn>
-              <Btn onClick={extractPriorSummaries} disabled={!priorNote.trim()} style={{ padding: '12px 32px' }}>
-                Analyze Prior Note →
-              </Btn>
+              <Btn onClick={extractPriorSummaries} disabled={!priorNote.trim()} style={{ padding: '12px 32px' }}>Analyze Prior Note →</Btn>
             </div>
           </div>
         )}
@@ -207,7 +224,7 @@ export default function RecertSuite({ onBack }) {
             {priorSummaries && (
               <div style={{ background: 'rgba(76,175,130,0.06)', border: `1px solid ${C.greenBorder}`, borderRadius: '2px', padding: '12px 18px', marginBottom: '24px', fontSize: '12px', color: C.green, fontFamily: C.mono, display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <span>✓</span>
-                <span>Prior note analyzed — last period status shown above each domain for interval comparison</span>
+                <span>Prior note analyzed — last period status shown above each domain</span>
               </div>
             )}
 
@@ -218,6 +235,12 @@ export default function RecertSuite({ onBack }) {
               </Field>
               <Field label="Patient Identifier">
                 <Input value={inputs.patientId} onChange={v => setField('patientId', v)} placeholder="e.g., initials or MRN" />
+              </Field>
+              <Field label="Age">
+                <Input value={inputs.age} onChange={v => setField('age', v)} placeholder="e.g., 82" />
+              </Field>
+              <Field label="Sex">
+                <Input value={inputs.sex} onChange={v => setField('sex', v)} placeholder="e.g., Female" />
               </Field>
               <Field label="Certification Period">
                 <Input value={inputs.certPeriod} onChange={v => setField('certPeriod', v)} placeholder="e.g., 04/16/2026 - 06/15/2026" />
@@ -259,8 +282,7 @@ export default function RecertSuite({ onBack }) {
                   </div>
                   {hasPrior && (
                     <div style={{ background: 'rgba(74,144,164,0.08)', border: `1px solid ${C.blueBorder}`, borderRadius: '2px', padding: '8px 12px', marginBottom: '8px', fontSize: '12px', color: C.blue, fontFamily: C.mono, lineHeight: 1.5 }}>
-                      <span style={{ fontSize: '10px', letterSpacing: '1px', opacity: 0.7 }}>LAST PERIOD: </span>
-                      {prior}
+                      <span style={{ fontSize: '10px', letterSpacing: '1px', opacity: 0.7 }}>LAST PERIOD: </span>{prior}
                     </div>
                   )}
                   <Textarea value={inputs[domain.key] || ''} onChange={v => setField(domain.key, v)} placeholder={domain.placeholder} rows={inputs[domain.key]?.trim() ? 3 : 2} />
@@ -285,11 +307,13 @@ export default function RecertSuite({ onBack }) {
             <Textarea value={rnNarrative} onChange={setRnNarrative} rows={20} />
             <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <Btn variant="secondary" onClick={() => setStage(1)}>← Edit Assessment</Btn>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                  <Btn variant="secondary" onClick={() => { navigator.clipboard.writeText(rnNarrative); onBack(); }}>Done — RN Note Complete</Btn>
-                  <Btn onClick={() => setStage(3)} style={{ padding: '12px 32px' }}>Proceed to Physician →</Btn>
-                </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <Btn variant="secondary" onClick={() => { navigator.clipboard.writeText(rnNarrative); onBack(); }}>
+                  Done — RN Note Complete
+                </Btn>
+                <Btn onClick={() => setStage(3)} style={{ padding: '12px 32px' }}>
+                  Proceed to F2F / Physician →
+                </Btn>
               </div>
             </div>
           </div>
@@ -297,66 +321,108 @@ export default function RecertSuite({ onBack }) {
 
         {stage === 3 && !loading && (
           <div>
-            <div style={{ background: 'rgba(0,0,0,0.2)', border: `1px solid ${C.border}`, borderRadius: '2px', marginBottom: '28px', overflow: 'hidden' }}>
-              <div style={{ padding: '10px 18px', borderBottom: `1px solid ${C.border}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div style={{ fontSize: '11px', fontFamily: C.mono, letterSpacing: '1.5px', color: C.goldDim }}>RN NARRATIVE — CONFIRMED</div>
-                <span style={{ fontSize: '9px', color: C.green, background: C.greenDim, border: `1px solid ${C.greenBorder}`, borderRadius: '10px', padding: '2px 8px', fontFamily: C.mono }}>LOCKED</span>
-              </div>
-              <div style={{ padding: '16px 18px', maxHeight: '160px', overflowY: 'auto', fontSize: '12px', color: C.textDim, lineHeight: 1.6, fontFamily: C.serif }}>
-                {rnNarrative.substring(0, 400)}...
-              </div>
+            <div style={{ background: 'rgba(196,168,130,0.05)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '14px 18px', marginBottom: '24px', fontSize: '12px', color: C.goldDim, fontFamily: C.mono, lineHeight: 1.6 }}>
+              A face-to-face encounter may be conducted by a physician, nurse practitioner, or physician assistant. Skip if not completed this certification period.
             </div>
 
-            <SectionLabel>Face-to-Face Encounter</SectionLabel>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-              <input type="checkbox" checked={mdInputs.f2fCompleted} onChange={e => setMdField('f2fCompleted', e.target.checked)}
-                style={{ accentColor: C.gold, width: '16px', height: '16px', cursor: 'pointer' }} />
-              <label style={{ fontSize: '13px', color: C.text, cursor: 'pointer' }} onClick={() => setMdField('f2fCompleted', !mdInputs.f2fCompleted)}>
-                Face-to-face encounter completed this certification period
-              </label>
-            </div>
-            {mdInputs.f2fCompleted && (
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '16px', marginBottom: '20px' }}>
-                <Field label="F2F Date"><Input value={mdInputs.f2fDate} onChange={v => setMdField('f2fDate', v)} placeholder="e.g., 03/10/2026" /></Field>
-                <Field label="F2F Clinical Findings">
-                  <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
-                    <div style={{ flex: 1 }}><Textarea value={mdInputs.f2fFindings} onChange={v => setMdField('f2fFindings', v)} placeholder="Describe clinical findings from the face-to-face encounter..." rows={3} /></div>
-                    <VoiceBtn onTranscript={t => setMdField('f2fFindings', mdInputs.f2fFindings ? mdInputs.f2fFindings + ' ' + t : t)} />
-                  </div>
-                </Field>
-              </div>
-            )}
-
-            <SectionLabel>Prior Physician Recertification Note</SectionLabel>
-            <div style={{ marginBottom: '24px' }}>
-              <div style={{ fontSize: '12px', color: C.goldDim, marginBottom: '8px', fontStyle: 'italic' }}>
-                Optional — paste the prior physician recert note to strengthen interval comparison language.
-              </div>
-              <Textarea value={mdInputs.priorMDNote} onChange={v => setMdField('priorMDNote', v)} placeholder="Paste the prior Physician Recertification Note here..." rows={6} />
+            <SectionLabel>Face-to-Face Encounter Details</SectionLabel>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px' }}>
+              <Field label="Date of Encounter *">
+                <Input value={f2fInputs.f2fDate} onChange={v => setF2fField('f2fDate', v)} placeholder="e.g., 04/10/2026" />
+              </Field>
+              <Field label="Conducted By">
+                <Input value={f2fInputs.f2fConductedBy} onChange={v => setF2fField('f2fConductedBy', v)} placeholder="e.g., Dr. Smith / NP Jones" />
+              </Field>
             </div>
 
-            <SectionLabel>Additional Clinical Observations</SectionLabel>
-            <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '28px' }}>
-              <div style={{ flex: 1 }}>
-                <Textarea value={mdInputs.mdObservations} onChange={v => setMdField('mdObservations', v)} placeholder="Any additional physician observations not captured in the RN narrative..." rows={4} />
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+              <div style={{ fontSize: '11px', fontFamily: C.mono, letterSpacing: '2px', color: C.gold }}>
+                CLINICAL FINDINGS <span style={{ color: '#e07070' }}>*</span>
               </div>
-              <VoiceBtn onTranscript={t => setMdField('mdObservations', mdInputs.mdObservations ? mdInputs.mdObservations + ' ' + t : t)} />
+              <VoiceBtn onTranscript={t => setF2fField('f2fFindings', f2fInputs.f2fFindings ? f2fInputs.f2fFindings + ' ' + t : t)} />
             </div>
+            <Textarea
+              value={f2fInputs.f2fFindings}
+              onChange={v => setF2fField('f2fFindings', v)}
+              placeholder="Describe clinical findings from the face-to-face encounter — functional status, systems findings, objective scales, significant observations confirming continued decline related to the terminal diagnosis..."
+              rows={10}
+            />
 
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Btn variant="secondary" onClick={() => setStage(2)}>← RN Review</Btn>
-              <Btn onClick={generateMDNote} style={{ padding: '12px 32px' }}>Generate Physician Recert Note →</Btn>
+            <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <Btn variant="secondary" onClick={() => setStage(2)}>← RN Review</Btn>
+                <Btn variant="ghost" onClick={() => setStage(4)}>Skip F2F — Go to Physician</Btn>
+              </div>
+              <Btn onClick={generateF2FNote} disabled={!f2fInputs.f2fDate.trim() || !f2fInputs.f2fFindings.trim()} style={{ padding: '12px 32px' }}>
+                Generate F2F Note →
+              </Btn>
             </div>
           </div>
         )}
 
         {stage === 4 && !loading && (
           <div>
+            {/* RN Narrative locked preview */}
+            <div style={{ background: 'rgba(0,0,0,0.2)', border: `1px solid ${C.border}`, borderRadius: '2px', marginBottom: '20px', overflow: 'hidden' }}>
+              <div style={{ padding: '10px 18px', borderBottom: `1px solid ${C.border}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ fontSize: '11px', fontFamily: C.mono, letterSpacing: '1.5px', color: C.goldDim }}>RN RECERTIFICATION NARRATIVE — CONFIRMED</div>
+                <span style={{ fontSize: '9px', color: C.green, background: C.greenDim, border: `1px solid ${C.greenBorder}`, borderRadius: '10px', padding: '2px 8px', fontFamily: C.mono }}>LOCKED</span>
+              </div>
+              <div style={{ padding: '14px 18px', maxHeight: '120px', overflowY: 'auto', fontSize: '12px', color: C.textDim, lineHeight: 1.6, fontFamily: C.serif }}>
+                {rnNarrative.substring(0, 350)}...
+              </div>
+            </div>
+
+            {/* F2F locked preview — if generated */}
+            {f2fNote && (
+              <div style={{ background: 'rgba(0,0,0,0.2)', border: `1px solid ${C.border}`, borderRadius: '2px', marginBottom: '20px', overflow: 'hidden' }}>
+                <div style={{ padding: '10px 18px', borderBottom: `1px solid ${C.border}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ fontSize: '11px', fontFamily: C.mono, letterSpacing: '1.5px', color: C.goldDim }}>FACE-TO-FACE ENCOUNTER NOTE — CONFIRMED</div>
+                  <span style={{ fontSize: '9px', color: C.green, background: C.greenDim, border: `1px solid ${C.greenBorder}`, borderRadius: '10px', padding: '2px 8px', fontFamily: C.mono }}>LOCKED</span>
+                </div>
+                <div style={{ padding: '14px 18px', maxHeight: '120px', overflowY: 'auto', fontSize: '12px', color: C.textDim, lineHeight: 1.6, fontFamily: C.serif }}>
+                  {f2fNote.substring(0, 350)}...
+                </div>
+              </div>
+            )}
+
+            {!f2fNote && (
+              <div style={{ background: 'rgba(196,168,130,0.04)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '10px 18px', marginBottom: '20px', fontSize: '11px', color: C.goldDim, fontFamily: C.mono }}>
+                No F2F note generated this period — physician recert will be based on RN narrative only.
+              </div>
+            )}
+
+            <SectionLabel>Prior Physician Recertification Note</SectionLabel>
+            <div style={{ marginBottom: '20px' }}>
+              <div style={{ fontSize: '12px', color: C.goldDim, marginBottom: '8px', fontStyle: 'italic' }}>
+                Optional — paste prior physician recert note to strengthen interval comparison.
+              </div>
+              <Textarea value={mdInputs.priorMDNote} onChange={v => setMdField('priorMDNote', v)} placeholder="Paste the prior Physician Recertification Note here..." rows={5} />
+            </div>
+
+            <SectionLabel>Additional Clinical Observations</SectionLabel>
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-start', marginBottom: '28px' }}>
+              <div style={{ flex: 1 }}>
+                <Textarea value={mdInputs.mdObservations} onChange={v => setMdField('mdObservations', v)} placeholder="Any additional physician observations not captured in the RN narrative or F2F note..." rows={4} />
+              </div>
+              <VoiceBtn onTranscript={t => setMdField('mdObservations', mdInputs.mdObservations ? mdInputs.mdObservations + ' ' + t : t)} />
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Btn variant="secondary" onClick={() => setStage(3)}>← F2F Encounter</Btn>
+              <Btn onClick={generateMDNote} style={{ padding: '12px 32px' }}>Generate Physician Recert Note →</Btn>
+            </div>
+          </div>
+        )}
+
+        {stage === 5 && !loading && (
+          <div>
             {rnNarrative && <DocOutput title="RN Recertification Narrative" content={rnNarrative} />}
+            {f2fNote && <DocOutput title="Face-to-Face Encounter Note" content={f2fNote} />}
             {mdNote && <DocOutput title="Physician Recertification Note" content={mdNote} />}
-            {rnNarrative && mdNote && (
+            {mdNote && (
               <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '8px' }}>
-                <Btn variant="secondary" onClick={() => setStage(3)}>← Edit Physician Input</Btn>
+                <Btn variant="secondary" onClick={() => setStage(4)}>← Edit Physician Input</Btn>
                 <Btn variant="secondary" onClick={reset}>New Recertification</Btn>
               </div>
             )}

@@ -121,7 +121,7 @@ export default function ClarityChart() {
               {[
                 { label: 'RN Visit Note', desc: '10 clinical scenarios, voice or text', status: 'complete', outputs: ['Structured Visit Note'] },
                 { label: 'Recertification Suite', desc: 'RN → MD sequential pipeline', status: 'complete', outputs: ['RN Recert', 'Physician Recert'] },
-                { label: 'Face-to-Face Note', desc: 'Physician attestation document', status: 'queued', outputs: ['F2F Visit Note'] },
+                { label: 'Face-to-Face Note', desc: 'Integrated into Recertification Suite — Stage 3', status: 'soon', outputs: ['F2F Note'] },
               ].map(mod => <ModCard key={mod.label} mod={mod} onClick={mod.status === 'complete' ? () => setView(mod.label === 'RN Visit Note' ? 'rn-visit-note' : mod.label === 'Recertification Suite' ? 'recert-suite' : null) : null} />)}
               <div style={{ fontSize: '10px', color: 'rgba(196,168,130,0.25)', fontFamily: C.mono, letterSpacing: '1px', padding: '6px 14px 4px' }}>VISIT NOTES → RN RECERT → MD RECERT</div>
             </div>

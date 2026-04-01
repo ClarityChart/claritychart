@@ -881,7 +881,7 @@ PPS 30%. KPS 30%. Weight 128 lbs.`
     age: 77,
     sex: 'Male',
     diagnosis: "Advanced Parkinson's disease with dementia (PDD), Hoehn & Yahr Stage 5",
-    secondaryDx: 'Parkinson's disease dementia, dysphagia with aspiration risk, recurrent aspiration pneumonia, orthostatic hypotension, urinary retention, constipation',
+    secondaryDx: "Parkinson's disease dementia, dysphagia with aspiration risk, recurrent aspiration pneumonia, orthostatic hypotension, urinary retention, constipation",
     tagline: "77M · Advanced Parkinson's disease · Home",
     color: '#4a7a6a',
     documents: [

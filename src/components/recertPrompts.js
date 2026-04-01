@@ -164,6 +164,8 @@ export function buildF2FSystem(inputs) {
     "Weight: " + (inputs.weight || "Not provided"),
     "",
     "CLINICAL FINDINGS FROM FACE-TO-FACE ENCOUNTER:",
-    inputs.f2fFindings || "Not provided"
+    inputs.f2fFindings || "Not provided",
+    "",
+    inputs.rnNarrativeRef?.trim() ? "RN RECERTIFICATION NARRATIVE (for reference — use to ensure F2F findings align with documented decline):\n" + inputs.rnNarrativeRef : ""
   ].join("\n");
 }

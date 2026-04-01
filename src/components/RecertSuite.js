@@ -327,6 +327,12 @@ function F2FPathway({ onBack, onBackHome }) {
               <Field label="Weight"><Input value={inputs.weight} onChange={v => setField('weight', v)} placeholder="e.g., 112 lbs" /></Field>
             </div>
 
+            <SectionLabel>RN Recertification Narrative</SectionLabel>
+            <div style={{ fontSize: '12px', color: C.goldDim, marginBottom: '8px', fontStyle: 'italic' }}>
+              Optional — paste the RN Recert narrative for reference when documenting F2F findings.
+            </div>
+            <Textarea value={inputs.rnNarrativeRef || ''} onChange={v => setField('rnNarrativeRef', v)} placeholder="Paste RN Recertification Narrative here for reference (optional)..." rows={6} />
+
             <SectionLabel>Encounter Details</SectionLabel>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px' }}>
               <Field label="Date of Encounter *"><Input value={inputs.f2fDate} onChange={v => setField('f2fDate', v)} placeholder="e.g., 04/10/2026" /></Field>

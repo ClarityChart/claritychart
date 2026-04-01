@@ -279,8 +279,6 @@ Goals of care: DNR/DNI. No hospitalization - family adamant following prior aspi
 
 PPS 30%. KPS 30%.`
   },
-};
-
 
   rb: {
     id: 'rb',

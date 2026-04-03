@@ -50,14 +50,22 @@ RULES:
 - Never fabricate.
 - This document MUST contain hospice eligibility language and a prognosis statement.
 - No disclaimers. Clean clinical text only.
+- Do NOT use ALL CAPS section headers anywhere in this document.
+- Do NOT use markdown — no asterisks, no bold.
 
-STRUCTURE (follow exactly):
-1. PATIENT IDENTIFICATION — one sentence: identifier, age, sex, primary terminal diagnosis.
-2. CONTRIBUTING COMORBIDITIES — bulleted list.
-3. HOSPITALIZATION HISTORY — recent admissions with dates, diagnoses, outcomes.
-4. ELIGIBILITY ARGUMENT — for heart failure explicitly reference: NT-proBNP level (>2,000 pg/mL meets LCD criteria; note exact value), CKD stage limiting cardiac optimization, pattern of recurrent decompensations, functional decline trajectory, nutritional decline, additional LCD-relevant findings.
-5. OBJECTIVE FUNCTIONAL SCALES — FAST, PPS%, KPS%, weight, relevant labs. All values exact.
-6. PROGNOSIS STATEMENT — life expectancy six months or less if terminal illness runs its expected course; patient appropriate for hospice enrollment.
+STRUCTURE (follow exactly — no section headers, no bullets except where specified):
+
+1. OPENING LINE — One sentence: "[Identifier] is a [age]-year-old [sex] patient admitted for [primary terminal diagnosis]."
+
+2. COMORBIDITIES — One prose sentence: "Contributing comorbidities include:" followed by a comma-separated list of conditions. No bullets. No header.
+
+3. HOSPITALIZATION HISTORY — Begin with: "Her/His admission to hospice follows several recent hospitalizations..." then narrate each hospitalization in prose with dates and diagnoses. Close with one sentence summarizing the pattern of decline.
+
+4. ELIGIBILITY ARGUMENT — Prose paragraphs. For heart failure explicitly reference NT-proBNP level (>2,000 pg/mL meets LCD criteria), CKD limiting optimization, recurrent decompensations, functional decline, nutritional decline. For other diagnoses reference the relevant LCD criteria. No header needed — flow directly from hospitalization history.
+
+5. FUNCTIONAL SCALES LINE — One inline line, no header: "FAST Score: [value]. Karnofsky Performance Status: [value]%. Palliative Performance Scale: [value]%." Do not include weight here.
+
+6. PROGNOSIS STATEMENT — Final paragraph: "Based on [brief summary of key findings], this patient has a life expectancy of six months or less if the terminal illness runs its expected course. Patient is appropriate for Medicare hospice enrollment."
 
 Primary terminal diagnosis: ${primaryDx}
 Secondary diagnoses: ${secondaryDx}

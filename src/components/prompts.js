@@ -59,7 +59,7 @@ STRUCTURE (follow exactly — no section headers, no bullets except where specif
 
 2. COMORBIDITIES — One prose sentence: "Contributing comorbidities include:" followed by a comma-separated list of conditions. No bullets. No header.
 
-3. HOSPITALIZATION HISTORY — Begin with: "Her/His admission to hospice follows several recent hospitalizations..." then narrate each hospitalization in prose with dates and diagnoses. Close with one sentence summarizing the pattern of decline.
+3. HOSPITALIZATION HISTORY — One to two sentences only. State the number of hospitalizations, the general timeframe, and the overall pattern of decline. Do NOT list each hospitalization individually with dates — the details are in the Admission Narrative. Example: 'Her admission to hospice follows four hospitalizations between August 2025 and March 2026 for progressively complex medical events, with declining functional recovery between episodes.'
 
 4. ELIGIBILITY ARGUMENT — Prose paragraphs. For heart failure explicitly reference NT-proBNP level (>2,000 pg/mL meets LCD criteria), CKD limiting optimization, recurrent decompensations, functional decline, nutritional decline. For other diagnoses reference the relevant LCD criteria. No header needed — flow directly from hospitalization history.
 

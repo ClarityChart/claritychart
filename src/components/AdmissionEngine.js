@@ -2,18 +2,19 @@
 import { useState, useRef } from 'react';
 import { C } from './tokens';
 import { Textarea, Input, Btn, VoiceBtn, DocOutput } from './ui';
-import { buildNarrativeSystem, buildCTISystem } from './prompts';
+import { buildNarrativeSystem, buildCTISystem, buildRecordSummarySystem, buildNarrativeEditSystem } from './prompts';
 import { DEMO_PATIENTS, PATIENT_LIST } from './demoPatients';
 
-const EMPTY_DOCS = { dischargeSummary: '', hp: '', palliativeCare: '', specialistNote: '', woundCare: '', labs: '' };
+const EMPTY_DOCS = { dischargeSummary: '', hp: '', palliativeCare: '', specialistNote: '', woundCare: '', labs: '', imaging: '' };
 
 const DOC_FIELDS = [
-  { key: 'dischargeSummary', label: 'Discharge Summary' },
-  { key: 'hp', label: 'History & Physical' },
-  { key: 'palliativeCare', label: 'Palliative Care Note' },
-  { key: 'specialistNote', label: 'Specialist Note' },
-  { key: 'woundCare', label: 'Wound Care Note' },
-  { key: 'labs', label: 'Lab Results' },
+  { key: 'dischargeSummary', label: 'Discharge Summaries', placeholder: 'Paste one or more discharge summaries. Include date of each hospitalization.' },
+  { key: 'hp', label: 'History & Physicals', placeholder: 'Paste one or more H&P documents.' },
+  { key: 'specialistNote', label: 'Specialist Notes', placeholder: 'Paste specialist notes. Include note type and date.' },
+  { key: 'labs', label: 'Lab Results', placeholder: 'Paste lab results with dates.' },
+  { key: 'imaging', label: 'Imaging Studies', placeholder: 'Paste imaging reports (CT, MRI, X-ray, echo, etc.) with dates.' },
+  { key: 'woundCare', label: 'Wound Care Notes', placeholder: 'Paste wound care notes if applicable.' },
+  { key: 'palliativeCare', label: 'Palliative Care / Goals of Care Notes', placeholder: 'Paste palliative care or goals of care notes if available.' },
 ];
 
 // Map document types to form fields
@@ -392,30 +393,56 @@ function ClinicalMode({ onBack, onBackHome }) {
   const [primaryDx, setPrimaryDx] = useState('');
   const [secondaryDx, setSecondaryDx] = useState('');
   const [docs, setDocs] = useState(EMPTY_DOCS);
+  const [recordSummaries, setRecordSummaries] = useState('');
   const [encounter, setEncounter] = useState('');
+  const [narrative, setNarrative] = useState('');
+  const [editRequest, setEditRequest] = useState('');
+  const [cti, setCti] = useState('');
   const [loading, setLoading] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState('');
-  const [narrative, setNarrative] = useState('');
-  const [cti, setCti] = useState('');
   const [error, setError] = useState('');
 
   const reset = () => {
     setStage(1); setPrimaryDx(''); setSecondaryDx('');
-    setDocs(EMPTY_DOCS); setEncounter('');
-    setNarrative(''); setCti(''); setError('');
+    setDocs(EMPTY_DOCS); setRecordSummaries(''); setEncounter('');
+    setNarrative(''); setEditRequest(''); setCti(''); setError('');
   };
 
   const docCount = Object.values(docs).filter(v => v.trim()).length;
 
-  const generate = async () => {
-    if (!primaryDx.trim() || !encounter.trim()) {
-      setError('Primary diagnosis and encounter narrative are required.');
-      return;
-    }
-    setError(''); setLoading(true); setStage(4); setNarrative(''); setCti('');
+  // Stage 2 -> 3: summarize records automatically
+  const summarizeAndContinue = async () => {
+    if (docCount === 0) { setStage(3); return; }
+    setLoading(true); setLoadingMsg('Summarizing uploaded records...');
     try {
-      setLoadingMsg('Generating Admission Narrative… (step 1 of 2)');
-      const r1 = await fetch('/api/generate', {
+      const docText = DOC_FIELDS
+        .filter(f => docs[f.key]?.trim())
+        .map(f => `=== ${f.label.toUpperCase()} ===\n${docs[f.key]}`)
+        .join('\n\n');
+      const r = await fetch('/api/generate', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514', max_tokens: 2000,
+          system: buildRecordSummarySystem(),
+          messages: [{ role: 'user', content: `Summarize these medical records:\n\n${docText}` }]
+        })
+      });
+      const d = await r.json();
+      const text = (d.content?.[0]?.text || '').replace(/\*\*/g, '').replace(/\*/g, '');
+      setRecordSummaries(text);
+      setStage(3);
+    } catch (e) {
+      setRecordSummaries('');
+      setStage(3);
+    } finally { setLoading(false); setLoadingMsg(''); }
+  };
+
+  // Stage 3 -> 4: generate admission narrative
+  const generateNarrative = async () => {
+    if (!encounter.trim()) { setError('Encounter narrative is required.'); return; }
+    setError(''); setLoading(true); setLoadingMsg('Generating Admission Narrative...');
+    try {
+      const r = await fetch('/api/generate', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: 'claude-sonnet-4-20250514', max_tokens: 4000,
@@ -423,29 +450,56 @@ function ClinicalMode({ onBack, onBackHome }) {
           messages: [{ role: 'user', content: 'Generate the Admission Narrative now.' }]
         })
       });
-      const d1 = await r1.json();
-      const narr = (d1.content?.[0]?.text || '').replace(/\*\*/g, '').replace(/\*/g, '');
-      if (!narr) throw new Error('Empty narrative response');
-      setNarrative(narr);
+      const d = await r.json();
+      const text = (d.content?.[0]?.text || '').replace(/\*\*/g, '').replace(/\*/g, '');
+      if (!text) throw new Error('Empty');
+      setNarrative(text); setStage(4);
+    } catch (e) { setError('Generation failed. Please try again.'); }
+    finally { setLoading(false); setLoadingMsg(''); }
+  };
 
-      setLoadingMsg('Generating Certificate of Terminal Illness… (step 2 of 2)');
-      const r2 = await fetch('/api/generate', {
+  // Stage 4: apply edits to narrative
+  const applyEdits = async () => {
+    if (!editRequest.trim()) return;
+    setLoading(true); setLoadingMsg('Applying edits...');
+    try {
+      const r = await fetch('/api/generate', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: 'claude-sonnet-4-20250514', max_tokens: 4000,
-          system: buildCTISystem(primaryDx, secondaryDx, docs, encounter, narr),
+          system: buildNarrativeEditSystem(narrative, editRequest),
+          messages: [{ role: 'user', content: 'Apply the requested edits to the narrative now.' }]
+        })
+      });
+      const d = await r.json();
+      const text = (d.content?.[0]?.text || '').replace(/\*\*/g, '').replace(/\*/g, '');
+      if (!text) throw new Error('Empty');
+      setNarrative(text); setEditRequest('');
+    } catch (e) { setError('Edit failed. Please try again.'); }
+    finally { setLoading(false); setLoadingMsg(''); }
+  };
+
+  // Stage 4 -> 5: generate CTI
+  const generateCTI = async () => {
+    setLoading(true); setLoadingMsg('Generating Certificate of Terminal Illness...'); setCti(''); setStage(5);
+    try {
+      const r = await fetch('/api/generate', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514', max_tokens: 4000,
+          system: buildCTISystem(primaryDx, secondaryDx, docs, encounter, narrative),
           messages: [{ role: 'user', content: 'Generate the Certificate of Terminal Illness now.' }]
         })
       });
-      const d2 = await r2.json();
-      setCti((d2.content?.[0]?.text || '').replace(/\*\*/g, '').replace(/\*/g, ''));
-    } catch (e) {
-      setError('Generation failed. Please try again.');
-      setStage(3);
-    } finally {
-      setLoading(false); setLoadingMsg('');
-    }
+      const d = await r.json();
+      const text = (d.content?.[0]?.text || '').replace(/\*\*/g, '').replace(/\*/g, '');
+      if (!text) throw new Error('Empty');
+      setCti(text);
+    } catch (e) { setError('CTI generation failed. Please try again.'); setStage(4); }
+    finally { setLoading(false); setLoadingMsg(''); }
   };
+
+  const stageLabels = ['Diagnosis', 'Records', 'Encounter', 'Narrative', 'CTI'];
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: C.bg, fontFamily: C.serif, color: C.text }}>
@@ -454,23 +508,29 @@ function ClinicalMode({ onBack, onBackHome }) {
 
         <div style={{ padding: '28px 0 24px', borderBottom: `1px solid ${C.border}`, marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
           <div>
-            <button onClick={onBack} style={{ background: 'none', border: 'none', color: C.goldDim, cursor: 'pointer', fontFamily: C.mono, fontSize: '10px', letterSpacing: '2px', padding: 0, marginBottom: '12px', display: 'block' }}>
-              ADMISSION ENGINE
-            </button>
+            <button onClick={onBack} style={{ background: 'none', border: 'none', color: C.goldDim, cursor: 'pointer', fontFamily: C.mono, fontSize: '10px', letterSpacing: '2px', padding: 0, marginBottom: '12px', display: 'block' }}>ADMISSION ENGINE</button>
             <div style={{ fontSize: '10px', letterSpacing: '3px', color: C.goldDim, fontFamily: C.mono, marginBottom: '4px' }}>CLINICAL MODE</div>
-            <div style={{ fontSize: '20px', color: C.text }}>New Patient Admission</div>
+            <div style={{ fontSize: '20px', color: C.text }}>
+              {stage === 1 && 'Diagnosis'}
+              {stage === 2 && 'Upload Records'}
+              {stage === 3 && 'Admission Encounter'}
+              {stage === 4 && 'Admission Narrative'}
+              {stage === 5 && 'Certificate of Terminal Illness'}
+            </div>
           </div>
           <div style={{ display: 'flex', gap: '10px' }}>
-            {(stage > 1 || primaryDx) && <Btn variant="ghost" onClick={reset}>Reset</Btn>}
+            {stage > 1 && <Btn variant="ghost" onClick={reset}>Reset</Btn>}
           </div>
         </div>
 
-        {stage < 4 && (
-          <div style={{ display: 'flex', gap: '8px', marginBottom: '32px' }}>
-            {[{n:1,l:'Diagnosis'},{n:2,l:'Records'},{n:3,l:'Encounter'}].map(s => (
-              <div key={s.n} onClick={() => s.n < stage && setStage(s.n)} style={{ flex: 1, cursor: s.n < stage ? 'pointer' : 'default' }}>
-                <div style={{ height: '2px', background: s.n <= stage ? C.gold : C.border, marginBottom: '5px' }} />
-                <div style={{ fontSize: '10px', letterSpacing: '2px', fontFamily: C.mono, color: s.n === stage ? C.gold : s.n < stage ? C.goldDim : 'rgba(196,168,130,0.25)' }}>{s.n}. {s.l.toUpperCase()}</div>
+        {stage < 5 && (
+          <div style={{ display: 'flex', gap: '6px', marginBottom: '32px' }}>
+            {stageLabels.map((label, i) => (
+              <div key={i} style={{ flex: 1 }}>
+                <div style={{ height: '2px', background: i + 1 <= stage ? C.gold : C.border, marginBottom: '5px' }} />
+                <div style={{ fontSize: '9px', letterSpacing: '1.5px', fontFamily: C.mono, color: i + 1 === stage ? C.gold : i + 1 < stage ? C.goldDim : 'rgba(196,168,130,0.25)' }}>
+                  {i + 1}. {label.toUpperCase()}
+                </div>
               </div>
             ))}
           </div>
@@ -478,7 +538,16 @@ function ClinicalMode({ onBack, onBackHome }) {
 
         {error && <div style={{ background: 'rgba(224,112,112,0.08)', border: '1px solid rgba(224,112,112,0.3)', borderRadius: '2px', padding: '10px 16px', color: '#e07070', fontSize: '12px', fontFamily: C.mono, marginBottom: '20px' }}>{error}</div>}
 
-        {stage === 1 && (
+        {loading && (
+          <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: '2px', padding: '40px', textAlign: 'center', marginBottom: '28px' }}>
+            <div style={{ fontSize: '11px', letterSpacing: '3px', color: C.gold, fontFamily: C.mono, marginBottom: '20px' }}>{loadingMsg}</div>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '8px' }}>
+              {[0,1,2].map(i => <div key={i} style={{ width: '8px', height: '8px', borderRadius: '50%', background: C.gold, animation: `bounce 1.2s ${i*0.2}s infinite ease-in-out` }} />)}
+            </div>
+          </div>
+        )}
+
+        {stage === 1 && !loading && (
           <div>
             <div style={{ background: 'rgba(196,168,130,0.05)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '14px 18px', marginBottom: '24px', fontSize: '12px', color: C.goldDim, fontFamily: C.mono, lineHeight: 1.6 }}>
               The physician determines the primary terminal diagnosis. ClarityChart organizes all documentation around this diagnosis.
@@ -493,75 +562,134 @@ function ClinicalMode({ onBack, onBackHome }) {
           </div>
         )}
 
-        {stage === 2 && (
+        {stage === 2 && !loading && (
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-              <div style={{ fontSize: '12px', color: C.goldDim }}>Paste text from available records. All fields optional.</div>
-              <div style={{ fontSize: '11px', fontFamily: C.mono, color: docCount > 0 ? C.green : C.goldDim }}>{docCount}/6 loaded</div>
+              <div style={{ fontSize: '12px', color: C.goldDim, fontStyle: 'italic' }}>Paste text from available records. All fields optional. Include dates where possible.</div>
+              <div style={{ fontSize: '11px', fontFamily: C.mono, color: docCount > 0 ? C.green : C.goldDim }}>{docCount}/{DOC_FIELDS.length} loaded</div>
             </div>
-            {DOC_FIELDS.map(({key, label}) => (
-              <div key={key} style={{ marginBottom: '18px' }}>
-                <div style={{ fontSize: '11px', fontFamily: C.mono, letterSpacing: '1.5px', color: docs[key].trim() ? C.gold : C.textDim, marginBottom: '6px' }}>
-                  {docs[key].trim() ? '✓ ' : '○ '}{label.toUpperCase()}
+            {DOC_FIELDS.map(({key, label, placeholder}) => (
+              <div key={key} style={{ marginBottom: '20px' }}>
+                <div style={{ fontSize: '11px', fontFamily: C.mono, letterSpacing: '1.5px', color: docs[key]?.trim() ? C.gold : C.textDim, marginBottom: '6px' }}>
+                  {docs[key]?.trim() ? '✓ ' : '○ '}{label.toUpperCase()}
                 </div>
-                <Textarea value={docs[key]} onChange={v => setDocs(d => ({...d,[key]:v}))} placeholder={`Paste ${label}...`} rows={docs[key].trim() ? 4 : 2} mono />
+                <Textarea value={docs[key] || ''} onChange={v => setDocs(d => ({...d,[key]:v}))} placeholder={placeholder} rows={docs[key]?.trim() ? 4 : 2} mono />
               </div>
             ))}
             <div style={{ marginTop: '28px', display: 'flex', justifyContent: 'space-between' }}>
               <Btn variant="secondary" onClick={() => setStage(1)}>← Back</Btn>
-              <Btn onClick={() => setStage(3)}>Continue → Encounter</Btn>
+              <Btn onClick={summarizeAndContinue}>
+                {docCount > 0 ? 'Summarize Records & Continue →' : 'Continue → Encounter'}
+              </Btn>
             </div>
           </div>
         )}
 
-        {stage === 3 && (
+        {stage === 3 && !loading && (
           <div>
-            <div style={{ background: 'rgba(196,168,130,0.05)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '14px 18px', marginBottom: '24px', fontSize: '12px', color: C.goldDim, fontFamily: C.mono, lineHeight: 1.6 }}>
-              Describe findings from the admission visit — functional status, systems review, goals of care, FAST/PPS/KPS scores, family present. Voice or text.
+            {/* Diagnoses summary */}
+            <div style={{ background: 'rgba(196,168,130,0.04)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '14px 18px', marginBottom: '24px' }}>
+              <div style={{ fontSize: '10px', letterSpacing: '2px', color: C.gold, fontFamily: C.mono, marginBottom: '10px' }}>DIAGNOSES</div>
+              <div style={{ fontSize: '13px', color: C.text, marginBottom: '4px' }}><span style={{ color: C.goldDim, fontSize: '11px', fontFamily: C.mono }}>Primary: </span>{primaryDx}</div>
+              {secondaryDx && <div style={{ fontSize: '12px', color: C.textDim, marginTop: '4px' }}><span style={{ color: C.goldDim, fontSize: '11px', fontFamily: C.mono }}>Secondary: </span>{secondaryDx}</div>}
             </div>
+
+            {/* Record summaries */}
+            {recordSummaries && (
+              <div style={{ background: 'rgba(74,144,164,0.06)', border: `1px solid ${C.blueBorder}`, borderRadius: '2px', padding: '16px 18px', marginBottom: '24px' }}>
+                <div style={{ fontSize: '10px', letterSpacing: '2px', color: C.blue, fontFamily: C.mono, marginBottom: '12px' }}>RECORD SUMMARIES</div>
+                {recordSummaries.split('\n').map((line, i) => {
+                  const isHeader = line.startsWith('[') && line.endsWith(']');
+                  if (isHeader) return <div key={i} style={{ fontSize: '11px', color: C.gold, fontFamily: C.mono, letterSpacing: '1px', marginTop: '14px', marginBottom: '4px' }}>{line}</div>;
+                  if (!line.trim()) return <div key={i} style={{ height: '4px' }} />;
+                  return <div key={i} style={{ fontSize: '12px', color: C.textDim, lineHeight: 1.6 }}>{line}</div>;
+                })}
+              </div>
+            )}
+
+            {/* Encounter narrative */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-              <div style={{ fontSize: '11px', fontFamily: C.mono, letterSpacing: '2px', color: C.gold }}>ADMISSION ENCOUNTER NARRATIVE <span style={{ color: '#e07070' }}>*</span></div>
+              <div style={{ fontSize: '11px', fontFamily: C.mono, letterSpacing: '2px', color: C.gold }}>
+                ADMISSION ENCOUNTER NARRATIVE <span style={{ color: '#e07070' }}>*</span>
+              </div>
               <VoiceBtn onTranscript={t => setEncounter(p => p ? p + ' ' + t : t)} />
             </div>
-            <Textarea value={encounter} onChange={setEncounter} placeholder="Dictate or type the admission encounter narrative..." rows={12} />
-            <div style={{ background: 'rgba(0,0,0,0.2)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '14px 18px', marginTop: '20px' }}>
-              <div style={{ fontSize: '10px', letterSpacing: '2px', color: C.goldDim, fontFamily: C.mono, marginBottom: '10px' }}>READY TO GENERATE</div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', fontSize: '12px', color: C.textDim }}>
-                <div>Primary Dx: <span style={{ color: C.text }}>{primaryDx.substring(0,40)}{primaryDx.length>40?'...':''}</span></div>
-                <div>Records: <span style={{ color: docCount > 0 ? C.green : C.textDim }}>{docCount} of 6 loaded</span></div>
-                <div>Encounter: <span style={{ color: encounter.trim() ? C.green : '#e07070' }}>{encounter.trim() ? '✓ Ready' : '⚠ Required'}</span></div>
-                <div>Output: <span style={{ color: C.gold }}>Narrative + CTI</span></div>
-              </div>
-            </div>
+            <Textarea value={encounter} onChange={setEncounter} placeholder="Describe findings from the admission visit — functional assessment, systems review, goals of care discussion, FAST/PPS/KPS scores, family present..." rows={12} />
+
             <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'space-between' }}>
-              <Btn variant="secondary" onClick={() => setStage(2)}>← Back</Btn>
-              <Btn onClick={generate} disabled={!encounter.trim()} style={{ padding: '12px 32px' }}>Generate Documents →</Btn>
+              <Btn variant="secondary" onClick={() => setStage(2)}>← Records</Btn>
+              <Btn onClick={generateNarrative} disabled={!encounter.trim()} style={{ padding: '12px 32px' }}>Generate Admission Narrative →</Btn>
             </div>
           </div>
         )}
 
-        {stage === 4 && (
+        {stage === 4 && !loading && (
           <div>
-            {loading && (
-              <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: '2px', padding: '40px', textAlign: 'center', marginBottom: '28px' }}>
-                <div style={{ fontSize: '11px', letterSpacing: '3px', color: C.gold, fontFamily: C.mono, marginBottom: '20px' }}>{loadingMsg}</div>
-                <div style={{ display: 'flex', justifyContent: 'center', gap: '8px' }}>
-                  {[0,1,2].map(i => <div key={i} style={{ width: '8px', height: '8px', borderRadius: '50%', background: C.gold, animation: `bounce 1.2s ${i*0.2}s infinite ease-in-out` }} />)}
+            {/* Transcribed encounter */}
+            <div style={{ marginBottom: '28px' }}>
+              <div style={{ fontSize: '10px', letterSpacing: '2px', color: C.goldDim, fontFamily: C.mono, marginBottom: '10px' }}>TRANSCRIBED ENCOUNTER NARRATIVE</div>
+              <div style={{ background: 'rgba(0,0,0,0.2)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '16px 18px', maxHeight: '200px', overflowY: 'auto', fontSize: '12px', color: C.textDim, lineHeight: 1.7, fontFamily: C.serif, whiteSpace: 'pre-wrap' }}>
+                {encounter}
+              </div>
+            </div>
+
+            {/* Drafted narrative */}
+            {narrative && (
+              <div style={{ marginBottom: '28px' }}>
+                <DocOutput title="Admission Narrative — Draft" content={narrative} />
+              </div>
+            )}
+
+            {/* Edit request box */}
+            <div style={{ marginBottom: '24px' }}>
+              <div style={{ fontSize: '11px', color: C.gold, fontFamily: C.mono, letterSpacing: '2px', marginBottom: '8px' }}>REQUEST EDITS</div>
+              <div style={{ fontSize: '12px', color: C.goldDim, marginBottom: '8px', fontStyle: 'italic' }}>
+                Describe any changes needed — the AI will revise the narrative accordingly.
+              </div>
+              <Textarea value={editRequest} onChange={setEditRequest} placeholder="e.g., Change the weight to 118 lbs. Add that patient has a stage 2 sacral wound. Remove the mention of prior hospitalization in 2024..." rows={4} />
+              <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'flex-end' }}>
+                <Btn variant="secondary" onClick={applyEdits} disabled={!editRequest.trim()}>Apply Edits</Btn>
+              </div>
+            </div>
+
+            {/* Three action buttons */}
+            <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: '24px', display: 'flex', justifyContent: 'space-between', gap: '12px' }}>
+              <Btn variant="secondary" onClick={() => setStage(1)}>Edit Inputs</Btn>
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <Btn variant="secondary" onClick={reset}>New Admission</Btn>
+                <Btn onClick={generateCTI} style={{ padding: '12px 24px' }}>Create Certificate of Terminal Illness →</Btn>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {stage === 5 && !loading && (
+          <div>
+            {cti && <DocOutput title="Certificate of Terminal Illness" content={cti} />}
+
+            {/* Admission Narrative for reference */}
+            {narrative && (
+              <div style={{ marginTop: '28px' }}>
+                <div style={{ fontSize: '10px', letterSpacing: '2px', color: C.goldDim, fontFamily: C.mono, marginBottom: '12px' }}>ADMISSION NARRATIVE — FOR REFERENCE</div>
+                <div style={{ background: 'rgba(0,0,0,0.15)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '20px 24px', maxHeight: '400px', overflowY: 'auto', fontFamily: C.serif }}>
+                  {narrative.split('\n').map((line, i) => {
+                    const isHeader = /^[A-Z][A-Z\s\/\(\)\-,]{4,}$/.test(line.trim()) && line.trim().length > 3;
+                    if (isHeader) return <div key={i} style={{ color: C.gold, fontFamily: C.mono, fontSize: '11px', letterSpacing: '2px', marginTop: '18px', marginBottom: '5px', paddingBottom: '4px', borderBottom: `1px solid rgba(196,168,130,0.12)` }}>{line}</div>;
+                    if (!line.trim()) return <div key={i} style={{ height: '6px' }} />;
+                    return <div key={i} style={{ color: C.textDim, fontSize: '13px', lineHeight: 1.75 }}>{line}</div>;
+                  })}
                 </div>
               </div>
             )}
-            {narrative && <DocOutput title="Admission Narrative" content={narrative} />}
-            {cti && <DocOutput title="Certificate of Terminal Illness" content={cti} />}
-            {!loading && narrative && cti && (
-              <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '8px' }}>
-                <Btn variant="secondary" onClick={() => setStage(3)}>← Edit Inputs</Btn>
-                <Btn variant="secondary" onClick={reset}>New Admission</Btn>
-              </div>
-            )}
+
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '24px' }}>
+              <Btn variant="secondary" onClick={() => setStage(4)}>← Back to Narrative</Btn>
+              <Btn variant="secondary" onClick={reset}>New Admission</Btn>
+            </div>
           </div>
         )}
+
       </div>
     </div>
   );
 }
-// cache bust Tue Mar 31 07:43:28 PDT 2026

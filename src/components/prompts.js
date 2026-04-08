@@ -4,37 +4,67 @@ export function buildNarrativeSystem(primaryDx, secondaryDx, docs, encounter) {
     .map(([k, v]) => `=== ${k.toUpperCase()} ===\n${v}`)
     .join('\n\n');
 
-  return `You are a clinical documentation specialist for a hospice agency. Generate a structured Admission Narrative.
+  return `You are a hospice nurse generating an Admission Narrative. Your goal is to produce a detailed, structured clinical document that preserves the nurse's voice and clinical observations while organizing information clearly for the medical record.
 
-RULES:
-- Third-person clinical narrative. NEVER use "I."
-- Preserve ALL numbers, lab values, dates, scores EXACTLY as provided.
-- Never fabricate information not in the inputs.
-- Do NOT include hospice eligibility conclusions — that belongs in the CTI only.
-- No disclaimers or meta-commentary. Clean clinical text only.
-- Section headers in ALL CAPS exactly as listed below.
-- Only include sections for which input data exists.
+NON-NEGOTIABLE RULES:
+- Third-person throughout. Never "I" or "me."
+- Preserve ALL specific numbers, dates, lab values, measurements, and clinical observations EXACTLY as provided
+- Never fabricate information not present in the inputs
+- Do NOT include hospice eligibility conclusions — that belongs in the CTI only
+- No disclaimers or meta-commentary
+- Use the section headers below in ALL CAPS exactly as listed
+- Preserve the nurse's clinical voice — direct, observational, specific
+- Labs should be presented as simple labeled values, not reformatted into prose
+- Imaging impressions should be quoted directly with numbered findings where available
+- Recent hospitalizations should be presented as a dated chronological list
 
-SECTIONS (ALL CAPS, in order):
+STRUCTURE (follow exactly, use ALL CAPS headers):
+
 REFERRAL SOURCE AND REASON FOR ADMISSION
-DECLINE TRAJECTORY AND RECENT HOSPITALIZATIONS
-OBJECTIVE CLINICAL DATA
-PAST MEDICAL HISTORY AND COMORBIDITIES
-MEDICATIONS
-NURSING ASSESSMENT
-VITAL SIGNS AND FUNCTIONAL SCALES
-ADVANCE DIRECTIVES AND GOALS OF CARE
-PSYCHOSOCIAL AND SPIRITUAL
+Describe who made the referral, who was present at the intake meeting (patient, family members by name and relationship), what was discussed (recent decline, goals of care, POLST/advance directives, hospice services, consent forms, Patient Information Handbook), and who agreed to proceed with hospice care. Draw from the encounter narrative for this section.
 
-Primary terminal diagnosis (physician-determined): ${primaryDx}
-Secondary diagnoses: ${secondaryDx}
+FAST: [value]. PPS: [value]%. KPS: [value]%.
+
+DECLINE TRAJECTORY
+Chronological narrative of the patient's functional and clinical decline. Begin with where the patient was 60-90 days ago (living situation, functional baseline, mobility, ADL independence). Then follow the clinical story forward through each significant event, hospitalization, and functional loss to present status. Include specific dates, diagnoses, procedures, complications, and functional changes. Preserve specific clinical details from the encounter narrative. Include any recent infections, wounds, or complications even if brief.
+
+RECENT HOSPITALIZATIONS
+Present as a dated chronological list. Format each entry as:
+[Date or date range] — [reason/diagnosis] — [one-line outcome or disposition]
+Pull from uploaded records and encounter narrative. Include ER visits.
+
+OBJECTIVE CLINICAL DATA
+Present labs as simple labeled values with dates:
+[Lab name]: [value]
+Present imaging as direct quote of impression with numbered findings where available. Include date of study.
+
+PAST MEDICAL HISTORY
+Simple comma-separated list of all diagnoses. No elaboration or prose.
+
+NURSING ASSESSMENT
+Systems-based clinical assessment in third-person nurse voice. Cover: cognitive/neurological status (orientation, communication, safety awareness), pain assessment (patient report and family observations), respiratory (breath sounds, work of breathing, oxygen), cardiovascular (heart rhythm, edema, pulses), gastrointestinal/genitourinary (bowel sounds, continence, bladder), skin integrity. Be direct and specific — preserve exact clinical observations from the encounter narrative.
+
+VITAL SIGNS
+Present as simple labeled list:
+BP: [value]
+HR: [value]
+RR: [value]
+Temp: [value]
+SpO2: [value]
+
+ADVANCE DIRECTIVES AND GOALS OF CARE
+DNR/DNI status, POLST status, healthcare proxy name and relationship, family goals and care preferences.
+
+PRIMARY TERMINAL DIAGNOSIS: ${primaryDx}
+SECONDARY DIAGNOSES: ${secondaryDx}
 
 UPLOADED RECORDS:
 ${docText}
 
-ADMISSION ENCOUNTER:
+ADMISSION ENCOUNTER NARRATIVE:
 ${encounter}`;
 }
+
 
 export function buildCTISystem(primaryDx, secondaryDx, docs, encounter, narrative) {
   const docText = Object.entries(docs)

@@ -97,23 +97,22 @@ function DemoMode({ onBack, onBackHome }) {
   const [droppedDocs, setDroppedDocs] = useState([]);
   const [dragging, setDragging] = useState(null);
   const [dragOver, setDragOver] = useState(false);
+  const [recordSummaries, setRecordSummaries] = useState('');
   const [encounter, setEncounter] = useState('');
+  const [narrative, setNarrative] = useState('');
+  const [editRequest, setEditRequest] = useState('');
+  const [cti, setCti] = useState('');
   const [loading, setLoading] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState('');
-  const [narrative, setNarrative] = useState('');
-  const [cti, setCti] = useState('');
   const [error, setError] = useState('');
-  const [stage, setStage] = useState('select'); // select | build | output
+  const [stage, setStage] = useState('select'); // select | build | encounter | narrative | cti
 
   const patient = selectedPatient ? DEMO_PATIENTS[selectedPatient] : null;
 
   const selectPatient = (id) => {
     setSelectedPatient(id);
-    setDroppedDocs([]);
-    setEncounter('');
-    setNarrative('');
-    setCti('');
-    setError('');
+    setDroppedDocs([]); setRecordSummaries(''); setEncounter('');
+    setNarrative(''); setEditRequest(''); setCti(''); setError('');
     setStage('build');
   };
 
@@ -121,11 +120,9 @@ function DemoMode({ onBack, onBackHome }) {
   const handleDragEnd = () => setDragging(null);
 
   const handleDrop = (e) => {
-    e.preventDefault();
-    setDragOver(false);
+    e.preventDefault(); setDragOver(false);
     if (dragging && !droppedDocs.find(d => d.id === dragging.id)) {
       setDroppedDocs(prev => [...prev, dragging]);
-      if (!encounter && patient) setEncounter(patient.encounter);
     }
     setDragging(null);
   };
@@ -133,28 +130,52 @@ function DemoMode({ onBack, onBackHome }) {
   const removeDoc = (docId) => setDroppedDocs(prev => prev.filter(d => d.id !== docId));
 
   const loadAll = () => {
-    if (patient) {
-      setDroppedDocs([...patient.documents]);
-      setEncounter(patient.encounter);
-    }
+    if (patient) setDroppedDocs([...patient.documents]);
   };
 
-  const generate = async () => {
-    if (!patient) return;
-    if (droppedDocs.length === 0) { setError('Add at least one document to the workspace before generating.'); return; }
-    if (!encounter.trim()) { setError('Encounter narrative is required.'); return; }
-
-    // Build docs object from dropped documents
-    const docs = { dischargeSummary: '', hp: '', palliativeCare: '', specialistNote: '', woundCare: '', labs: '' };
+  // Build docs object from dropped documents
+  const buildDocs = () => {
+    const docs = { dischargeSummary: '', hp: '', palliativeCare: '', specialistNote: '', woundCare: '', labs: '', imaging: '' };
     droppedDocs.forEach(doc => {
       const field = docTypeToField(doc.type);
       docs[field] = docs[field] ? docs[field] + '\n\n' + doc.content : doc.content;
     });
+    return docs;
+  };
 
-    setError(''); setLoading(true); setStage('output'); setNarrative(''); setCti('');
+  // Stage build -> encounter: summarize records
+  const summarizeAndContinue = async () => {
+    if (!patient || droppedDocs.length === 0) { setStage('encounter'); return; }
+    setLoading(true); setLoadingMsg('Summarizing chart documents...');
     try {
-      setLoadingMsg('Generating Admission Narrative… (step 1 of 2)');
-      const r1 = await fetch('/api/generate', {
+      const docText = droppedDocs.map(d => `=== ${d.type.toUpperCase()} (${d.date}) ===\n${d.content}`).join('\n\n');
+      const r = await fetch('/api/generate', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514', max_tokens: 2000,
+          system: buildRecordSummarySystem(),
+          messages: [{ role: 'user', content: `Summarize these medical records:\n\n${docText}` }]
+        })
+      });
+      const d = await r.json();
+      const text = (d.content?.[0]?.text || '').replace(/\*\*/g, '').replace(/\*/g, '');
+      setRecordSummaries(text);
+      setEncounter(patient.encounter);
+      setStage('encounter');
+    } catch (e) {
+      setRecordSummaries('');
+      setEncounter(patient?.encounter || '');
+      setStage('encounter');
+    } finally { setLoading(false); setLoadingMsg(''); }
+  };
+
+  // Generate narrative
+  const generateNarrative = async () => {
+    if (!patient) return;
+    setError(''); setLoading(true); setLoadingMsg('Generating Admission Narrative...');
+    const docs = buildDocs();
+    try {
+      const r = await fetch('/api/generate', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: 'claude-sonnet-4-20250514', max_tokens: 4000,
@@ -162,34 +183,66 @@ function DemoMode({ onBack, onBackHome }) {
           messages: [{ role: 'user', content: 'Generate the Admission Narrative now.' }]
         })
       });
-      const d1 = await r1.json();
-      const narr = (d1.content?.[0]?.text || '').replace(/\*\*/g, '').replace(/\*/g, '');
-      if (!narr) throw new Error('Empty narrative response');
-      setNarrative(narr);
+      const d = await r.json();
+      const text = (d.content?.[0]?.text || '').replace(/\*\*/g, '').replace(/\*/g, '');
+      if (!text) throw new Error('Empty');
+      setNarrative(text); setStage('narrative');
+    } catch (e) { setError('Generation failed. Please try again.'); }
+    finally { setLoading(false); setLoadingMsg(''); }
+  };
 
-      setLoadingMsg('Generating Certificate of Terminal Illness… (step 2 of 2)');
-      const r2 = await fetch('/api/generate', {
+  // Apply edits
+  const applyEdits = async () => {
+    if (!editRequest.trim()) return;
+    setLoading(true); setLoadingMsg('Applying edits...');
+    try {
+      const r = await fetch('/api/generate', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: 'claude-sonnet-4-20250514', max_tokens: 4000,
-          system: buildCTISystem(patient.diagnosis, patient.secondaryDx, docs, encounter, narr),
+          system: buildNarrativeEditSystem(narrative, editRequest),
+          messages: [{ role: 'user', content: 'Apply the requested edits now.' }]
+        })
+      });
+      const d = await r.json();
+      const text = (d.content?.[0]?.text || '').replace(/\*\*/g, '').replace(/\*/g, '');
+      if (!text) throw new Error('Empty');
+      setNarrative(text); setEditRequest('');
+    } catch (e) { setError('Edit failed. Please try again.'); }
+    finally { setLoading(false); setLoadingMsg(''); }
+  };
+
+  // Generate CTI
+  const generateCTI = async () => {
+    if (!patient) return;
+    setLoading(true); setLoadingMsg('Generating Certificate of Terminal Illness...'); setCti(''); setStage('cti');
+    const docs = buildDocs();
+    try {
+      const r = await fetch('/api/generate', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514', max_tokens: 4000,
+          system: buildCTISystem(patient.diagnosis, patient.secondaryDx, docs, encounter, narrative),
           messages: [{ role: 'user', content: 'Generate the Certificate of Terminal Illness now.' }]
         })
       });
-      const d2 = await r2.json();
-      setCti((d2.content?.[0]?.text || '').replace(/\*\*/g, '').replace(/\*/g, ''));
-    } catch (e) {
-      setError('Generation failed. Please try again.');
-      setStage('build');
-    } finally {
-      setLoading(false); setLoadingMsg('');
-    }
+      const d = await r.json();
+      const text = (d.content?.[0]?.text || '').replace(/\*\*/g, '').replace(/\*/g, '');
+      if (!text) throw new Error('Empty');
+      setCti(text);
+    } catch (e) { setError('CTI generation failed. Please try again.'); setStage('narrative'); }
+    finally { setLoading(false); setLoadingMsg(''); }
   };
 
   const reset = () => {
     setStage('select'); setSelectedPatient(null); setDroppedDocs([]);
-    setEncounter(''); setNarrative(''); setCti(''); setError('');
+    setRecordSummaries(''); setEncounter(''); setNarrative('');
+    setEditRequest(''); setCti(''); setError('');
   };
+
+  const stageLabels = { select: 1, build: 2, encounter: 3, narrative: 4, cti: 5 };
+  const stageTitles = ['Patient', 'Documents', 'Encounter', 'Narrative', 'CTI'];
+  const currentStageNum = stageLabels[stage] || 1;
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: C.bg, fontFamily: C.serif, color: C.text }}>
@@ -197,32 +250,52 @@ function DemoMode({ onBack, onBackHome }) {
         textarea::placeholder{color:rgba(196,168,130,0.3)}textarea:focus{outline:none}
         ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:rgba(196,168,130,0.2);border-radius:3px}
         @keyframes bounce{0%,80%,100%{transform:scale(0.6);opacity:0.4}40%{transform:scale(1);opacity:1}}
-        .doc-card{transition:all 0.15s;cursor:grab}
-        .doc-card:hover{border-color:rgba(196,168,130,0.4)!important;background:rgba(196,168,130,0.08)!important}
-        .doc-card:active{cursor:grabbing}
+        .doc-card{transition:all 0.15s;cursor:grab}.doc-card:hover{border-color:rgba(196,168,130,0.4)!important;background:rgba(196,168,130,0.08)!important}
       `}</style>
       <div style={{ maxWidth: '960px', margin: '0 auto', padding: '0 28px 80px' }}>
 
-        {/* Header */}
         <div style={{ padding: '28px 0 24px', borderBottom: `1px solid ${C.border}`, marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
           <div>
-            <button onClick={onBack} style={{ background: 'none', border: 'none', color: C.goldDim, cursor: 'pointer', fontFamily: C.mono, fontSize: '10px', letterSpacing: '2px', padding: 0, marginBottom: '12px', display: 'block' }}>
-              ADMISSION ENGINE
-            </button>
+            <button onClick={onBack} style={{ background: 'none', border: 'none', color: C.goldDim, cursor: 'pointer', fontFamily: C.mono, fontSize: '10px', letterSpacing: '2px', padding: 0, marginBottom: '12px', display: 'block' }}>ADMISSION ENGINE</button>
             <div style={{ fontSize: '10px', letterSpacing: '3px', color: C.goldDim, fontFamily: C.mono, marginBottom: '4px' }}>DEMO MODE</div>
             <div style={{ fontSize: '20px', color: C.text }}>
-              {stage === 'select' ? 'Select Demo Patient' : stage === 'build' ? (patient?.name + ' — ' + patient?.diagnosis.substring(0, 40) + '...') : 'Generated Documents'}
+              {stage === 'select' && 'Select Demo Patient'}
+              {stage === 'build' && (patient?.name + ' — Documents')}
+              {stage === 'encounter' && 'Admission Encounter'}
+              {stage === 'narrative' && 'Admission Narrative'}
+              {stage === 'cti' && 'Certificate of Terminal Illness'}
             </div>
           </div>
           {stage !== 'select' && <Btn variant="ghost" onClick={reset}>← Patients</Btn>}
         </div>
 
-        {/* Patient Selection */}
+        {stage !== 'select' && stage !== 'cti' && (
+          <div style={{ display: 'flex', gap: '6px', marginBottom: '32px' }}>
+            {stageTitles.map((label, i) => (
+              <div key={i} style={{ flex: 1 }}>
+                <div style={{ height: '2px', background: i + 1 <= currentStageNum ? C.gold : C.border, marginBottom: '5px' }} />
+                <div style={{ fontSize: '9px', letterSpacing: '1.5px', fontFamily: C.mono, color: i + 1 === currentStageNum ? C.gold : i + 1 < currentStageNum ? C.goldDim : 'rgba(196,168,130,0.25)' }}>
+                  {i + 1}. {label.toUpperCase()}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {error && <div style={{ background: 'rgba(224,112,112,0.08)', border: '1px solid rgba(224,112,112,0.3)', borderRadius: '2px', padding: '10px 16px', color: '#e07070', fontSize: '12px', fontFamily: C.mono, marginBottom: '20px' }}>{error}</div>}
+
+        {loading && (
+          <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: '2px', padding: '40px', textAlign: 'center' }}>
+            <div style={{ fontSize: '11px', letterSpacing: '3px', color: C.gold, fontFamily: C.mono, marginBottom: '20px' }}>{loadingMsg}</div>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '8px' }}>
+              {[0,1,2].map(i => <div key={i} style={{ width: '8px', height: '8px', borderRadius: '50%', background: C.gold, animation: `bounce 1.2s ${i*0.2}s infinite ease-in-out` }} />)}
+            </div>
+          </div>
+        )}
+
         {stage === 'select' && (
           <div>
-            <div style={{ fontSize: '13px', color: C.goldDim, marginBottom: '24px', fontStyle: 'italic' }}>
-              Select a patient to load their chart documents. Drag documents into the workspace, then generate.
-            </div>
+            <div style={{ fontSize: '13px', color: C.goldDim, marginBottom: '24px', fontStyle: 'italic' }}>Select a patient to load their chart documents.</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {PATIENT_LIST.map(id => {
                 const p = DEMO_PATIENTS[id];
@@ -231,9 +304,7 @@ function DemoMode({ onBack, onBackHome }) {
                     style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '20px 24px', background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: '2px', cursor: 'pointer', transition: 'all 0.15s' }}
                     onMouseEnter={e => { e.currentTarget.style.background = C.bgCardHover; e.currentTarget.style.borderColor = C.borderHover; }}
                     onMouseLeave={e => { e.currentTarget.style.background = C.bgCard; e.currentTarget.style.borderColor = C.border; }}>
-                    <div style={{ width: '48px', height: '48px', borderRadius: '2px', background: `${p.color}18`, border: `1px solid ${p.color}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', color: p.color, fontFamily: C.mono, flexShrink: 0 }}>
-                      {p.name}
-                    </div>
+                    <div style={{ width: '48px', height: '48px', borderRadius: '2px', background: `${p.color}18`, border: `1px solid ${p.color}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', color: p.color, fontFamily: C.mono, flexShrink: 0 }}>{p.name}</div>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: '15px', color: C.text, marginBottom: '4px' }}>{p.diagnosis}</div>
                       <div style={{ fontSize: '12px', color: C.goldDim, fontFamily: C.mono }}>{p.tagline}</div>
@@ -247,40 +318,23 @@ function DemoMode({ onBack, onBackHome }) {
           </div>
         )}
 
-        {/* Build Stage */}
-        {stage === 'build' && patient && (
+        {stage === 'build' && !loading && patient && (
           <div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '28px' }}>
-
-              {/* Left: Available documents */}
               <div>
-                <div style={{ fontSize: '10px', letterSpacing: '2px', color: C.goldDim, fontFamily: C.mono, marginBottom: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ fontSize: '10px', letterSpacing: '2px', color: C.goldDim, fontFamily: C.mono, marginBottom: '12px', display: 'flex', justifyContent: 'space-between' }}>
                   <span>CHART DOCUMENTS</span>
-                  <button onClick={loadAll} style={{ background: 'none', border: `1px solid ${C.border}`, color: C.goldDim, cursor: 'pointer', fontFamily: C.mono, fontSize: '9px', letterSpacing: '1px', padding: '3px 10px', borderRadius: '2px' }}>
-                    LOAD ALL
-                  </button>
+                  <button onClick={loadAll} style={{ background: 'none', border: `1px solid ${C.border}`, color: C.goldDim, cursor: 'pointer', fontFamily: C.mono, fontSize: '9px', letterSpacing: '1px', padding: '3px 10px', borderRadius: '2px' }}>LOAD ALL</button>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   {patient.documents.map(doc => {
                     const isDropped = droppedDocs.find(d => d.id === doc.id);
                     return (
-                      <div key={doc.id}
-                        className="doc-card"
-                        draggable={!isDropped}
-                        onDragStart={() => !isDropped && handleDragStart(doc)}
-                        onDragEnd={handleDragEnd}
-                        style={{
-                          padding: '10px 14px', background: isDropped ? 'rgba(76,175,130,0.06)' : C.bgCard,
-                          border: `1px solid ${isDropped ? C.greenBorder : C.border}`,
-                          borderRadius: '2px', opacity: isDropped ? 0.5 : 1,
-                          cursor: isDropped ? 'default' : 'grab',
-                          display: 'flex', alignItems: 'center', gap: '10px',
-                        }}>
-                        <span style={{ fontSize: '14px', flexShrink: 0 }}>
-                          {isDropped ? '✓' : '⠿'}
-                        </span>
+                      <div key={doc.id} className="doc-card" draggable={!isDropped} onDragStart={() => !isDropped && handleDragStart(doc)} onDragEnd={handleDragEnd}
+                        style={{ padding: '10px 14px', background: isDropped ? 'rgba(76,175,130,0.06)' : C.bgCard, border: `1px solid ${isDropped ? C.greenBorder : C.border}`, borderRadius: '2px', opacity: isDropped ? 0.5 : 1, cursor: isDropped ? 'default' : 'grab', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <span style={{ fontSize: '14px', flexShrink: 0 }}>{isDropped ? '✓' : '⠿'}</span>
                         <div style={{ flex: 1 }}>
-                          <div style={{ fontSize: '12px', color: isDropped ? C.green : C.text, fontFamily: C.mono, letterSpacing: '0.5px' }}>{doc.type}</div>
+                          <div style={{ fontSize: '12px', color: isDropped ? C.green : C.text, fontFamily: C.mono }}>{doc.type}</div>
                           <div style={{ fontSize: '10px', color: C.goldDim }}>{doc.date}</div>
                         </div>
                         {!isDropped && <span style={{ fontSize: '10px', color: C.goldDim, fontFamily: C.mono }}>drag →</span>}
@@ -289,26 +343,15 @@ function DemoMode({ onBack, onBackHome }) {
                   })}
                 </div>
               </div>
-
-              {/* Right: Drop zone */}
               <div>
-                <div style={{ fontSize: '10px', letterSpacing: '2px', color: C.goldDim, fontFamily: C.mono, marginBottom: '12px' }}>
-                  WORKSPACE ({droppedDocs.length} documents)
-                </div>
-                <div
-                  onDragOver={e => { e.preventDefault(); setDragOver(true); }}
-                  onDragLeave={() => setDragOver(false)}
-                  onDrop={handleDrop}
-                  style={{
-                    minHeight: '240px', border: `2px dashed ${dragOver ? C.gold : C.border}`,
-                    borderRadius: '2px', padding: '16px', transition: 'all 0.15s',
-                    background: dragOver ? 'rgba(196,168,130,0.06)' : 'rgba(0,0,0,0.1)',
-                  }}>
+                <div style={{ fontSize: '10px', letterSpacing: '2px', color: C.goldDim, fontFamily: C.mono, marginBottom: '12px' }}>WORKSPACE ({droppedDocs.length} documents)</div>
+                <div onDragOver={e => { e.preventDefault(); setDragOver(true); }} onDragLeave={() => setDragOver(false)} onDrop={handleDrop}
+                  style={{ minHeight: '240px', border: `2px dashed ${dragOver ? C.gold : C.border}`, borderRadius: '2px', padding: '16px', transition: 'all 0.15s', background: dragOver ? 'rgba(196,168,130,0.06)' : 'rgba(0,0,0,0.1)' }}>
                   {droppedDocs.length === 0 ? (
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '180px', color: C.goldDim, fontFamily: C.mono, fontSize: '11px', letterSpacing: '1px', textAlign: 'center', gap: '8px' }}>
                       <div style={{ fontSize: '24px', opacity: 0.4 }}>⊕</div>
                       <div>DRAG DOCUMENTS HERE</div>
-                      <div style={{ fontSize: '10px', opacity: 0.6 }}>or click LOAD ALL to add all documents</div>
+                      <div style={{ fontSize: '10px', opacity: 0.6 }}>or click LOAD ALL</div>
                     </div>
                   ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -327,59 +370,91 @@ function DemoMode({ onBack, onBackHome }) {
                 </div>
               </div>
             </div>
-
-            {/* Encounter narrative */}
-            <div style={{ marginBottom: '24px' }}>
-              <div style={{ fontSize: '10px', letterSpacing: '2px', color: C.gold, fontFamily: C.mono, marginBottom: '8px' }}>
-                ADMISSION ENCOUNTER NARRATIVE <span style={{ color: '#e07070' }}>*</span>
-              </div>
-              <div style={{ position: 'relative' }}>
-                <Textarea value={encounter} onChange={setEncounter} placeholder="Dictate or type the admission encounter narrative..." rows={8} />
-                <div style={{ position: 'absolute', right: '10px', bottom: '10px' }}>
-                  <VoiceBtn onTranscript={t => setEncounter(p => p ? p + ' ' + t : t)} />
-                </div>
-              </div>
-            </div>
-
-            {error && (
-              <div style={{ background: 'rgba(224,112,112,0.08)', border: '1px solid rgba(224,112,112,0.3)', borderRadius: '2px', padding: '10px 16px', color: '#e07070', fontSize: '12px', fontFamily: C.mono, marginBottom: '20px' }}>
-                {error}
-              </div>
-            )}
-
-            {/* Generate */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div style={{ fontSize: '12px', color: C.textDim, fontFamily: C.mono }}>
-                {droppedDocs.length} document{droppedDocs.length !== 1 ? 's' : ''} in workspace · {encounter.trim() ? '✓ Encounter ready' : '⚠ Encounter required'}
-              </div>
-              <Btn onClick={generate} disabled={droppedDocs.length === 0 || !encounter.trim()} style={{ padding: '12px 32px' }}>
-                Generate Documents →
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Btn onClick={summarizeAndContinue} disabled={droppedDocs.length === 0} style={{ padding: '12px 32px' }}>
+                {droppedDocs.length > 0 ? 'Summarize & Continue →' : 'Add Documents First'}
               </Btn>
             </div>
           </div>
         )}
 
-        {/* Loading */}
-        {loading && (
-          <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: '2px', padding: '40px', textAlign: 'center' }}>
-            <div style={{ fontSize: '11px', letterSpacing: '3px', color: C.gold, fontFamily: C.mono, marginBottom: '20px' }}>{loadingMsg}</div>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '8px' }}>
-              {[0,1,2].map(i => <div key={i} style={{ width: '8px', height: '8px', borderRadius: '50%', background: C.gold, animation: `bounce 1.2s ${i*0.2}s infinite ease-in-out` }} />)}
+        {stage === 'encounter' && !loading && (
+          <div>
+            <div style={{ background: 'rgba(196,168,130,0.04)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '14px 18px', marginBottom: '24px' }}>
+              <div style={{ fontSize: '10px', letterSpacing: '2px', color: C.gold, fontFamily: C.mono, marginBottom: '10px' }}>DIAGNOSES</div>
+              <div style={{ fontSize: '13px', color: C.text, marginBottom: '4px' }}><span style={{ color: C.goldDim, fontSize: '11px', fontFamily: C.mono }}>Primary: </span>{patient?.diagnosis}</div>
+              {patient?.secondaryDx && <div style={{ fontSize: '12px', color: C.textDim, marginTop: '4px' }}><span style={{ color: C.goldDim, fontSize: '11px', fontFamily: C.mono }}>Secondary: </span>{patient?.secondaryDx}</div>}
+            </div>
+
+            {recordSummaries && (
+              <div style={{ background: 'rgba(74,144,164,0.06)', border: `1px solid ${C.blueBorder}`, borderRadius: '2px', padding: '16px 18px', marginBottom: '24px' }}>
+                <div style={{ fontSize: '10px', letterSpacing: '2px', color: C.blue, fontFamily: C.mono, marginBottom: '12px' }}>RECORD SUMMARIES</div>
+                {recordSummaries.split('\n').map((line, i) => {
+                  const isHeader = line.startsWith('[') && line.endsWith(']');
+                  if (isHeader) return <div key={i} style={{ fontSize: '11px', color: C.gold, fontFamily: C.mono, letterSpacing: '1px', marginTop: '14px', marginBottom: '4px' }}>{line}</div>;
+                  if (!line.trim()) return <div key={i} style={{ height: '4px' }} />;
+                  return <div key={i} style={{ fontSize: '12px', color: C.textDim, lineHeight: 1.6 }}>{line}</div>;
+                })}
+              </div>
+            )}
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+              <div style={{ fontSize: '11px', fontFamily: C.mono, letterSpacing: '2px', color: C.gold }}>ADMISSION ENCOUNTER NARRATIVE</div>
+              <VoiceBtn onTranscript={t => setEncounter(p => p ? p + ' ' + t : t)} />
+            </div>
+            <Textarea value={encounter} onChange={setEncounter} placeholder="Describe findings from the admission visit..." rows={12} />
+            <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'space-between' }}>
+              <Btn variant="secondary" onClick={() => setStage('build')}>← Documents</Btn>
+              <Btn onClick={generateNarrative} disabled={!encounter.trim()} style={{ padding: '12px 32px' }}>Generate Admission Narrative →</Btn>
             </div>
           </div>
         )}
 
-        {/* Output */}
-        {stage === 'output' && !loading && (
+        {stage === 'narrative' && !loading && (
           <div>
-            {narrative && <DocOutput title="Admission Narrative" content={narrative} />}
-            {cti && <DocOutput title="Certificate of Terminal Illness" content={cti} />}
-            {narrative && cti && (
-              <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '8px' }}>
-                <Btn variant="secondary" onClick={() => { setStage('build'); setNarrative(''); setCti(''); }}>← Edit</Btn>
+            <div style={{ marginBottom: '28px' }}>
+              <div style={{ fontSize: '10px', letterSpacing: '2px', color: C.goldDim, fontFamily: C.mono, marginBottom: '10px' }}>TRANSCRIBED ENCOUNTER NARRATIVE</div>
+              <div style={{ background: 'rgba(0,0,0,0.2)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '16px 18px', maxHeight: '200px', overflowY: 'auto', fontSize: '12px', color: C.textDim, lineHeight: 1.7, fontFamily: C.serif, whiteSpace: 'pre-wrap' }}>{encounter}</div>
+            </div>
+            {narrative && <div style={{ marginBottom: '28px' }}><DocOutput title="Admission Narrative — Draft" content={narrative} /></div>}
+            <div style={{ marginBottom: '24px' }}>
+              <div style={{ fontSize: '11px', color: C.gold, fontFamily: C.mono, letterSpacing: '2px', marginBottom: '8px' }}>REQUEST EDITS</div>
+              <div style={{ fontSize: '12px', color: C.goldDim, marginBottom: '8px', fontStyle: 'italic' }}>Describe any changes needed — the AI will revise the narrative accordingly.</div>
+              <Textarea value={editRequest} onChange={setEditRequest} placeholder="e.g., Change the weight to 118 lbs. Add that patient has a stage 2 sacral wound..." rows={4} />
+              <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'flex-end' }}>
+                <Btn variant="secondary" onClick={applyEdits} disabled={!editRequest.trim()}>Apply Edits</Btn>
+              </div>
+            </div>
+            <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: '24px', display: 'flex', justifyContent: 'space-between', gap: '12px' }}>
+              <Btn variant="secondary" onClick={() => setStage('encounter')}>Edit Inputs</Btn>
+              <div style={{ display: 'flex', gap: '12px' }}>
                 <Btn variant="secondary" onClick={reset}>New Patient</Btn>
+                <Btn onClick={generateCTI} style={{ padding: '12px 24px' }}>Create Certificate of Terminal Illness →</Btn>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {stage === 'cti' && !loading && (
+          <div>
+            {cti && <DocOutput title="Certificate of Terminal Illness" content={cti} />}
+            {narrative && (
+              <div style={{ marginTop: '28px' }}>
+                <div style={{ fontSize: '10px', letterSpacing: '2px', color: C.goldDim, fontFamily: C.mono, marginBottom: '12px' }}>ADMISSION NARRATIVE — FOR REFERENCE</div>
+                <div style={{ background: 'rgba(0,0,0,0.15)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '20px 24px', maxHeight: '400px', overflowY: 'auto', fontFamily: C.serif }}>
+                  {narrative.split('\n').map((line, i) => {
+                    const isHeader = /^[A-Z][A-Z\s\/\(\)\-,]{4,}$/.test(line.trim()) && line.trim().length > 3;
+                    if (isHeader) return <div key={i} style={{ color: C.gold, fontFamily: C.mono, fontSize: '11px', letterSpacing: '2px', marginTop: '18px', marginBottom: '5px', paddingBottom: '4px', borderBottom: `1px solid rgba(196,168,130,0.12)` }}>{line}</div>;
+                    if (!line.trim()) return <div key={i} style={{ height: '6px' }} />;
+                    return <div key={i} style={{ color: C.textDim, fontSize: '13px', lineHeight: 1.75 }}>{line}</div>;
+                  })}
+                </div>
               </div>
             )}
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '24px' }}>
+              <Btn variant="secondary" onClick={() => setStage('narrative')}>← Back to Narrative</Btn>
+              <Btn variant="secondary" onClick={reset}>New Patient</Btn>
+            </div>
           </div>
         )}
 

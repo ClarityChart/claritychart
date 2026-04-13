@@ -21,7 +21,7 @@ function ModCard({ mod, onClick }) {
       onMouseLeave={() => setHov(false)}
       style={{
         display: 'flex', alignItems: 'center', gap: '12px', padding: '16px 18px', width: '100%',
-        background: hov && active ? C.bgCardHover : 'rgba(255,255,255,0.02)',
+        background: hov && active ? C.bgCardHover : C.bgCard,
         border: `1px solid ${hov && active ? C.borderHover : C.border}`,
         borderRadius: '2px', cursor: active ? 'pointer' : 'default',
         textAlign: 'left', transition: 'all 0.15s',
@@ -29,9 +29,9 @@ function ModCard({ mod, onClick }) {
       }}
     >
       <div style={{ flex: 1 }}>
-        <div style={{ fontSize: 'clamp(13px, 1.4vw, 15px)', fontWeight: active ? '600' : 'normal', color: active ? C.text : C.textDim, marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ fontSize: 'clamp(14px, 1.5vw, 16px)', fontWeight: active ? '600' : 'normal', color: active ? C.text : C.textDim, marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '8px' }}>
           {mod.label}
-          <span style={{ fontSize: '9px', color: sc.c, background: sc.bg, border: `1px solid ${sc.b}`, borderRadius: '10px', padding: '1px 7px', fontFamily: C.mono, letterSpacing: '1px' }}>
+          <span style={{ fontSize: '11px', color: sc.c, background: sc.bg, border: `1px solid ${sc.b}`, borderRadius: '10px', padding: '1px 7px', fontFamily: C.mono, letterSpacing: '1px' }}>
             {sc.l}
           </span>
         </div>
@@ -39,11 +39,11 @@ function ModCard({ mod, onClick }) {
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', alignItems: 'flex-end' }}>
         {mod.outputs.map(o => (
-          <span key={o} style={{ fontSize: '9px', color: 'rgba(196,168,130,0.35)', fontFamily: C.mono, whiteSpace: 'nowrap' }}>→ {o}</span>
+          <span key={o} style={{ fontSize: '12px', color: '#b8a878', fontFamily: C.mono, whiteSpace: 'nowrap' }}>→ {o}</span>
         ))}
       </div>
       {active && (
-        <span style={{ color: hov ? C.gold : C.border, fontSize: '16px', marginLeft: '4px', transition: 'all 0.15s', transform: hov ? 'translateX(2px)' : 'none', display: 'inline-block' }}>›</span>
+        <span style={{ color: hov ? C.gold : '#a09070', fontSize: '18px', marginLeft: '4px', transition: 'all 0.15s', transform: hov ? 'translateX(2px)' : 'none', display: 'inline-block' }}>›</span>
       )}
     </button>
   );
@@ -104,7 +104,7 @@ export default function ClarityChart() {
             </div>
             <div style={{ padding: '10px 12px' }}>
               <ModCard mod={{ label: 'Admission Engine', desc: 'Narrative + CTI from uploaded records', status: 'complete', outputs: ['Admission Narrative', 'CTI'] }} onClick={() => setView('admission-engine')} />
-              <div style={{ fontSize: '10px', color: 'rgba(196,168,130,0.25)', fontFamily: C.mono, letterSpacing: '1px', padding: '6px 14px 4px' }}>RECORDS → ENCOUNTER → NARRATIVE + CTI</div>
+              <div style={{ fontSize: '12px', color: '#a09070', fontFamily: C.mono, letterSpacing: '1px', padding: '6px 14px 4px' }}>RECORDS → ENCOUNTER → NARRATIVE + CTI</div>
             </div>
           </div>
 
@@ -114,7 +114,7 @@ export default function ClarityChart() {
               <div style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: C.blueDim, border: `1px solid ${C.blueBorder}`, borderRadius: '2px', fontSize: '14px' }}>◎</div>
               <div>
                 <div style={{ fontSize: 'clamp(14px, 1.5vw, 16px)', color: C.text }}>Ongoing Care Pathway</div>
-                <div style={{ fontSize: '10px', color: 'rgba(74,144,164,0.5)', fontFamily: C.mono }}>Visit notes · Recertification</div>
+                <div style={{ fontSize: '12px', color: '#5aaac0', fontFamily: C.mono }}>Visit notes · Recertification</div>
               </div>
             </div>
             <div style={{ padding: '10px 12px' }}>
@@ -123,7 +123,7 @@ export default function ClarityChart() {
                 { label: 'Recertification Suite', desc: 'RN → MD sequential pipeline', status: 'complete', outputs: ['RN Recert', 'Physician Recert'] },
                 
               ].map(mod => <ModCard key={mod.label} mod={mod} onClick={mod.status === 'complete' ? () => setView(mod.label === 'RN Visit Note' ? 'rn-visit-note' : mod.label === 'Recertification Suite' ? 'recert-suite' : null) : null} />)}
-              <div style={{ fontSize: '10px', color: 'rgba(196,168,130,0.25)', fontFamily: C.mono, letterSpacing: '1px', padding: '6px 14px 4px' }}>VISIT NOTES → RN RECERT → MD RECERT</div>
+              <div style={{ fontSize: '12px', color: '#a09070', fontFamily: C.mono, letterSpacing: '1px', padding: '6px 14px 4px' }}>VISIT NOTES → RN RECERT → MD RECERT</div>
             </div>
           </div>
         </div>

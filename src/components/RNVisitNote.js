@@ -460,28 +460,15 @@ ${form.narrative}`;
           </div>
         )}
 
-        {step === 3 && !loading && (
-          <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: '2px', padding: '32px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
-              <div>
-                <div style={{ fontSize: '22px', color: C.text, marginBottom: '8px' }}>Visit Note Draft</div>
-                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                  {sc && <span style={{ fontSize: '14px', color: C.gold, background: 'rgba(196,168,130,0.1)', border: `1px solid ${C.border}`, borderRadius: '10px', padding: '2px 10px', fontFamily: C.mono }}>{sc.name}</span>}
-                  <span style={{ fontSize: '14px', color: C.gold, background: 'rgba(196,168,130,0.1)', border: `1px solid ${C.border}`, borderRadius: '10px', padding: '2px 10px', fontFamily: C.mono }}>{form.initials}</span>
-                  <span style={{ fontSize: '14px', color: C.gold, background: 'rgba(196,168,130,0.1)', border: `1px solid ${C.border}`, borderRadius: '10px', padding: '2px 10px', fontFamily: C.mono }}>{new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-                </div>
-              </div>
-              <button onClick={() => { navigator.clipboard.writeText(noteOutput); setCopied(true); setTimeout(() => setCopied(false), 2000); }} style={{ padding: '8px 18px', borderRadius: '2px', border: `1px solid ${C.border}`, background: 'transparent', color: C.gold, cursor: 'pointer', fontFamily: C.mono, fontSize: '14px', letterSpacing: '1px' }}>
-                {copied ? 'Copied' : 'Copy'}
-              </button>
+        {step === 3 && !loading && output && (
+          <div>
+            <div style={{ display: 'flex', gap: '12px', marginBottom: '24px' }}>
+              <BackBtn onClick={() => setStep(2)} label="Edit Clinical Details" />
+              <BackBtn onClick={() => setStep(1)} label="Change Scenario" />
             </div>
-
-            <div style={{ background: 'rgba(0,0,0,0.2)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '24px 28px', fontSize: '13px', lineHeight: 1.85, color: '#d8c8b4', whiteSpace: 'pre-wrap', fontFamily: C.serif, minHeight: '280px' }}>
-              {noteOutput}
-            </div>
-
-            <div style={{ textAlign: 'center', marginTop: '28px', paddingTop: '24px', borderTop: `1px solid ${C.border}` }}>
-              <button onClick={resetAll} style={{ padding: '10px 22px', borderRadius: '2px', border: `1px solid ${C.border}`, background: 'transparent', color: C.gold, cursor: 'pointer', fontFamily: C.mono, fontSize: '13px', letterSpacing: '2px' }}>Start New Note</button>
+            <EditableDraft title="RN Visit Note" value={output} onChange={setOutput} badge="DRAFT" />
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '8px' }}>
+              <Btn variant="secondary" onClick={() => { setStep(1); setOutput(''); }}>New Note</Btn>
             </div>
           </div>
         )}

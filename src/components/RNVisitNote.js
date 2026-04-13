@@ -280,10 +280,10 @@ ${form.narrative}`;
 
         <div style={{ padding: '28px 0 24px', borderBottom: `1px solid ${C.border}`, marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
           <div>
-            <button onClick={onBack} style={{ background: 'none', border: 'none', color: C.goldDim, cursor: 'pointer', fontFamily: C.mono, fontSize: '10px', letterSpacing: '2px', padding: 0, marginBottom: '12px', display: 'block' }}>
+            <button onClick={onBack} style={{ background: 'none', border: 'none', color: '#d4b896', cursor: 'pointer', fontFamily: C.mono, fontSize: '14px', letterSpacing: '2px', padding: 0, marginBottom: '12px', display: 'block' }}>
               PLATFORM HOME
             </button>
-            <div style={{ fontSize: '10px', letterSpacing: '3px', color: C.goldDim, fontFamily: C.mono, marginBottom: '4px' }}>RN VISIT NOTE</div>
+            <div style={{ fontSize: '14px', letterSpacing: '3px', color: '#d4b896', fontFamily: C.mono, marginBottom: '4px' }}>RN VISIT NOTE</div>
             <div style={{ fontSize: '20px', color: C.text }}>
               {step === 1 ? 'Select Clinical Scenario' : step === 2 ? sc?.name : 'Visit Note'}
             </div>
@@ -298,13 +298,13 @@ ${form.narrative}`;
                   width: '26px', height: '26px', borderRadius: '50%',
                   border: `2px solid ${step === i+1 ? C.gold : step > i+1 ? C.goldDim : C.border}`,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '11px', fontFamily: C.mono,
+                  fontSize: '13px', fontFamily: C.mono,
                   background: step === i+1 ? C.gold : 'transparent',
                   color: step === i+1 ? '#0f1923' : step > i+1 ? C.goldDim : 'rgba(196,168,130,0.25)',
                 }}>
                   {step > i+1 ? '✓' : i+1}
                 </div>
-                <span style={{ fontSize: '11px', fontFamily: C.mono, letterSpacing: '1px', color: step === i+1 ? C.gold : step > i+1 ? C.goldDim : 'rgba(196,168,130,0.25)' }}>
+                <span style={{ fontSize: '13px', fontFamily: C.mono, letterSpacing: '1px', color: step === i+1 ? C.gold : step > i+1 ? C.goldDim : 'rgba(196,168,130,0.25)' }}>
                   {lbl.toUpperCase()}
                 </span>
               </div>
@@ -316,7 +316,7 @@ ${form.narrative}`;
         {step === 1 && (
           <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: '2px', padding: '32px' }}>
             <div style={{ fontSize: '22px', color: C.text, marginBottom: '8px' }}>What type of visit is this?</div>
-            <div style={{ fontSize: '13px', color: C.goldDim, marginBottom: '28px', fontStyle: 'italic' }}>
+            <div style={{ fontSize: '13px', color: '#d4b896', marginBottom: '28px', fontStyle: 'italic' }}>
               Select the scenario that best describes today's visit. This shapes the questions and note structure.
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
@@ -330,7 +330,7 @@ ${form.narrative}`;
                   <span style={{ fontSize: '18px', flexShrink: 0 }}>{scenario.icon}</span>
                   <div>
                     <div style={{ fontSize: '13px', color: C.text, fontFamily: C.mono, letterSpacing: '0.5px', marginBottom: '3px' }}>{scenario.name}</div>
-                    <div style={{ fontSize: '12px', color: C.goldDim, fontStyle: 'italic' }}>{scenario.hint}</div>
+                    <div style={{ fontSize: '14px', color: '#d4b896', fontStyle: 'italic' }}>{scenario.hint}</div>
                   </div>
                 </div>
               ))}
@@ -340,7 +340,7 @@ ${form.narrative}`;
                 padding: '11px 24px', borderRadius: '2px', border: 'none',
                 background: selected ? C.gold : C.border, color: selected ? '#0f1923' : C.goldDim,
                 cursor: selected ? 'pointer' : 'not-allowed', fontFamily: C.mono,
-                fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase',
+                fontSize: '13px', letterSpacing: '2px', textTransform: 'uppercase',
               }}>Continue →</button>
             </div>
           </div>
@@ -349,7 +349,7 @@ ${form.narrative}`;
         {step === 2 && !loading && (
           <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: '2px', padding: '32px' }}>
             <div style={{ fontSize: '22px', color: C.text, marginBottom: '6px' }}>Clinical Details</div>
-            <div style={{ fontSize: '13px', color: C.goldDim, marginBottom: '24px', fontStyle: 'italic' }}>
+            <div style={{ fontSize: '13px', color: '#d4b896', marginBottom: '24px', fontStyle: 'italic' }}>
               Fill in what you observed. Speak freely in the narrative field — the AI will structure it.
             </div>
 
@@ -358,7 +358,7 @@ ${form.narrative}`;
                 <span style={{ fontSize: '18px' }}>{sc.icon}</span>
                 <div>
                   <div style={{ fontSize: '13px', color: C.gold, fontFamily: C.mono, letterSpacing: '0.5px' }}>{sc.name}</div>
-                  <div style={{ fontSize: '12px', color: C.goldDim, fontStyle: 'italic', marginTop: '2px' }}>{sc.hint}</div>
+                  <div style={{ fontSize: '14px', color: '#d4b896', fontStyle: 'italic', marginTop: '2px' }}>{sc.hint}</div>
                 </div>
               </div>
             )}
@@ -404,9 +404,9 @@ ${form.narrative}`;
             <FieldDivider>Clinical Narrative *</FieldDivider>
             {sc && (
               <div style={{ background: 'rgba(196,168,130,0.04)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '14px 16px', marginBottom: '16px' }}>
-                <div style={{ fontSize: '10px', letterSpacing: '2px', color: C.gold, fontFamily: C.mono, marginBottom: '10px' }}>SPEAK TO THESE POINTS</div>
+                <div style={{ fontSize: '14px', letterSpacing: '2px', color: C.gold, fontFamily: C.mono, marginBottom: '10px' }}>SPEAK TO THESE POINTS</div>
                 {sc.prompts.map((p, i) => (
-                  <div key={i} style={{ fontSize: '13px', color: C.textDim, marginBottom: '6px', display: 'flex', gap: '8px', lineHeight: 1.4 }}>
+                  <div key={i} style={{ fontSize: '13px', color: '#d8c8b4', marginBottom: '6px', display: 'flex', gap: '8px', lineHeight: 1.4 }}>
                     <span style={{ color: C.gold, fontWeight: 'bold', flexShrink: 0 }}>→</span>
                     <span>{p}</span>
                   </div>
@@ -428,7 +428,7 @@ ${form.narrative}`;
                   background: isRecording ? 'rgba(220,80,80,0.8)' : C.gold,
                   border: 'none', borderRadius: '2px', color: isRecording ? '#fff' : '#0f1923',
                   padding: '6px 14px', cursor: 'pointer', fontFamily: C.mono,
-                  fontSize: '10px', letterSpacing: '1px', display: 'flex', alignItems: 'center', gap: '5px',
+                  fontSize: '14px', letterSpacing: '1px', display: 'flex', alignItems: 'center', gap: '5px',
                 }}>
                   {isRecording ? 'Stop' : 'Dictate'}
                 </button>
@@ -438,8 +438,8 @@ ${form.narrative}`;
             <ErrorBox message={error} />
 
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '28px', paddingTop: '24px', borderTop: `1px solid ${C.border}` }}>
-              <button onClick={() => setStep(1)} style={{ padding: '10px 22px', borderRadius: '2px', border: `1px solid ${C.border}`, background: 'transparent', color: C.gold, cursor: 'pointer', fontFamily: C.mono, fontSize: '11px', letterSpacing: '2px' }}>Back</button>
-              <button onClick={generate} style={{ padding: '11px 28px', borderRadius: '2px', border: 'none', background: C.gold, color: '#0f1923', cursor: 'pointer', fontFamily: C.mono, fontSize: '11px', letterSpacing: '2px' }}>Generate Note</button>
+              <button onClick={() => setStep(1)} style={{ padding: '10px 22px', borderRadius: '2px', border: `1px solid ${C.border}`, background: 'transparent', color: C.gold, cursor: 'pointer', fontFamily: C.mono, fontSize: '13px', letterSpacing: '2px' }}>Back</button>
+              <button onClick={generate} style={{ padding: '11px 28px', borderRadius: '2px', border: 'none', background: C.gold, color: '#0f1923', cursor: 'pointer', fontFamily: C.mono, fontSize: '13px', letterSpacing: '2px' }}>Generate Note</button>
             </div>
           </div>
         )}
@@ -448,10 +448,10 @@ ${form.narrative}`;
           <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: '2px', padding: '60px 40px', textAlign: 'center' }}>
             <div style={{ width: '44px', height: '44px', border: `3px solid ${C.border}`, borderTopColor: C.gold, borderRadius: '50%', margin: '0 auto 20px', animation: 'spin 0.8s linear infinite' }} />
             <div style={{ fontSize: '20px', color: C.text, marginBottom: '8px' }}>Drafting your note...</div>
-            <div style={{ fontSize: '12px', color: C.goldDim, fontFamily: C.mono }}>Structuring your clinical input into a compliant hospice visit note</div>
+            <div style={{ fontSize: '14px', color: '#d4b896', fontFamily: C.mono }}>Structuring your clinical input into a compliant hospice visit note</div>
             <div style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '8px', maxWidth: '280px', margin: '24px auto 0', textAlign: 'left' }}>
               {LOADING_STEPS.map((lbl, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '12px', color: loadingStep === i ? C.gold : loadingStep > i ? C.goldDim : 'rgba(196,168,130,0.25)', fontFamily: C.mono }}>
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px', color: loadingStep === i ? C.gold : loadingStep > i ? C.goldDim : 'rgba(196,168,130,0.25)', fontFamily: C.mono }}>
                   <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: loadingStep === i ? C.gold : loadingStep > i ? C.goldDim : C.border, flexShrink: 0 }} />
                   {lbl}
                 </div>
@@ -466,22 +466,22 @@ ${form.narrative}`;
               <div>
                 <div style={{ fontSize: '22px', color: C.text, marginBottom: '8px' }}>Visit Note Draft</div>
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                  {sc && <span style={{ fontSize: '10px', color: C.gold, background: 'rgba(196,168,130,0.1)', border: `1px solid ${C.border}`, borderRadius: '10px', padding: '2px 10px', fontFamily: C.mono }}>{sc.name}</span>}
-                  <span style={{ fontSize: '10px', color: C.gold, background: 'rgba(196,168,130,0.1)', border: `1px solid ${C.border}`, borderRadius: '10px', padding: '2px 10px', fontFamily: C.mono }}>{form.initials}</span>
-                  <span style={{ fontSize: '10px', color: C.gold, background: 'rgba(196,168,130,0.1)', border: `1px solid ${C.border}`, borderRadius: '10px', padding: '2px 10px', fontFamily: C.mono }}>{new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                  {sc && <span style={{ fontSize: '14px', color: C.gold, background: 'rgba(196,168,130,0.1)', border: `1px solid ${C.border}`, borderRadius: '10px', padding: '2px 10px', fontFamily: C.mono }}>{sc.name}</span>}
+                  <span style={{ fontSize: '14px', color: C.gold, background: 'rgba(196,168,130,0.1)', border: `1px solid ${C.border}`, borderRadius: '10px', padding: '2px 10px', fontFamily: C.mono }}>{form.initials}</span>
+                  <span style={{ fontSize: '14px', color: C.gold, background: 'rgba(196,168,130,0.1)', border: `1px solid ${C.border}`, borderRadius: '10px', padding: '2px 10px', fontFamily: C.mono }}>{new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                 </div>
               </div>
-              <button onClick={() => { navigator.clipboard.writeText(noteOutput); setCopied(true); setTimeout(() => setCopied(false), 2000); }} style={{ padding: '8px 18px', borderRadius: '2px', border: `1px solid ${C.border}`, background: 'transparent', color: C.gold, cursor: 'pointer', fontFamily: C.mono, fontSize: '10px', letterSpacing: '1px' }}>
+              <button onClick={() => { navigator.clipboard.writeText(noteOutput); setCopied(true); setTimeout(() => setCopied(false), 2000); }} style={{ padding: '8px 18px', borderRadius: '2px', border: `1px solid ${C.border}`, background: 'transparent', color: C.gold, cursor: 'pointer', fontFamily: C.mono, fontSize: '14px', letterSpacing: '1px' }}>
                 {copied ? 'Copied' : 'Copy'}
               </button>
             </div>
 
-            <div style={{ background: 'rgba(0,0,0,0.2)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '24px 28px', fontSize: '13px', lineHeight: 1.85, color: C.textDim, whiteSpace: 'pre-wrap', fontFamily: C.serif, minHeight: '280px' }}>
+            <div style={{ background: 'rgba(0,0,0,0.2)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '24px 28px', fontSize: '13px', lineHeight: 1.85, color: '#d8c8b4', whiteSpace: 'pre-wrap', fontFamily: C.serif, minHeight: '280px' }}>
               {noteOutput}
             </div>
 
             <div style={{ textAlign: 'center', marginTop: '28px', paddingTop: '24px', borderTop: `1px solid ${C.border}` }}>
-              <button onClick={resetAll} style={{ padding: '10px 22px', borderRadius: '2px', border: `1px solid ${C.border}`, background: 'transparent', color: C.gold, cursor: 'pointer', fontFamily: C.mono, fontSize: '11px', letterSpacing: '2px' }}>Start New Note</button>
+              <button onClick={resetAll} style={{ padding: '10px 22px', borderRadius: '2px', border: `1px solid ${C.border}`, background: 'transparent', color: C.gold, cursor: 'pointer', fontFamily: C.mono, fontSize: '13px', letterSpacing: '2px' }}>Start New Note</button>
             </div>
           </div>
         )}
@@ -493,7 +493,7 @@ ${form.narrative}`;
 
 function FieldDivider({ children }) {
   return (
-    <div style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', color: C.goldDim, padding: '14px 0 8px', borderBottom: `1px solid rgba(196,168,130,0.15)`, marginBottom: '16px', fontFamily: 'Courier New, monospace' }}>
+    <div style={{ fontSize: '14px', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', color: '#d4b896', padding: '14px 0 8px', borderBottom: `1px solid rgba(196,168,130,0.15)`, marginBottom: '16px', fontFamily: 'Courier New, monospace' }}>
       {children}
     </div>
   );
@@ -502,7 +502,7 @@ function FieldDivider({ children }) {
 function FormField({ label, children }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-      <label style={{ fontSize: '10px', fontWeight: 700, color: 'rgba(196,168,130,0.45)', letterSpacing: '1px', textTransform: 'uppercase', fontFamily: 'Courier New, monospace' }}>{label}</label>
+      <label style={{ fontSize: '14px', fontWeight: 700, color: 'rgba(196,168,130,0.45)', letterSpacing: '1px', textTransform: 'uppercase', fontFamily: 'Courier New, monospace' }}>{label}</label>
       {children}
     </div>
   );

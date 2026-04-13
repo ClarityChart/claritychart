@@ -218,11 +218,12 @@ export function TopNav({ onHome, moduleName }) {
   return (
     <div style={{
       position: 'sticky', top: 0, zIndex: 100,
-      background: '#0a141e',
-      borderBottom: `1px solid rgba(196,168,130,0.25)`,
+      background: '#1e3045',
+      borderBottom: `3px solid #d4b896`,
       padding: '0 clamp(16px,3vw,32px)',
-      height: '56px',
+      height: '60px',
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      boxShadow: '0 2px 20px rgba(0,0,0,0.5)',
     }}>
       <button onClick={onHome} style={{ display: 'flex', alignItems: 'center', gap: '14px', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
         <span style={{ fontSize: 'clamp(17px,2vw,22px)', color: C.text, fontFamily: C.serif, fontWeight: 'bold' }}>

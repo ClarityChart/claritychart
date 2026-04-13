@@ -30,7 +30,7 @@ export default function RecertSuite({ onBack }) {
             PLATFORM HOME
           </button>
           <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontFamily: C.mono, marginBottom: '4px' }}>RECERTIFICATION SUITE</div>
-          <div style={{ fontSize: 'clamp(18px,2.5vw,24px)', color: C.text }}>Select Your Pathway</div>
+          <div style={{ fontSize: 'clamp(20px,2.5vw,26px)', color: '#f8f0e4', fontWeight: 'bold' }}>Select Your Pathway</div>
           <div style={{ fontSize: '13px', color: C.gold, marginTop: '4px', fontStyle: 'italic' }}>Each clinician completes their portion independently</div>
         </div>
 
@@ -138,7 +138,7 @@ function RNPathway({ onBack, onBackHome }) {
           <div>
             <button onClick={onBack} style={{ background: 'none', border: 'none', color: C.goldDim, cursor: 'pointer', fontFamily: C.mono, fontSize: '12px', letterSpacing: '2px', padding: 0, marginBottom: '12px', display: 'block' }}>RECERTIFICATION SUITE</button>
             <div style={{ fontSize: '12px', letterSpacing: '3px', color: C.gold, fontFamily: C.mono, marginBottom: '4px' }}>RN PATHWAY</div>
-            <div style={{ fontSize: 'clamp(18px,2.5vw,24px)', color: C.text }}>{stage === 0 ? 'Prior Note' : stage === 1 ? 'RN Assessment' : 'RN Narrative Review'}</div>
+            <div style={{ fontSize: 'clamp(20px,2.5vw,26px)', color: '#f8f0e4', fontWeight: 'bold' }}>{stage === 0 ? 'Prior Note' : stage === 1 ? 'RN Assessment' : 'RN Narrative Review'}</div>
           </div>
           <Btn variant="ghost" onClick={() => { setStage(0); setRnNarrative(''); setError(''); }}>Reset</Btn>
         </div>
@@ -287,7 +287,7 @@ function F2FPathway({ onBack, onBackHome }) {
           <div>
             <button onClick={onBack} style={{ background: 'none', border: 'none', color: C.goldDim, cursor: 'pointer', fontFamily: C.mono, fontSize: '12px', letterSpacing: '2px', padding: 0, marginBottom: '12px', display: 'block' }}>RECERTIFICATION SUITE</button>
             <div style={{ fontSize: '12px', letterSpacing: '3px', color: C.blue, fontFamily: C.mono, marginBottom: '4px' }}>F2F PATHWAY</div>
-            <div style={{ fontSize: 'clamp(18px,2.5vw,24px)', color: C.text }}>Face-to-Face Encounter Note</div>
+            <div style={{ fontSize: 'clamp(20px,2.5vw,26px)', color: '#f8f0e4', fontWeight: 'bold' }}>Face-to-Face Encounter Note</div>
             <div style={{ fontSize: '13px', color: C.gold, marginTop: '4px', fontStyle: 'italic' }}>Physician · Nurse Practitioner · Physician Assistant</div>
           </div>
           {(f2fNote || inputs.f2fFindings) && <Btn variant="ghost" onClick={reset}>Reset</Btn>}
@@ -394,7 +394,7 @@ function MDPathway({ onBack, onBackHome }) {
           <div>
             <button onClick={onBack} style={{ background: 'none', border: 'none', color: C.goldDim, cursor: 'pointer', fontFamily: C.mono, fontSize: '12px', letterSpacing: '2px', padding: 0, marginBottom: '12px', display: 'block' }}>RECERTIFICATION SUITE</button>
             <div style={{ fontSize: '12px', letterSpacing: '3px', color: C.green, fontFamily: C.mono, marginBottom: '4px' }}>PHYSICIAN PATHWAY</div>
-            <div style={{ fontSize: 'clamp(18px,2.5vw,24px)', color: C.text }}>Physician Recertification Note</div>
+            <div style={{ fontSize: 'clamp(20px,2.5vw,26px)', color: '#f8f0e4', fontWeight: 'bold' }}>Physician Recertification Note</div>
             <div style={{ fontSize: '13px', color: C.gold, marginTop: '4px', fontStyle: 'italic' }}>Paste RN narrative and F2F note — generate physician recertification</div>
           </div>
           {(mdNote || rnNarrative) && <Btn variant="ghost" onClick={reset}>Reset</Btn>}

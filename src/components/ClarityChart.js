@@ -90,7 +90,7 @@ export default function ClarityChart() {
         </div>
 
         {/* Modules */}
-        <div style={{ fontSize: '13px', letterSpacing: '3px', color: C.goldDim, fontFamily: C.mono, marginBottom: '18px' }}>DOCUMENTATION MODULES</div>
+        <div style={{ fontSize: '13px', letterSpacing: '3px', color: '#d4b896', fontFamily: C.mono, fontWeight: 'bold', marginBottom: '18px' }}>DOCUMENTATION MODULES</div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '18px' }}>
 
           {/* Admission Pathway */}

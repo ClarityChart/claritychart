@@ -44,7 +44,7 @@ export default function AdmissionEngine({ onBack }) {
             PLATFORM HOME
           </button>
           <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontFamily: C.mono, marginBottom: '4px' }}>ADMISSION ENGINE</div>
-          <div style={{ fontSize: 'clamp(18px,2.5vw,24px)', color: C.text }}>New Patient Admission</div>
+          <div style={{ fontSize: 'clamp(20px,2.5vw,26px)', color: '#f8f0e4', fontWeight: 'bold' }}>New Patient Admission</div>
           <div style={{ fontSize: '13px', color: C.gold, marginTop: '4px', fontStyle: 'italic' }}>Choose how you would like to proceed</div>
         </div>
 
@@ -259,7 +259,7 @@ function DemoMode({ onBack, onBackHome }) {
           <div>
             <TopNav onHome={onBack} moduleName='Admission Engine' />
             <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontFamily: C.mono, marginBottom: '4px' }}>DEMO MODE</div>
-            <div style={{ fontSize: 'clamp(18px,2.5vw,24px)', color: C.text }}>
+            <div style={{ fontSize: 'clamp(20px,2.5vw,26px)', color: '#f8f0e4', fontWeight: 'bold' }}>
               {stage === 'select' && 'Select Demo Patient'}
               {stage === 'build' && (patient?.name + ' — Documents')}
               {stage === 'encounter' && 'Admission Encounter'}
@@ -584,7 +584,7 @@ function ClinicalMode({ onBack, onBackHome }) {
           <div>
             <TopNav onHome={onBack} moduleName='Admission Engine' />
             <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontFamily: C.mono, marginBottom: '4px' }}>CLINICAL MODE</div>
-            <div style={{ fontSize: 'clamp(18px,2.5vw,24px)', color: C.text }}>
+            <div style={{ fontSize: 'clamp(20px,2.5vw,26px)', color: '#f8f0e4', fontWeight: 'bold' }}>
               {stage === 1 && 'Diagnosis'}
               {stage === 2 && 'Upload Records'}
               {stage === 3 && 'Admission Encounter'}

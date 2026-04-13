@@ -460,15 +460,15 @@ ${form.narrative}`;
           </div>
         )}
 
-        {step === 3 && !loading && output && (
+        {step === 3 && !loading && noteOutput && (
           <div>
             <div style={{ display: 'flex', gap: '12px', marginBottom: '24px' }}>
               <BackBtn onClick={() => setStep(2)} label="Edit Clinical Details" />
               <BackBtn onClick={() => setStep(1)} label="Change Scenario" />
             </div>
-            <EditableDraft title="RN Visit Note" value={output} onChange={setOutput} badge="DRAFT" />
+            <EditableDraft title="RN Visit Note" value={noteOutput} onChange={setNoteOutput} badge="DRAFT" />
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '8px' }}>
-              <Btn variant="secondary" onClick={() => { setStep(1); setOutput(''); }}>New Note</Btn>
+              <Btn variant="secondary" onClick={() => { setStep(1); setNoteOutput(''); }}>New Note</Btn>
             </div>
           </div>
         )}

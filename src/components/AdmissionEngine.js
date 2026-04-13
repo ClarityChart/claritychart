@@ -1,7 +1,7 @@
 'use client';
 import { useState, useRef } from 'react';
 import { C } from './tokens';
-import { Textarea, Input, Btn, VoiceBtn, DocOutput } from './ui';
+import { Textarea, Input, Btn, VoiceBtn, DocOutput, TopNav, ErrorBox, Collapsible } from './ui';
 import { buildNarrativeSystem, buildCTISystem, buildRecordSummarySystem, buildNarrativeEditSystem } from './prompts';
 import { DEMO_PATIENTS, PATIENT_LIST } from './demoPatients';
 
@@ -250,13 +250,14 @@ function DemoMode({ onBack, onBackHome }) {
         textarea::placeholder{color:rgba(196,168,130,0.3)}textarea:focus{outline:none}
         ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:rgba(196,168,130,0.2);border-radius:3px}
         @keyframes bounce{0%,80%,100%{transform:scale(0.6);opacity:0.4}40%{transform:scale(1);opacity:1}}
+        @keyframes voicePulse{0%,100%{box-shadow:0 0 0 2px rgba(220,80,80,0.3)}50%{box-shadow:0 0 0 5px rgba(220,80,80,0.1)}}
         .doc-card{transition:all 0.15s;cursor:grab}.doc-card:hover{border-color:rgba(196,168,130,0.4)!important;background:rgba(196,168,130,0.08)!important}
       `}</style>
       <div style={{ maxWidth: '960px', margin: '0 auto', padding: '0 28px 80px' }}>
 
         <div style={{ padding: '28px 0 24px', borderBottom: `1px solid ${C.border}`, marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
           <div>
-            <button onClick={onBack} style={{ background: 'none', border: 'none', color: C.goldDim, cursor: 'pointer', fontFamily: C.mono, fontSize: '10px', letterSpacing: '2px', padding: 0, marginBottom: '12px', display: 'block' }}>ADMISSION ENGINE</button>
+            <TopNav onHome={onBack} moduleName='Admission Engine' />
             <div style={{ fontSize: '10px', letterSpacing: '3px', color: C.goldDim, fontFamily: C.mono, marginBottom: '4px' }}>DEMO MODE</div>
             <div style={{ fontSize: '20px', color: C.text }}>
               {stage === 'select' && 'Select Demo Patient'}
@@ -282,7 +283,7 @@ function DemoMode({ onBack, onBackHome }) {
           </div>
         )}
 
-        {error && <div style={{ background: 'rgba(224,112,112,0.08)', border: '1px solid rgba(224,112,112,0.3)', borderRadius: '2px', padding: '10px 16px', color: '#e07070', fontSize: '12px', fontFamily: C.mono, marginBottom: '20px' }}>{error}</div>}
+        <ErrorBox message={error} />
 
         {loading && (
           <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: '2px', padding: '40px', textAlign: 'center' }}>
@@ -307,7 +308,8 @@ function DemoMode({ onBack, onBackHome }) {
                     <div style={{ width: '48px', height: '48px', borderRadius: '2px', background: `${p.color}18`, border: `1px solid ${p.color}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', color: p.color, fontFamily: C.mono, flexShrink: 0 }}>{p.name}</div>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: '15px', color: C.text, marginBottom: '4px' }}>{p.diagnosis}</div>
-                      <div style={{ fontSize: '12px', color: C.goldDim, fontFamily: C.mono }}>{p.tagline}</div>
+                      <div style={{ fontSize: '12px', color: C.goldDim, fontFamily: C.mono, marginBottom: '4px' }}>{p.tagline}</div>
+                      {p.snapshot && <div style={{ fontSize: '11px', color: 'rgba(196,168,130,0.5)', fontFamily: C.mono }}>{p.snapshot}</div>}
                     </div>
                     <div style={{ fontSize: '11px', color: C.goldDim, fontFamily: C.mono }}>{p.documents.length} documents</div>
                     <div style={{ fontSize: '16px', color: C.border }}>›</div>
@@ -324,7 +326,7 @@ function DemoMode({ onBack, onBackHome }) {
               <div>
                 <div style={{ fontSize: '10px', letterSpacing: '2px', color: C.goldDim, fontFamily: C.mono, marginBottom: '12px', display: 'flex', justifyContent: 'space-between' }}>
                   <span>CHART DOCUMENTS</span>
-                  <button onClick={loadAll} style={{ background: 'none', border: `1px solid ${C.border}`, color: C.goldDim, cursor: 'pointer', fontFamily: C.mono, fontSize: '9px', letterSpacing: '1px', padding: '3px 10px', borderRadius: '2px' }}>LOAD ALL</button>
+                  <button onClick={loadAll} style={{ background: C.gold, border: 'none', color: '#0f1923', cursor: 'pointer', fontFamily: C.mono, fontSize: '10px', letterSpacing: '1px', padding: '6px 14px', borderRadius: '2px', fontWeight: 'bold' }}>Load All Documents</button>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   {patient.documents.map(doc => {
@@ -412,10 +414,9 @@ function DemoMode({ onBack, onBackHome }) {
 
         {stage === 'narrative' && !loading && (
           <div>
-            <div style={{ marginBottom: '28px' }}>
-              <div style={{ fontSize: '10px', letterSpacing: '2px', color: C.goldDim, fontFamily: C.mono, marginBottom: '10px' }}>TRANSCRIBED ENCOUNTER NARRATIVE</div>
-              <div style={{ background: 'rgba(0,0,0,0.2)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '16px 18px', maxHeight: '200px', overflowY: 'auto', fontSize: '12px', color: C.textDim, lineHeight: 1.7, fontFamily: C.serif, whiteSpace: 'pre-wrap' }}>{encounter}</div>
-            </div>
+            <Collapsible title="Transcribed Encounter Narrative" defaultOpen={false}>
+              <div style={{ background: 'rgba(0,0,0,0.2)', borderRadius: '2px', padding: '14px 16px', maxHeight: '200px', overflowY: 'auto', fontSize: '12px', color: C.textDim, lineHeight: 1.7, fontFamily: C.serif, whiteSpace: 'pre-wrap' }}>{encounter}</div>
+            </Collapsible>
             {narrative && <div style={{ marginBottom: '28px' }}><DocOutput title="Admission Narrative — Draft" content={narrative} /></div>}
             <div style={{ marginBottom: '24px' }}>
               <div style={{ fontSize: '11px', color: C.gold, fontFamily: C.mono, letterSpacing: '2px', marginBottom: '8px' }}>REQUEST EDITS</div>
@@ -578,12 +579,13 @@ function ClinicalMode({ onBack, onBackHome }) {
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: C.bg, fontFamily: C.serif, color: C.text }}>
-      <style>{`textarea::placeholder,input::placeholder{color:rgba(196,168,130,0.3)}textarea:focus,input:focus{outline:none}::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:rgba(196,168,130,0.2);border-radius:3px}@keyframes bounce{0%,80%,100%{transform:scale(0.6);opacity:0.4}40%{transform:scale(1);opacity:1}}`}</style>
+      <style>{`textarea::placeholder,input::placeholder{color:rgba(196,168,130,0.3)}textarea:focus,input:focus{outline:none}::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:rgba(196,168,130,0.2);border-radius:3px}@keyframes bounce{0%,80%,100%{transform:scale(0.6);opacity:0.4}40%{transform:scale(1);opacity:1}}
+        @keyframes voicePulse{0%,100%{box-shadow:0 0 0 2px rgba(220,80,80,0.3)}50%{box-shadow:0 0 0 5px rgba(220,80,80,0.1)}}`}</style>
       <div style={{ maxWidth: '860px', margin: '0 auto', padding: '0 28px 80px' }}>
 
         <div style={{ padding: '28px 0 24px', borderBottom: `1px solid ${C.border}`, marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
           <div>
-            <button onClick={onBack} style={{ background: 'none', border: 'none', color: C.goldDim, cursor: 'pointer', fontFamily: C.mono, fontSize: '10px', letterSpacing: '2px', padding: 0, marginBottom: '12px', display: 'block' }}>ADMISSION ENGINE</button>
+            <TopNav onHome={onBack} moduleName='Admission Engine' />
             <div style={{ fontSize: '10px', letterSpacing: '3px', color: C.goldDim, fontFamily: C.mono, marginBottom: '4px' }}>CLINICAL MODE</div>
             <div style={{ fontSize: '20px', color: C.text }}>
               {stage === 1 && 'Diagnosis'}
@@ -611,7 +613,7 @@ function ClinicalMode({ onBack, onBackHome }) {
           </div>
         )}
 
-        {error && <div style={{ background: 'rgba(224,112,112,0.08)', border: '1px solid rgba(224,112,112,0.3)', borderRadius: '2px', padding: '10px 16px', color: '#e07070', fontSize: '12px', fontFamily: C.mono, marginBottom: '20px' }}>{error}</div>}
+        <ErrorBox message={error} />
 
         {loading && (
           <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: '2px', padding: '40px', textAlign: 'center', marginBottom: '28px' }}>
@@ -700,13 +702,12 @@ function ClinicalMode({ onBack, onBackHome }) {
 
         {stage === 4 && !loading && (
           <div>
-            {/* Transcribed encounter */}
-            <div style={{ marginBottom: '28px' }}>
-              <div style={{ fontSize: '10px', letterSpacing: '2px', color: C.goldDim, fontFamily: C.mono, marginBottom: '10px' }}>TRANSCRIBED ENCOUNTER NARRATIVE</div>
-              <div style={{ background: 'rgba(0,0,0,0.2)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '16px 18px', maxHeight: '200px', overflowY: 'auto', fontSize: '12px', color: C.textDim, lineHeight: 1.7, fontFamily: C.serif, whiteSpace: 'pre-wrap' }}>
+            {/* Transcribed encounter - collapsible */}
+            <Collapsible title="Transcribed Encounter Narrative" defaultOpen={false}>
+              <div style={{ background: 'rgba(0,0,0,0.2)', borderRadius: '2px', padding: '14px 16px', maxHeight: '200px', overflowY: 'auto', fontSize: '12px', color: C.textDim, lineHeight: 1.7, fontFamily: C.serif, whiteSpace: 'pre-wrap' }}>
                 {encounter}
               </div>
-            </div>
+            </Collapsible>
 
             {/* Drafted narrative */}
             {narrative && (

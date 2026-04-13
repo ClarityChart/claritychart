@@ -1,6 +1,7 @@
 export const DEMO_PATIENTS = {
   gd: {
     id: 'gd',
+    snapshot: 'NT-proBNP 8,292 · 2 hospitalizations in 3 weeks · PPS 30%',
     name: 'GD',
     age: 100,
     sex: 'Female',
@@ -89,6 +90,7 @@ FAST 6c. PPS 30%. KPS 30%. Weight today 112 lbs.`
   },
   lm: {
     id: 'lm',
+    snapshot: 'FAST 6e · 2 falls this period · MAC declining · Stage 1 sacral wound',
     name: 'LM',
     age: 82,
     sex: 'Female',
@@ -185,6 +187,7 @@ PPS 40%. KPS 40%.`
   },
   tr: {
     id: 'tr',
+    snapshot: 'Post MCA stroke · Global aphasia · PEG dependent · PPS 30%',
     name: 'TR',
     age: 88,
     sex: 'Male',
@@ -282,6 +285,7 @@ PPS 30%. KPS 30%.`
 
   rb: {
     id: 'rb',
+    snapshot: 'FEV1 28% · Cor pulmonale · BMI 17.2 · O2 4L at rest',
     name: 'RB',
     age: 74,
     sex: 'Male',
@@ -374,6 +378,7 @@ PPS 40%. KPS 40%.`
 
   mc: {
     id: 'mc',
+    snapshot: 'Stage IV NSCLC · Brain mets · 30 lb weight loss · KPS 40%',
     name: 'MC',
     age: 67,
     sex: 'Male',
@@ -474,6 +479,7 @@ PPS 40%. KPS 40%. Weight 148 lbs.`
 
   wk: {
     id: 'wk',
+    snapshot: 'eGFR 8 · Cr 8.4 · K 5.9 · Declined dialysis · PPS 30%',
     name: 'WK',
     age: 79,
     sex: 'Male',
@@ -573,6 +579,7 @@ PPS 30%. KPS 30%.`
 
   ph: {
     id: 'ph',
+    snapshot: 'Child-Pugh C · MELD 32 · Paracentesis q10-14 days · INR 2.9',
     name: 'PH',
     age: 61,
     sex: 'Male',
@@ -673,6 +680,7 @@ PPS 40%. KPS 40%.`
 
   ef: {
     id: 'ef',
+    snapshot: 'ALS bulbar · FVC 38% · Anarthric · PEG dependent · Tobii device',
     name: 'EF',
     age: 58,
     sex: 'Female',
@@ -776,6 +784,7 @@ PPS 40%. KPS 40%. Weight 118 lbs.`
 
   dv: {
     id: 'dv',
+    snapshot: 'Stage IV pancreatic · 28 lb loss · Bili 8.4 · Pain 8/10',
     name: 'DV',
     age: 71,
     sex: 'Female',
@@ -877,6 +886,7 @@ PPS 30%. KPS 30%. Weight 128 lbs.`
 
   hn: {
     id: 'hn',
+    snapshot: 'Hoehn-Yahr 5 · Anarthric · 2 aspiration PNAs · Bedbound',
     name: 'HN',
     age: 77,
     sex: 'Male',

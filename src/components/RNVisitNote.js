@@ -1,6 +1,7 @@
 'use client';
 import { useState, useRef } from 'react';
 import { C } from './tokens';
+import { TopNav, ErrorBox, DocOutput, VoiceBtn } from './ui';
 
 const SCENARIOS = {
   routine: {
@@ -267,6 +268,7 @@ ${form.narrative}`;
     <div style={{ minHeight: '100vh', backgroundColor: C.bg, fontFamily: C.serif, color: C.text }}>
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes voicePulse{0%,100%{box-shadow:0 0 0 2px rgba(220,80,80,0.3)}50%{box-shadow:0 0 0 5px rgba(220,80,80,0.1)}}
         * { box-sizing: border-box; }
         input:focus, select:focus, textarea:focus { border-color: ${C.gold} !important; outline: none; }
         input::placeholder, textarea::placeholder { color: rgba(196,168,130,0.3); }
@@ -433,11 +435,7 @@ ${form.narrative}`;
               </div>
             </FormField>
 
-            {error && (
-              <div style={{ background: 'rgba(224,112,112,0.08)', border: '1px solid rgba(224,112,112,0.3)', borderRadius: '2px', padding: '10px 16px', color: '#e07070', fontSize: '12px', fontFamily: C.mono, marginTop: '16px' }}>
-                {error}
-              </div>
-            )}
+            <ErrorBox message={error} />
 
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '28px', paddingTop: '24px', borderTop: `1px solid ${C.border}` }}>
               <button onClick={() => setStep(1)} style={{ padding: '10px 22px', borderRadius: '2px', border: `1px solid ${C.border}`, background: 'transparent', color: C.gold, cursor: 'pointer', fontFamily: C.mono, fontSize: '11px', letterSpacing: '2px' }}>Back</button>

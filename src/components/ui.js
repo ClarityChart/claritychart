@@ -109,7 +109,7 @@ export function VoiceBtn({ onTranscript, label = 'Dictate' }) {
       border: `1px solid ${on ? 'rgba(220,80,80,0.6)' : C.border}`,
       borderRadius: '4px', color: on ? '#ff8080' : C.gold,
       padding: '9px 18px', cursor: 'pointer', fontFamily: C.mono,
-      fontSize: FONT_MONO, letterSpacing: '1.5px', textTransform: 'uppercase',
+      fontSize: '13px', letterSpacing: '1.5px', textTransform: 'uppercase',
       transition: 'all 0.15s', whiteSpace: 'nowrap',
     }}>
       <span style={{
@@ -225,15 +225,15 @@ export function TopNav({ onHome, moduleName }) {
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
     }}>
       <button onClick={onHome} style={{ display: 'flex', alignItems: 'center', gap: '14px', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
-        <span style={{ fontSize: 'clamp(16px,2vw,20px)', color: C.text, fontFamily: C.serif }}>
+        <span style={{ fontSize: 'clamp(17px,2vw,22px)', color: C.text, fontFamily: C.serif, fontWeight: 'bold' }}>
           Clarity<span style={{ color: C.gold }}>Chart</span>
         </span>
-        <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: C.gold, fontFamily: C.mono, letterSpacing: '1px', paddingLeft: '14px', borderLeft: `1px solid rgba(196,168,130,0.3)` }}>
-          ← Home
+        <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: C.gold, fontFamily: C.mono, fontWeight: 'bold', letterSpacing: '1px', paddingLeft: '14px', borderLeft: `2px solid rgba(196,168,130,0.5)` }}>
+          ← HOME
         </span>
       </button>
       {moduleName && (
-        <span style={{ fontSize: '12px', color: C.textDim, fontFamily: C.mono, letterSpacing: '2px', textTransform: 'uppercase' }}>
+        <span style={{ fontSize: '13px', color: C.gold, fontFamily: C.mono, letterSpacing: '2px', textTransform: 'uppercase', fontWeight: 'bold' }}>
           {moduleName}
         </span>
       )}
@@ -247,12 +247,12 @@ export function BackBtn({ onClick, label = 'Back' }) {
     <button onClick={onClick} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
       style={{
         display: 'flex', alignItems: 'center', gap: '8px',
-        background: hov ? 'rgba(196,168,130,0.1)' : 'transparent',
-        border: `1px solid ${hov ? C.gold : C.border}`,
-        borderRadius: '4px', color: hov ? C.gold : C.textDim,
-        padding: '10px 20px', cursor: 'pointer',
-        fontFamily: C.mono, fontSize: FONT_MONO, letterSpacing: '1.5px',
-        transition: 'all 0.15s',
+        background: hov ? 'rgba(196,168,130,0.15)' : 'rgba(196,168,130,0.06)',
+        border: `2px solid ${hov ? C.gold : 'rgba(196,168,130,0.5)'}`,
+        borderRadius: '4px', color: hov ? C.text : C.gold,
+        padding: '10px 22px', cursor: 'pointer',
+        fontFamily: C.mono, fontSize: '13px', letterSpacing: '1.5px',
+        fontWeight: 'bold', transition: 'all 0.15s',
       }}>
       ‹ {label}
     </button>
@@ -276,7 +276,7 @@ export function ProgressSteps({ steps, current, onStepClick }) {
             }} />
             <div style={{
               fontSize: FONT_MONO, letterSpacing: '1px', fontFamily: C.mono,
-              color: active ? C.gold : done ? C.textDim : 'rgba(196,168,130,0.35)',
+              color: active ? C.gold : done ? C.text : 'rgba(196,168,130,0.4)',
               textDecoration: clickable ? 'underline' : 'none',
               textDecorationColor: 'rgba(196,168,130,0.4)',
               transition: 'color 0.2s',

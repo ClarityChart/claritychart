@@ -35,7 +35,7 @@ function ModCard({ mod, onClick }) {
             {sc.l}
           </span>
         </div>
-        <div style={{ fontSize: '11px', color: C.goldDim, fontStyle: 'italic' }}>{mod.desc}</div>
+        <div style={{ fontSize: '13px', color: C.gold, fontStyle: 'italic' }}>{mod.desc}</div>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', alignItems: 'flex-end' }}>
         {mod.outputs.map(o => (
@@ -90,7 +90,7 @@ export default function ClarityChart() {
         </div>
 
         {/* Modules */}
-        <div style={{ fontSize: '11px', letterSpacing: '3px', color: C.goldDim, fontFamily: C.mono, marginBottom: '18px' }}>DOCUMENTATION MODULES</div>
+        <div style={{ fontSize: '13px', letterSpacing: '3px', color: C.goldDim, fontFamily: C.mono, marginBottom: '18px' }}>DOCUMENTATION MODULES</div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '18px' }}>
 
           {/* Admission Pathway */}
@@ -99,7 +99,7 @@ export default function ClarityChart() {
               <div style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(196,168,130,0.1)', border: `1px solid rgba(196,168,130,0.25)`, borderRadius: '2px', fontSize: '14px' }}>✦</div>
               <div>
                 <div style={{ fontSize: 'clamp(14px, 1.5vw, 16px)', color: C.text }}>Admission Pathway</div>
-                <div style={{ fontSize: '10px', color: C.goldDim, fontFamily: C.mono }}>New patient enrollment</div>
+                <div style={{ fontSize: '14px', color: C.gold, fontFamily: C.mono }}>New patient enrollment</div>
               </div>
             </div>
             <div style={{ padding: '10px 12px' }}>

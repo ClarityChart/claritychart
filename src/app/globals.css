@@ -1,16 +1,17 @@
 /* ClarityChart Global Styles */
 :root {
   --bg: #0f1923;
-  --card: #1a2836;
-  --gold: #c4a882;
-  --gold-dim: #8a7460;
-  --text: #f0e8dc;
-  --text-dim: #c8b8a8;
+  --card: #1e3045;
+  --gold: #d4b896;
+  --text: #f8f0e4;
+  --text-dim: #d8c8b4;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { font-size: clamp(15px, 1.5vw, 17px); }
+html {
+  font-size: clamp(15px, 1.8vw, 18px);
+}
 
 body {
   background: var(--bg);
@@ -20,50 +21,31 @@ body {
   min-height: 100vh;
 }
 
-/* Responsive container */
-.cc-container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 0 clamp(16px, 4vw, 40px) 80px;
+/* Force ALL text to be readable */
+p, div, span, label, input, textarea, button, h1, h2, h3 {
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Card styles */
-.cc-card {
-  background: #1a2836;
-  border: 1px solid rgba(196,168,130,0.3);
-  border-radius: 4px;
-}
-
-/* Typography scale */
-.cc-title { font-size: clamp(22px, 3vw, 30px); color: var(--text); }
-.cc-heading { font-size: clamp(16px, 2vw, 20px); color: var(--text); }
-.cc-body { font-size: clamp(14px, 1.4vw, 16px); color: var(--text-dim); line-height: 1.7; }
-.cc-label { font-size: clamp(10px, 1vw, 12px); font-family: 'Courier New', monospace; letter-spacing: 2px; color: var(--gold-dim); }
-.cc-mono { font-family: 'Courier New', monospace; }
-
-/* Form elements */
 textarea, input {
-  font-size: clamp(14px, 1.3vw, 15px) !important;
+  font-size: clamp(14px, 1.5vw, 16px) !important;
+  color: #f8f0e4 !important;
 }
 
 textarea::placeholder, input::placeholder {
-  color: rgba(196,168,130,0.35) !important;
+  color: rgba(196,168,130,0.5) !important;
 }
 
-textarea:focus, input:focus, select:focus {
+textarea:focus, input:focus {
   outline: none;
-  border-color: #c4a882 !important;
+  border-color: #d4b896 !important;
 }
 
-/* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-thumb { background: rgba(196,168,130,0.25); border-radius: 3px; }
-::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(196,168,130,0.3); border-radius: 3px; }
 
-/* Animations */
 @keyframes voicePulse {
-  0%, 100% { box-shadow: 0 0 0 3px rgba(220,80,80,0.3); }
-  50% { box-shadow: 0 0 0 6px rgba(220,80,80,0.1); }
+  0%, 100% { box-shadow: 0 0 0 3px rgba(220,80,80,0.4); }
+  50% { box-shadow: 0 0 0 7px rgba(220,80,80,0.1); }
 }
 
 @keyframes progressFill {
@@ -74,11 +56,4 @@ textarea:focus, input:focus, select:focus {
 @keyframes bounce {
   0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
   40% { transform: scale(1); opacity: 1; }
-}
-
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* Progress bar animation */
-.progress-active {
-  animation: progressFill 1.5s ease-out forwards;
 }

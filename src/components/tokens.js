@@ -1,3 +1,8 @@
+// Responsive font sizing utility
+export function clamp(min, preferred, max) {
+  return `clamp(${min}px, ${preferred}, ${max}px)`;
+}
+
 export const C = {
   bg: '#0f1923',
   bgCard: 'rgba(196,168,130,0.04)',

@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { C } from './tokens';
-import { Textarea, Input, Btn, VoiceBtn, DocOutput, TopNav, ErrorBox } from './ui';
+import { Textarea, Input, Btn, VoiceBtn, DocOutput, TopNav, ErrorBox, EditableDraft, BackBtn, ProgressSteps, ProgressLoader } from './ui';
 import { DECLINE_DOMAINS, buildPriorExtractionSystem, buildRNRecertSystem, buildF2FSystem, buildMDRecertSystem } from './recertPrompts';
 
 const EMPTY_INPUTS = {
@@ -244,7 +244,7 @@ function RNPathway({ onBack, onBackHome }) {
             <div style={{ background: 'rgba(196,168,130,0.05)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '12px 18px', marginBottom: '16px', fontSize: '12px', color: C.goldDim, fontFamily: C.mono, lineHeight: 1.6 }}>
               Review and edit the narrative before finalizing. Use Copy to share with the physician for the recertification note.
             </div>
-            <Textarea value={rnNarrative} onChange={setRnNarrative} rows={22} />
+            <EditableDraft title="RN Recertification Narrative" value={rnNarrative} onChange={setRnNarrative} badge="DRAFT" />
             <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'space-between' }}>
               <Btn variant="secondary" onClick={() => setStage(1)}>← Edit Assessment</Btn>
               <div style={{ display: 'flex', gap: '10px' }}>

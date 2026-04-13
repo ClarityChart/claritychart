@@ -284,3 +284,163 @@ export function Collapsible({ title, children, defaultOpen = false }) {
     </div>
   );
 }
+
+// Progress bar loader — replaces spinner
+export function ProgressLoader({ steps, currentStep, message }) {
+  return (
+    <div style={{
+      background: C.bgCard, border: `1px solid ${C.border}`,
+      borderRadius: '2px', padding: '32px 40px', textAlign: 'center',
+    }}>
+      <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontFamily: C.mono, marginBottom: '24px' }}>
+        {message || 'GENERATING...'}
+      </div>
+      {steps && steps.length > 0 && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '360px', margin: '0 auto 24px' }}>
+          {steps.map((step, i) => {
+            const done = i < currentStep;
+            const active = i === currentStep;
+            return (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{
+                  width: '20px', height: '20px', borderRadius: '50%', flexShrink: 0,
+                  border: `2px solid ${done ? C.green : active ? C.gold : C.border}`,
+                  background: done ? C.green : active ? 'rgba(196,168,130,0.15)' : 'transparent',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: '10px', color: done ? '#0f1923' : active ? C.gold : C.goldDim,
+                  transition: 'all 0.3s',
+                }}>
+                  {done ? '✓' : i + 1}
+                </div>
+                <div style={{ flex: 1, textAlign: 'left' }}>
+                  <div style={{ height: '3px', background: C.border, borderRadius: '2px', overflow: 'hidden' }}>
+                    <div style={{
+                      height: '100%', borderRadius: '2px', transition: 'width 0.5s ease',
+                      background: done ? C.green : active ? C.gold : 'transparent',
+                      width: done ? '100%' : active ? '60%' : '0%',
+                    }} />
+                  </div>
+                </div>
+                <div style={{
+                  fontSize: '11px', fontFamily: C.mono, letterSpacing: '1px',
+                  color: done ? C.green : active ? C.gold : C.goldDim,
+                  minWidth: '140px', textAlign: 'left',
+                }}>
+                  {step}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Editable draft — plain text, clean paste into EHR
+export function EditableDraft({ title, value, onChange, badge }) {
+  const [copied, setCopied] = useState('idle');
+
+  const copy = async () => {
+    setCopied('copying');
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopied('copied');
+      setTimeout(() => setCopied('idle'), 3000);
+    } catch { setCopied('idle'); }
+  };
+
+  return (
+    <div style={{
+      background: C.bgCard, border: `1px solid ${C.border}`,
+      borderRadius: '2px', overflow: 'hidden', marginBottom: '24px',
+    }}>
+      <div style={{
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        padding: '12px 20px', borderBottom: `1px solid ${C.border}`,
+        background: 'rgba(0,0,0,0.2)',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <span style={{ color: C.text, fontSize: '14px' }}>{title}</span>
+          {badge && <span style={{ fontSize: '9px', color: C.green, background: C.greenDim, border: `1px solid ${C.greenBorder}`, borderRadius: '10px', padding: '2px 8px', fontFamily: C.mono }}>{badge}</span>}
+          <span style={{ fontSize: '10px', color: C.goldDim, fontFamily: C.mono, letterSpacing: '1px' }}>✎ editable</span>
+        </div>
+        <button onClick={copy} style={{
+          display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 16px',
+          borderRadius: '2px', border: `1px solid ${copied === 'copied' ? C.greenBorder : C.border}`,
+          background: copied === 'copied' ? C.greenDim : 'transparent',
+          color: copied === 'copied' ? C.green : C.gold,
+          cursor: 'pointer', fontFamily: C.mono, fontSize: '10px', letterSpacing: '1px', transition: 'all 0.2s',
+        }}>
+          {copied === 'copied' ? '✓ Copied to clipboard' : copied === 'copying' ? 'Copying...' : '⎘ Copy'}
+        </button>
+      </div>
+      <textarea
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        style={{
+          width: '100%', minHeight: '400px', background: 'transparent',
+          border: 'none', outline: 'none', padding: '20px 24px',
+          color: C.textDim, fontSize: '14px', lineHeight: 1.8,
+          fontFamily: C.serif, resize: 'vertical', boxSizing: 'border-box',
+        }}
+      />
+    </div>
+  );
+}
+
+// Consistent back button for all pages
+export function BackBtn({ onClick, label = 'Back' }) {
+  const [hov, setHov] = useState(false);
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        display: 'flex', alignItems: 'center', gap: '6px',
+        background: 'none', border: `1px solid ${hov ? C.borderHover : C.border}`,
+        borderRadius: '2px', color: hov ? C.gold : C.goldDim,
+        padding: '8px 16px', cursor: 'pointer', fontFamily: C.mono,
+        fontSize: '11px', letterSpacing: '1.5px', transition: 'all 0.15s',
+      }}
+    >
+      ‹ {label}
+    </button>
+  );
+}
+
+// Clickable progress steps
+export function ProgressSteps({ steps, current, onStepClick }) {
+  return (
+    <div style={{ display: 'flex', gap: '6px', marginBottom: '32px' }}>
+      {steps.map((label, i) => {
+        const done = i < current;
+        const active = i === current;
+        const clickable = done && onStepClick;
+        return (
+          <div
+            key={i}
+            onClick={() => clickable && onStepClick(i)}
+            style={{ flex: 1, cursor: clickable ? 'pointer' : 'default' }}
+            title={clickable ? `Go back to ${label}` : ''}
+          >
+            <div style={{
+              height: '3px',
+              background: active ? C.gold : done ? C.goldDim : C.border,
+              marginBottom: '6px', borderRadius: '2px', transition: 'background 0.2s',
+            }} />
+            <div style={{
+              fontSize: '9px', letterSpacing: '1.5px', fontFamily: C.mono,
+              color: active ? C.gold : done ? C.goldDim : 'rgba(196,168,130,0.25)',
+              textDecoration: clickable ? 'underline' : 'none',
+              textDecorationColor: 'rgba(196,168,130,0.3)',
+            }}>
+              {i + 1}. {label.toUpperCase()}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}

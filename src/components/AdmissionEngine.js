@@ -1,7 +1,7 @@
 'use client';
 import { useState, useRef } from 'react';
 import { C } from './tokens';
-import { Textarea, Input, Btn, VoiceBtn, DocOutput, TopNav, ErrorBox, Collapsible } from './ui';
+import { Textarea, Input, Btn, VoiceBtn, DocOutput, TopNav, ErrorBox, Collapsible, ProgressLoader, EditableDraft, BackBtn, ProgressSteps } from './ui';
 import { buildNarrativeSystem, buildCTISystem, buildRecordSummarySystem, buildNarrativeEditSystem } from './prompts';
 import { DEMO_PATIENTS, PATIENT_LIST } from './demoPatients';
 
@@ -417,7 +417,7 @@ function DemoMode({ onBack, onBackHome }) {
             <Collapsible title="Transcribed Encounter Narrative" defaultOpen={false}>
               <div style={{ background: 'rgba(0,0,0,0.2)', borderRadius: '2px', padding: '14px 16px', maxHeight: '200px', overflowY: 'auto', fontSize: '12px', color: C.textDim, lineHeight: 1.7, fontFamily: C.serif, whiteSpace: 'pre-wrap' }}>{encounter}</div>
             </Collapsible>
-            {narrative && <div style={{ marginBottom: '28px' }}><DocOutput title="Admission Narrative — Draft" content={narrative} /></div>}
+            {narrative && <div style={{ marginBottom: '28px' }}><EditableDraft title="Admission Narrative — Draft" value={narrative} onChange={setNarrative} badge="DRAFT" /></div>}
             <div style={{ marginBottom: '24px' }}>
               <div style={{ fontSize: '11px', color: C.gold, fontFamily: C.mono, letterSpacing: '2px', marginBottom: '8px' }}>REQUEST EDITS</div>
               <div style={{ fontSize: '12px', color: C.goldDim, marginBottom: '8px', fontStyle: 'italic' }}>Describe any changes needed — the AI will revise the narrative accordingly.</div>

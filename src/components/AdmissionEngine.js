@@ -1,7 +1,7 @@
 'use client';
 import { useState, useRef } from 'react';
 import { C } from './tokens';
-import { Textarea, Input, Btn, VoiceBtn, DocOutput, TopNav, ErrorBox, Collapsible, ProgressLoader, EditableDraft, BackBtn, ProgressSteps } from './ui';
+import { Textarea, Input, Btn, VoiceBtn, DocOutput, TopNav, ErrorBox, Collapsible, ProgressLoader, EditableDraft, BackBtn, ProgressSteps, useUnsavedWarning } from './ui';
 import { buildNarrativeSystem, buildCTISystem, buildRecordSummarySystem, buildNarrativeEditSystem } from './prompts';
 import { DEMO_PATIENTS, PATIENT_LIST } from './demoPatients';
 
@@ -271,27 +271,24 @@ function DemoMode({ onBack, onBackHome }) {
         </div>
 
         {stage !== 'select' && stage !== 'cti' && (
-          <div style={{ display: 'flex', gap: '6px', marginBottom: '32px' }}>
-            {stageTitles.map((label, i) => (
-              <div key={i} style={{ flex: 1 }}>
-                <div style={{ height: '2px', background: i + 1 <= currentStageNum ? C.gold : C.border, marginBottom: '5px' }} />
-                <div style={{ fontSize: '9px', letterSpacing: '1.5px', fontFamily: C.mono, color: i + 1 === currentStageNum ? C.gold : i + 1 < currentStageNum ? C.goldDim : 'rgba(196,168,130,0.25)' }}>
-                  {i + 1}. {label.toUpperCase()}
-                </div>
-              </div>
-            ))}
-          </div>
+          <ProgressSteps
+            steps={stageTitles}
+            current={currentStageNum - 1}
+            onStepClick={(i) => {
+              const stageMap = ['select', 'build', 'encounter', 'narrative', 'cti'];
+              if (i < currentStageNum - 1) setStage(stageMap[i + 1]);
+            }}
+          />
         )}
 
         <ErrorBox message={error} />
 
         {loading && (
-          <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: '2px', padding: '40px', textAlign: 'center' }}>
-            <div style={{ fontSize: '11px', letterSpacing: '3px', color: C.gold, fontFamily: C.mono, marginBottom: '20px' }}>{loadingMsg}</div>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '8px' }}>
-              {[0,1,2].map(i => <div key={i} style={{ width: '8px', height: '8px', borderRadius: '50%', background: C.gold, animation: `bounce 1.2s ${i*0.2}s infinite ease-in-out` }} />)}
-            </div>
-          </div>
+          <ProgressLoader
+            message={loadingMsg}
+            steps={['Summarizing documents', 'Generating narrative', 'Creating CTI']}
+            currentStep={loadingMsg.includes('Summariz') ? 0 : loadingMsg.includes('Narrative') ? 1 : loadingMsg.includes('CTI') || loadingMsg.includes('Certificate') ? 2 : 0}
+          />
         )}
 
         {stage === 'select' && (
@@ -302,7 +299,7 @@ function DemoMode({ onBack, onBackHome }) {
                 const p = DEMO_PATIENTS[id];
                 return (
                   <div key={id} onClick={() => selectPatient(id)}
-                    style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '20px 24px', background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: '2px', cursor: 'pointer', transition: 'all 0.15s' }}
+                    style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '20px 24px', background: 'rgba(20,32,45,0.98)', border: `1px solid ${C.border}`, borderRadius: '2px', cursor: 'pointer', transition: 'all 0.15s' }}
                     onMouseEnter={e => { e.currentTarget.style.background = C.bgCardHover; e.currentTarget.style.borderColor = C.borderHover; }}
                     onMouseLeave={e => { e.currentTarget.style.background = C.bgCard; e.currentTarget.style.borderColor = C.border; }}>
                     <div style={{ width: '48px', height: '48px', borderRadius: '2px', background: `${p.color}18`, border: `1px solid ${p.color}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', color: p.color, fontFamily: C.mono, flexShrink: 0 }}>{p.name}</div>
@@ -406,7 +403,7 @@ function DemoMode({ onBack, onBackHome }) {
             </div>
             <Textarea value={encounter} onChange={setEncounter} placeholder="Describe findings from the admission visit..." rows={12} />
             <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'space-between' }}>
-              <Btn variant="secondary" onClick={() => setStage('build')}>← Documents</Btn>
+              <BackBtn onClick={() => setStage('build')} label="Documents" />
               <Btn onClick={generateNarrative} disabled={!encounter.trim()} style={{ padding: '12px 32px' }}>Generate Admission Narrative →</Btn>
             </div>
           </div>
@@ -427,7 +424,7 @@ function DemoMode({ onBack, onBackHome }) {
               </div>
             </div>
             <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: '24px', display: 'flex', justifyContent: 'space-between', gap: '12px' }}>
-              <Btn variant="secondary" onClick={() => setStage('encounter')}>Edit Inputs</Btn>
+              <BackBtn onClick={() => setStage('encounter')} label="Encounter" />
               <div style={{ display: 'flex', gap: '12px' }}>
                 <Btn variant="secondary" onClick={reset}>New Patient</Btn>
                 <Btn onClick={generateCTI} style={{ padding: '12px 24px' }}>Create Certificate of Terminal Illness →</Btn>
@@ -453,7 +450,7 @@ function DemoMode({ onBack, onBackHome }) {
               </div>
             )}
             <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '24px' }}>
-              <Btn variant="secondary" onClick={() => setStage('narrative')}>← Back to Narrative</Btn>
+              <BackBtn onClick={() => setStage('narrative')} label="Narrative" />
               <Btn variant="secondary" onClick={reset}>New Patient</Btn>
             </div>
           </div>
@@ -601,27 +598,21 @@ function ClinicalMode({ onBack, onBackHome }) {
         </div>
 
         {stage < 5 && (
-          <div style={{ display: 'flex', gap: '6px', marginBottom: '32px' }}>
-            {stageLabels.map((label, i) => (
-              <div key={i} style={{ flex: 1 }}>
-                <div style={{ height: '2px', background: i + 1 <= stage ? C.gold : C.border, marginBottom: '5px' }} />
-                <div style={{ fontSize: '9px', letterSpacing: '1.5px', fontFamily: C.mono, color: i + 1 === stage ? C.gold : i + 1 < stage ? C.goldDim : 'rgba(196,168,130,0.25)' }}>
-                  {i + 1}. {label.toUpperCase()}
-                </div>
-              </div>
-            ))}
-          </div>
+          <ProgressSteps
+            steps={stageLabels}
+            current={stage - 1}
+            onStepClick={(i) => { if (i + 1 < stage) setStage(i + 1); }}
+          />
         )}
 
         <ErrorBox message={error} />
 
         {loading && (
-          <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: '2px', padding: '40px', textAlign: 'center', marginBottom: '28px' }}>
-            <div style={{ fontSize: '11px', letterSpacing: '3px', color: C.gold, fontFamily: C.mono, marginBottom: '20px' }}>{loadingMsg}</div>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '8px' }}>
-              {[0,1,2].map(i => <div key={i} style={{ width: '8px', height: '8px', borderRadius: '50%', background: C.gold, animation: `bounce 1.2s ${i*0.2}s infinite ease-in-out` }} />)}
-            </div>
-          </div>
+          <ProgressLoader
+            message={loadingMsg}
+            steps={['Analyzing records', 'Generating narrative', 'Creating CTI']}
+            currentStep={loadingMsg.includes('Narrative') ? 1 : loadingMsg.includes('CTI') || loadingMsg.includes('Certificate') ? 2 : 0}
+          />
         )}
 
         {stage === 1 && !loading && (
@@ -654,7 +645,7 @@ function ClinicalMode({ onBack, onBackHome }) {
               </div>
             ))}
             <div style={{ marginTop: '28px', display: 'flex', justifyContent: 'space-between' }}>
-              <Btn variant="secondary" onClick={() => setStage(1)}>← Back</Btn>
+              <BackBtn onClick={() => setStage(1)} label="Diagnosis" />
               <Btn onClick={summarizeAndContinue}>
                 {docCount > 0 ? 'Summarize Records & Continue →' : 'Continue → Encounter'}
               </Btn>
@@ -694,7 +685,7 @@ function ClinicalMode({ onBack, onBackHome }) {
             <Textarea value={encounter} onChange={setEncounter} placeholder="Describe findings from the admission visit — functional assessment, systems review, goals of care discussion, FAST/PPS/KPS scores, family present..." rows={12} />
 
             <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'space-between' }}>
-              <Btn variant="secondary" onClick={() => setStage(2)}>← Records</Btn>
+              <BackBtn onClick={() => setStage(2)} label="Records" />
               <Btn onClick={generateNarrative} disabled={!encounter.trim()} style={{ padding: '12px 32px' }}>Generate Admission Narrative →</Btn>
             </div>
           </div>
@@ -730,7 +721,7 @@ function ClinicalMode({ onBack, onBackHome }) {
 
             {/* Three action buttons */}
             <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: '24px', display: 'flex', justifyContent: 'space-between', gap: '12px' }}>
-              <Btn variant="secondary" onClick={() => setStage(1)}>Edit Inputs</Btn>
+              <BackBtn onClick={() => setStage(1)} label="Edit Inputs" />
               <div style={{ display: 'flex', gap: '12px' }}>
                 <Btn variant="secondary" onClick={reset}>New Admission</Btn>
                 <Btn onClick={generateCTI} style={{ padding: '12px 24px' }}>Create Certificate of Terminal Illness →</Btn>
@@ -759,7 +750,7 @@ function ClinicalMode({ onBack, onBackHome }) {
             )}
 
             <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '24px' }}>
-              <Btn variant="secondary" onClick={() => setStage(4)}>← Back to Narrative</Btn>
+              <BackBtn onClick={() => setStage(4)} label="Narrative" />
               <Btn variant="secondary" onClick={reset}>New Admission</Btn>
             </div>
           </div>

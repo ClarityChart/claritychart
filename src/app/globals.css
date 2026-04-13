@@ -1,0 +1,62 @@
+/* Global responsive styles for ClarityChart */
+:root {
+  --font-base: clamp(14px, 1.5vw, 16px);
+  --font-sm: clamp(12px, 1.2vw, 14px);
+  --font-lg: clamp(16px, 2vw, 20px);
+  --font-xl: clamp(20px, 2.5vw, 28px);
+  --font-mono: clamp(11px, 1.1vw, 13px);
+  --card-bg: rgba(196,168,130,0.08);
+  --card-border: rgba(196,168,130,0.25);
+  --card-solid: rgba(25,38,50,0.95);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-size: var(--font-base);
+  -webkit-font-smoothing: antialiased;
+}
+
+textarea::placeholder, input::placeholder {
+  color: rgba(196,168,130,0.3);
+}
+
+textarea:focus, input:focus, select:focus {
+  outline: none;
+  border-color: #c4a882 !important;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: rgba(196,168,130,0.2); border-radius: 3px; }
+
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes voicePulse {
+  0%, 100% { box-shadow: 0 0 0 2px rgba(220,80,80,0.3); }
+  50% { box-shadow: 0 0 0 5px rgba(220,80,80,0.1); }
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Solid card backgrounds throughout */
+.cc-card {
+  background: rgba(20,32,45,0.98) !important;
+  border: 1px solid rgba(196,168,130,0.25) !important;
+  border-radius: 4px !important;
+}
+
+/* Responsive container */
+.cc-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 clamp(16px, 3vw, 32px) 80px;
+}
+
+/* Scale text throughout */
+.cc-body { font-size: var(--font-base); line-height: 1.7; }
+.cc-label { font-size: var(--font-mono); }
+.cc-heading { font-size: var(--font-xl); }
+.cc-subheading { font-size: var(--font-lg); }

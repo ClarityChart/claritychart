@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { C } from './tokens';
-import { Textarea, Input, Btn, VoiceBtn, DocOutput, TopNav, ErrorBox, EditableDraft, BackBtn, ProgressSteps, ProgressLoader } from './ui';
+import { Textarea, Input, Btn, VoiceBtn, DocOutput, TopNav, ErrorBox, EditableDraft, BackBtn, ProgressSteps, ProgressLoader, useUnsavedWarning } from './ui';
 import { DECLINE_DOMAINS, buildPriorExtractionSystem, buildRNRecertSystem, buildF2FSystem, buildMDRecertSystem } from './recertPrompts';
 
 const EMPTY_INPUTS = {
@@ -144,25 +144,21 @@ function RNPathway({ onBack, onBackHome }) {
         </div>
 
         {stage < 3 && (
-          <div style={{ display: 'flex', gap: '8px', marginBottom: '32px' }}>
-            {stageLabels.map((label, i) => (
-              <div key={i} style={{ flex: 1 }}>
-                <div style={{ height: '2px', background: i <= stage ? C.gold : C.border, marginBottom: '5px' }} />
-                <div style={{ fontSize: '10px', letterSpacing: '2px', fontFamily: C.mono, color: i === stage ? C.gold : i < stage ? C.goldDim : 'rgba(196,168,130,0.25)' }}>{i+1}. {label.toUpperCase()}</div>
-              </div>
-            ))}
-          </div>
+          <ProgressSteps
+            steps={stageLabels}
+            current={stage}
+            onStepClick={(i) => { if (i < stage) setStage(i); }}
+          />
         )}
 
         {error && <div style={{ background: 'rgba(224,112,112,0.08)', border: '1px solid rgba(224,112,112,0.3)', borderRadius: '2px', padding: '10px 16px', color: '#e07070', fontSize: '12px', fontFamily: C.mono, marginBottom: '20px' }}>{error}</div>}
 
         {(loading || extracting) && (
-          <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: '2px', padding: '40px', textAlign: 'center' }}>
-            <div style={{ fontSize: '11px', letterSpacing: '3px', color: C.gold, fontFamily: C.mono, marginBottom: '20px' }}>{extracting ? 'ANALYZING PRIOR NOTE...' : 'GENERATING RN NARRATIVE...'}</div>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '8px' }}>
-              {[0,1,2].map(i => <div key={i} style={{ width: '8px', height: '8px', borderRadius: '50%', background: C.gold, animation: `bounce 1.2s ${i*0.2}s infinite ease-in-out` }} />)}
-            </div>
-          </div>
+          <ProgressLoader
+            message={extracting ? 'ANALYZING PRIOR NOTE...' : 'GENERATING RN NARRATIVE...'}
+            steps={['Analyzing prior note', 'Processing domains', 'Generating narrative']}
+            currentStep={extracting ? 0 : 2}
+          />
         )}
 
         {stage === 0 && !extracting && (
@@ -233,7 +229,7 @@ function RNPathway({ onBack, onBackHome }) {
               );
             })}
             <div style={{ marginTop: '28px', display: 'flex', justifyContent: 'space-between' }}>
-              <Btn variant="secondary" onClick={() => setStage(0)}>← Prior Note</Btn>
+              <BackBtn onClick={() => setStage(0)} label="Prior Note" />
               <Btn onClick={generateRN} disabled={!inputs.diagnosis.trim() || filledDomains === 0} style={{ padding: '12px 32px' }}>Generate RN Narrative →</Btn>
             </div>
           </div>
@@ -246,7 +242,7 @@ function RNPathway({ onBack, onBackHome }) {
             </div>
             <EditableDraft title="RN Recertification Narrative" value={rnNarrative} onChange={setRnNarrative} badge="DRAFT" />
             <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'space-between' }}>
-              <Btn variant="secondary" onClick={() => setStage(1)}>← Edit Assessment</Btn>
+              <BackBtn onClick={() => setStage(1)} label="Assessment" />
               <div style={{ display: 'flex', gap: '10px' }}>
                 <Btn variant="secondary" onClick={() => { navigator.clipboard.writeText(rnNarrative); }}>Copy Note</Btn>
                 <Btn variant="secondary" onClick={onBackHome}>Done — Return Home</Btn>
@@ -300,12 +296,11 @@ function F2FPathway({ onBack, onBackHome }) {
         {error && <div style={{ background: 'rgba(224,112,112,0.08)', border: '1px solid rgba(224,112,112,0.3)', borderRadius: '2px', padding: '10px 16px', color: '#e07070', fontSize: '12px', fontFamily: C.mono, marginBottom: '20px' }}>{error}</div>}
 
         {loading && (
-          <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: '2px', padding: '40px', textAlign: 'center' }}>
-            <div style={{ fontSize: '11px', letterSpacing: '3px', color: C.gold, fontFamily: C.mono, marginBottom: '20px' }}>GENERATING FACE-TO-FACE NOTE...</div>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '8px' }}>
-              {[0,1,2].map(i => <div key={i} style={{ width: '8px', height: '8px', borderRadius: '50%', background: C.gold, animation: `bounce 1.2s ${i*0.2}s infinite ease-in-out` }} />)}
-            </div>
-          </div>
+          <ProgressLoader
+            message="GENERATING FACE-TO-FACE NOTE..."
+            steps={['Processing clinical findings', 'Generating F2F note']}
+            currentStep={1}
+          />
         )}
 
         {!f2fNote && !loading && (
@@ -408,12 +403,11 @@ function MDPathway({ onBack, onBackHome }) {
         {error && <div style={{ background: 'rgba(224,112,112,0.08)', border: '1px solid rgba(224,112,112,0.3)', borderRadius: '2px', padding: '10px 16px', color: '#e07070', fontSize: '12px', fontFamily: C.mono, marginBottom: '20px' }}>{error}</div>}
 
         {loading && (
-          <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: '2px', padding: '40px', textAlign: 'center' }}>
-            <div style={{ fontSize: '11px', letterSpacing: '3px', color: C.gold, fontFamily: C.mono, marginBottom: '20px' }}>GENERATING PHYSICIAN RECERTIFICATION NOTE...</div>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '8px' }}>
-              {[0,1,2].map(i => <div key={i} style={{ width: '8px', height: '8px', borderRadius: '50%', background: C.gold, animation: `bounce 1.2s ${i*0.2}s infinite ease-in-out` }} />)}
-            </div>
-          </div>
+          <ProgressLoader
+            message="GENERATING PHYSICIAN RECERTIFICATION NOTE..."
+            steps={['Processing RN narrative', 'Synthesizing F2F note', 'Generating physician recert']}
+            currentStep={2}
+          />
         )}
 
         {!mdNote && !loading && (

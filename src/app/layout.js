@@ -1,3 +1,4 @@
+import './globals.css';
 export const metadata = {
   title: 'ClarityChart — Hospice Documentation Platform',
   description: 'AI-powered clinical documentation built exclusively for hospice.',

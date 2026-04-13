@@ -90,11 +90,11 @@ export default function ClarityChart() {
         </div>
 
         {/* Modules */}
-        <div style={{ fontSize: '10px', letterSpacing: '3px', color: C.goldDim, fontFamily: C.mono, marginBottom: '18px' }}>DOCUMENTATION MODULES</div>
+        <div style={{ fontSize: '11px', letterSpacing: '3px', color: C.goldDim, fontFamily: C.mono, marginBottom: '18px' }}>DOCUMENTATION MODULES</div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '18px' }}>
 
           {/* Admission Pathway */}
-          <div style={{ background: 'rgba(196,168,130,0.08)', border: `1px solid rgba(196,168,130,0.25)`, borderRadius: '4px' }}>
+          <div style={{ background: 'rgba(20,32,45,0.98)', border: `1px solid rgba(196,168,130,0.25)`, borderRadius: '4px' }}>
             <div style={{ padding: '16px 20px 12px', borderBottom: `1px solid ${C.border}`, display: 'flex', alignItems: 'center', gap: '12px' }}>
               <div style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(196,168,130,0.1)', border: `1px solid rgba(196,168,130,0.25)`, borderRadius: '2px', fontSize: '14px' }}>✦</div>
               <div>
@@ -109,7 +109,7 @@ export default function ClarityChart() {
           </div>
 
           {/* Ongoing Care Pathway */}
-          <div style={{ background: 'rgba(196,168,130,0.08)', border: `1px solid rgba(196,168,130,0.25)`, borderRadius: '4px' }}>
+          <div style={{ background: 'rgba(20,32,45,0.98)', border: `1px solid rgba(196,168,130,0.25)`, borderRadius: '4px' }}>
             <div style={{ padding: '16px 20px 12px', borderBottom: '1px solid rgba(74,144,164,0.15)', display: 'flex', alignItems: 'center', gap: '12px' }}>
               <div style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: C.blueDim, border: `1px solid ${C.blueBorder}`, borderRadius: '2px', fontSize: '14px' }}>◎</div>
               <div>

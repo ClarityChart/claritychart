@@ -1,7 +1,7 @@
 'use client';
 import { useState, useRef } from 'react';
 import { C } from './tokens';
-import { TopNav, ErrorBox, DocOutput, VoiceBtn } from './ui';
+import { TopNav, ErrorBox, EditableDraft, BackBtn, Btn } from './ui';
 
 const SCENARIOS = {
   routine: {

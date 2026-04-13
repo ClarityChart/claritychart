@@ -69,9 +69,9 @@ export default function ClarityChart() {
         {/* Header */}
         <header style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', padding: '36px 0 28px', borderBottom: `1px solid ${C.border}`, marginBottom: '44px' }}>
           <div>
-            <div style={{ fontSize: '10px', letterSpacing: '4px', color: C.goldDim, fontFamily: C.mono, marginBottom: '4px' }}>CLINICAL DOCUMENTATION PLATFORM</div>
+            <div style={{ fontSize: '12px', letterSpacing: '4px', color: '#c8b8a4', fontFamily: C.mono, marginBottom: '4px' }}>CLINICAL DOCUMENTATION PLATFORM</div>
             <div style={{ fontSize: 'clamp(24px, 3vw, 34px)', color: C.text }}>Clarity<span style={{ color: C.gold }}>Chart</span></div>
-            <div style={{ fontSize: '12px', color: 'rgba(196,168,130,0.45)', marginTop: '4px', fontStyle: 'italic' }}>Built exclusively for hospice</div>
+            <div style={{ fontSize: '14px', color: '#c8b8a4', marginTop: '6px', fontStyle: 'italic' }}>Built exclusively for hospice</div>
           </div>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(196,168,130,0.08)', border: `1px solid ${C.border}`, borderRadius: '20px', padding: '5px 14px', fontSize: '11px', color: C.gold, fontFamily: C.mono }}>
             <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: C.green, boxShadow: `0 0 6px ${C.green}` }} />
@@ -130,8 +130,8 @@ export default function ClarityChart() {
 
         {/* Footer */}
         <div style={{ borderTop: `1px solid rgba(196,168,130,0.1)`, marginTop: '48px', paddingTop: '20px', display: 'flex', justifyContent: 'space-between' }}>
-          <div style={{ fontSize: '10px', color: 'rgba(196,168,130,0.2)', fontFamily: C.mono }}>CLARITYCHART · HOSPICE DOCUMENTATION PLATFORM · BETA</div>
-          <div style={{ fontSize: '10px', color: 'rgba(196,168,130,0.2)', fontFamily: C.mono }}>FOR CLINICAL USE · NOT FOR DIAGNOSTIC DECISIONS</div>
+          <div style={{ fontSize: '11px', color: 'rgba(196,168,130,0.4)', fontFamily: C.mono }}>CLARITYCHART · HOSPICE DOCUMENTATION PLATFORM · BETA</div>
+          <div style={{ fontSize: '11px', color: 'rgba(196,168,130,0.4)', fontFamily: C.mono }}>FOR CLINICAL USE · NOT FOR DIAGNOSTIC DECISIONS</div>
         </div>
       </div>
     </div>

@@ -270,7 +270,7 @@ function DemoMode({ onBack, onBackHome }) {
           {stage !== 'select' && <Btn variant="ghost" onClick={reset}>← Patients</Btn>}
         </div>
 
-        {stage !== 'select' && stage !== 'cti' && (
+        {stage !== 'select' && (
           <ProgressSteps
             steps={stageTitles}
             current={currentStageNum - 1}
@@ -597,13 +597,11 @@ function ClinicalMode({ onBack, onBackHome }) {
           </div>
         </div>
 
-        {stage < 5 && (
-          <ProgressSteps
+        <ProgressSteps
             steps={stageLabels}
-            current={stage - 1}
+            current={Math.min(stage - 1, stageLabels.length - 1)}
             onStepClick={(i) => { if (i + 1 < stage) setStage(i + 1); }}
           />
-        )}
 
         <ErrorBox message={error} />
 
@@ -611,7 +609,7 @@ function ClinicalMode({ onBack, onBackHome }) {
           <ProgressLoader
             message={loadingMsg}
             steps={['Analyzing records', 'Generating narrative', 'Creating CTI']}
-            currentStep={loadingMsg.includes('Narrative') ? 1 : loadingMsg.includes('CTI') || loadingMsg.includes('Certificate') ? 2 : 0}
+            currentStep={loadingMsg.includes('Summariz') ? 0 : loadingMsg.includes('Narrative') ? 1 : loadingMsg.includes('CTI') || loadingMsg.includes('Certificate') ? 2 : 0}
           />
         )}
 

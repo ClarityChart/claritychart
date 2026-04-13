@@ -4,22 +4,37 @@ export function clamp(min, preferred, max) {
 }
 
 export const C = {
+  // Backgrounds
   bg: '#0f1923',
-  bgCard: 'rgba(196,168,130,0.04)',
-  bgCardHover: 'rgba(196,168,130,0.08)',
-  border: 'rgba(196,168,130,0.15)',
-  borderHover: 'rgba(196,168,130,0.3)',
+  bgCard: '#1a2836',
+  bgCardHover: '#1f3040',
+  bgCardActive: '#243548',
+
+  // Borders
+  border: 'rgba(196,168,130,0.3)',
+  borderHover: 'rgba(196,168,130,0.6)',
+
+  // Gold
   gold: '#c4a882',
-  goldDim: 'rgba(196,168,130,0.45)',
-  goldFaint: 'rgba(196,168,130,0.12)',
+  goldDim: '#8a7460',
+  goldFaint: 'rgba(196,168,130,0.15)',
+
+  // Text
   text: '#f0e8dc',
-  textDim: '#b8a898',
+  textDim: '#c8b8a8',
+  textFaint: '#8a7a6a',
+
+  // Green
   green: '#4caf82',
-  greenDim: 'rgba(76,175,130,0.1)',
-  greenBorder: 'rgba(76,175,130,0.25)',
+  greenDim: 'rgba(76,175,130,0.15)',
+  greenBorder: 'rgba(76,175,130,0.4)',
+
+  // Blue
   blue: '#4a90a4',
-  blueDim: 'rgba(74,144,164,0.1)',
-  blueBorder: 'rgba(74,144,164,0.25)',
+  blueDim: 'rgba(74,144,164,0.15)',
+  blueBorder: 'rgba(74,144,164,0.4)',
+
+  // Fonts
   mono: "Courier New, monospace",
   serif: "Georgia, 'Times New Roman', serif",
 };

@@ -2,6 +2,11 @@
 import { useState, useRef, useEffect } from 'react';
 import { C } from './tokens';
 
+const FONT_BASE = 'clamp(14px, 1.4vw, 16px)';
+const FONT_SM = 'clamp(12px, 1.1vw, 13px)';
+const FONT_LG = 'clamp(16px, 1.8vw, 20px)';
+const FONT_MONO = 'clamp(11px, 1vw, 12px)';
+
 export function Textarea({ value, onChange, placeholder, rows = 4, mono }) {
   return (
     <textarea
@@ -11,13 +16,13 @@ export function Textarea({ value, onChange, placeholder, rows = 4, mono }) {
       rows={rows}
       style={{
         width: '100%',
-        background: 'rgba(0,0,0,0.35)',
+        background: 'rgba(0,0,0,0.4)',
         border: `1px solid ${C.border}`,
-        borderRadius: '3px',
+        borderRadius: '4px',
         color: C.text,
-        padding: '12px 14px',
+        padding: '12px 16px',
         fontFamily: mono ? C.mono : C.serif,
-        fontSize: mono ? '12px' : '14px',
+        fontSize: mono ? FONT_MONO : FONT_BASE,
         lineHeight: 1.65,
         resize: 'vertical',
         outline: 'none',
@@ -38,13 +43,13 @@ export function Input({ value, onChange, placeholder }) {
       placeholder={placeholder}
       style={{
         width: '100%',
-        background: 'rgba(0,0,0,0.35)',
+        background: 'rgba(0,0,0,0.4)',
         border: `1px solid ${C.border}`,
-        borderRadius: '3px',
+        borderRadius: '4px',
         color: C.text,
-        padding: '11px 14px',
+        padding: '11px 16px',
         fontFamily: C.serif,
-        fontSize: '14px',
+        fontSize: FONT_BASE,
         outline: 'none',
         boxSizing: 'border-box',
         transition: 'border-color 0.15s',
@@ -57,38 +62,27 @@ export function Input({ value, onChange, placeholder }) {
 
 export function Btn({ children, onClick, variant = 'primary', disabled, style }) {
   const [hov, setHov] = useState(false);
+  const base = {
+    padding: '11px 24px',
+    borderRadius: '4px',
+    cursor: disabled ? 'not-allowed' : 'pointer',
+    fontFamily: C.mono,
+    fontSize: FONT_MONO,
+    letterSpacing: '1.5px',
+    textTransform: 'uppercase',
+    transition: 'all 0.15s',
+    opacity: disabled ? 0.4 : 1,
+    border: 'none',
+  };
   const variants = {
-    primary: {
-      background: disabled ? 'rgba(196,168,130,0.3)' : hov ? '#d4b892' : C.gold,
-      color: '#0f1923', border: 'none',
-    },
-    secondary: {
-      background: hov ? 'rgba(196,168,130,0.1)' : 'transparent',
-      color: C.gold,
-      border: `1px solid ${hov ? C.borderHover : C.border}`,
-    },
-    ghost: { background: 'transparent', color: C.goldDim, border: 'none' },
-    danger: { background: 'transparent', color: '#e07070', border: '1px solid rgba(224,112,112,0.3)' },
+    primary: { background: disabled ? '#5a4a3a' : hov ? '#d4b892' : C.gold, color: '#0f1923' },
+    secondary: { background: hov ? 'rgba(196,168,130,0.15)' : 'transparent', color: C.gold, border: `1px solid ${hov ? C.gold : C.border}` },
+    ghost: { background: 'transparent', color: C.goldDim },
+    danger: { background: 'transparent', color: '#e07070', border: '1px solid rgba(224,112,112,0.4)' },
   };
   return (
-    <button
-      onClick={disabled ? undefined : onClick}
-      onMouseEnter={() => setHov(true)}
-      onMouseLeave={() => setHov(false)}
-      style={{
-        padding: '11px 24px',
-        borderRadius: '3px',
-        cursor: disabled ? 'not-allowed' : 'pointer',
-        fontFamily: C.mono,
-        fontSize: '12px',
-        letterSpacing: '1.5px',
-        textTransform: 'uppercase',
-        transition: 'all 0.15s',
-        opacity: disabled ? 0.45 : 1,
-        ...variants[variant],
-        ...style,
-      }}
-    >
+    <button onClick={disabled ? undefined : onClick} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+      style={{ ...base, ...variants[variant], ...style }}>
       {children}
     </button>
   );
@@ -97,14 +91,10 @@ export function Btn({ children, onClick, variant = 'primary', disabled, style })
 export function VoiceBtn({ onTranscript, label = 'Dictate' }) {
   const [on, setOn] = useState(false);
   const ref = useRef(null);
-
   const toggle = () => {
     if (on) { ref.current?.stop(); setOn(false); return; }
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SR) {
-      alert('Voice input requires Chrome or Edge. Please switch browsers or type your response.');
-      return;
-    }
+    if (!SR) { alert('Voice input requires Chrome or Edge browser.'); return; }
     const r = new SR();
     r.continuous = true; r.interimResults = false; r.lang = 'en-US';
     r.onresult = e => onTranscript(Array.from(e.results).map(x => x[0].transcript).join(' '));
@@ -112,29 +102,22 @@ export function VoiceBtn({ onTranscript, label = 'Dictate' }) {
     r.onerror = () => setOn(false);
     r.start(); ref.current = r; setOn(true);
   };
-
   return (
     <button onClick={toggle} style={{
       display: 'flex', alignItems: 'center', gap: '8px',
-      background: on ? 'rgba(220,80,80,0.12)' : 'rgba(196,168,130,0.08)',
-      border: `1px solid ${on ? 'rgba(220,80,80,0.5)' : C.border}`,
-      borderRadius: '3px',
-      color: on ? '#e07070' : C.gold,
-      padding: '8px 16px',
-      cursor: 'pointer',
-      fontFamily: C.mono,
-      fontSize: '11px',
-      letterSpacing: '1.5px',
-      textTransform: 'uppercase',
-      transition: 'all 0.15s',
-      whiteSpace: 'nowrap',
+      background: on ? 'rgba(220,80,80,0.15)' : 'rgba(196,168,130,0.1)',
+      border: `1px solid ${on ? 'rgba(220,80,80,0.6)' : C.border}`,
+      borderRadius: '4px', color: on ? '#ff8080' : C.gold,
+      padding: '9px 18px', cursor: 'pointer', fontFamily: C.mono,
+      fontSize: FONT_MONO, letterSpacing: '1.5px', textTransform: 'uppercase',
+      transition: 'all 0.15s', whiteSpace: 'nowrap',
     }}>
       <span style={{
-        width: '8px', height: '8px', borderRadius: '50%', flexShrink: 0,
-        background: on ? '#e07070' : C.gold,
+        width: '9px', height: '9px', borderRadius: '50%', flexShrink: 0,
+        background: on ? '#ff8080' : C.gold,
         animation: on ? 'voicePulse 1s infinite' : 'none',
       }} />
-      {on ? '■ Stop' : `🎙 ${label}`}
+      {on ? '■ Stop Recording' : `🎙 ${label}`}
     </button>
   );
 }
@@ -143,104 +126,88 @@ export function ErrorBox({ message }) {
   if (!message) return null;
   return (
     <div style={{
-      background: 'rgba(224,112,112,0.1)',
-      border: '1px solid rgba(224,112,112,0.4)',
-      borderLeft: '4px solid #e07070',
-      borderRadius: '3px',
-      padding: '14px 18px',
-      color: '#e07070',
-      fontSize: '14px',
-      fontFamily: C.serif,
-      marginBottom: '20px',
-      lineHeight: 1.5,
-      display: 'flex',
-      alignItems: 'flex-start',
-      gap: '10px',
+      background: 'rgba(224,112,112,0.12)', border: '1px solid rgba(224,112,112,0.5)',
+      borderLeft: '4px solid #e07070', borderRadius: '4px',
+      padding: '14px 18px', color: '#ff9090', fontSize: FONT_BASE,
+      fontFamily: C.serif, marginBottom: '20px', lineHeight: 1.6,
+      display: 'flex', alignItems: 'flex-start', gap: '12px',
     }}>
-      <span style={{ fontSize: '18px', flexShrink: 0 }}>⚠</span>
+      <span style={{ fontSize: '20px', flexShrink: 0, lineHeight: 1 }}>⚠</span>
       <span>{message}</span>
     </div>
   );
 }
 
-export function DocOutput({ title, content, badge }) {
-  const [copyState, setCopyState] = useState('idle');
+function CopyBtn({ getText }) {
+  const [state, setState] = useState('idle');
   const copy = async () => {
-    setCopyState('copying');
+    setState('copying');
     try {
-      await navigator.clipboard.writeText(content);
-      setCopyState('copied');
-      setTimeout(() => setCopyState('idle'), 3000);
-    } catch { setCopyState('idle'); }
+      await navigator.clipboard.writeText(getText());
+      setState('copied');
+      setTimeout(() => setState('idle'), 3000);
+    } catch { setState('idle'); }
   };
+  return (
+    <button onClick={copy} style={{
+      display: 'flex', alignItems: 'center', gap: '8px',
+      padding: '8px 20px', borderRadius: '4px',
+      border: `1px solid ${state === 'copied' ? C.greenBorder : C.border}`,
+      background: state === 'copied' ? C.greenDim : 'transparent',
+      color: state === 'copied' ? C.green : C.gold,
+      cursor: 'pointer', fontFamily: C.mono, fontSize: FONT_MONO,
+      letterSpacing: '1px', transition: 'all 0.2s', whiteSpace: 'nowrap',
+    }}>
+      {state === 'copied' ? <><span>✓</span> Copied!</> : state === 'copying' ? 'Copying...' : <><span>⎘</span> Copy Note</>}
+    </button>
+  );
+}
+
+export function DocOutput({ title, content, badge }) {
   const rendered = content.split('\n').map((line, i) => {
     line = line.replace(/\*\*/g, '').replace(/\*/g, '');
     const isHeader = /^[A-Z][A-Z\s\/\(\)\-,:.]{4,}$/.test(line.trim()) && line.trim().length > 3;
     if (isHeader) return (
-      <div key={i} style={{ color: C.gold, fontFamily: C.mono, fontSize: '12px', letterSpacing: '2px', marginTop: '22px', marginBottom: '6px', paddingBottom: '4px', borderBottom: `1px solid rgba(196,168,130,0.15)` }}>{line}</div>
+      <div key={i} style={{ color: C.gold, fontFamily: C.mono, fontSize: FONT_MONO, letterSpacing: '2px', marginTop: '24px', marginBottom: '8px', paddingBottom: '6px', borderBottom: `1px solid rgba(196,168,130,0.2)` }}>{line}</div>
     );
-    if (!line.trim()) return <div key={i} style={{ height: '7px' }} />;
-    return <div key={i} style={{ color: C.textDim, fontSize: '14px', lineHeight: 1.85 }}>{line}</div>;
+    if (!line.trim()) return <div key={i} style={{ height: '8px' }} />;
+    return <div key={i} style={{ color: C.textDim, fontSize: FONT_BASE, lineHeight: 1.85 }}>{line}</div>;
   });
   return (
-    <div style={{ background: 'rgba(20,32,45,0.98)', border: `1px solid rgba(196,168,130,0.25)`, borderRadius: '4px', overflow: 'hidden', marginBottom: '24px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 20px', borderBottom: `1px solid ${C.border}`, background: 'rgba(0,0,0,0.3)' }}>
+    <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: '4px', overflow: 'hidden', marginBottom: '28px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 22px', borderBottom: `1px solid ${C.border}`, background: 'rgba(0,0,0,0.25)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <span style={{ color: C.text, fontSize: '15px' }}>{title}</span>
-          {badge && <span style={{ fontSize: '10px', color: C.green, background: C.greenDim, border: `1px solid ${C.greenBorder}`, borderRadius: '10px', padding: '2px 8px', fontFamily: C.mono }}>{badge}</span>}
+          <span style={{ color: C.text, fontSize: FONT_LG, fontFamily: C.serif }}>{title}</span>
+          {badge && <span style={{ fontSize: '10px', color: C.green, background: C.greenDim, border: `1px solid ${C.greenBorder}`, borderRadius: '12px', padding: '2px 10px', fontFamily: C.mono }}>{badge}</span>}
         </div>
-        <button onClick={copy} style={{
-          display: 'flex', alignItems: 'center', gap: '6px', padding: '7px 18px',
-          borderRadius: '3px', border: `1px solid ${copyState === 'copied' ? C.greenBorder : C.border}`,
-          background: copyState === 'copied' ? C.greenDim : 'transparent',
-          color: copyState === 'copied' ? C.green : C.gold,
-          cursor: 'pointer', fontFamily: C.mono, fontSize: '11px', letterSpacing: '1px', transition: 'all 0.2s',
-        }}>
-          {copyState === 'copied' ? '✓ Copied to clipboard' : copyState === 'copying' ? 'Copying...' : '⎘ Copy'}
-        </button>
+        <CopyBtn getText={() => content} />
       </div>
-      <div style={{ padding: '22px 26px', maxHeight: '560px', overflowY: 'auto', fontFamily: C.serif }}>{rendered}</div>
+      <div style={{ padding: '24px 28px', maxHeight: '580px', overflowY: 'auto', fontFamily: C.serif }}>{rendered}</div>
     </div>
   );
 }
 
 export function EditableDraft({ title, value, onChange, badge }) {
-  const [copyState, setCopyState] = useState('idle');
-  const copy = async () => {
-    setCopyState('copying');
-    try {
-      await navigator.clipboard.writeText(value);
-      setCopyState('copied');
-      setTimeout(() => setCopyState('idle'), 3000);
-    } catch { setCopyState('idle'); }
-  };
   return (
-    <div style={{ background: 'rgba(20,32,45,0.98)', border: `1px solid rgba(196,168,130,0.25)`, borderRadius: '4px', overflow: 'hidden', marginBottom: '24px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 20px', borderBottom: `1px solid ${C.border}`, background: 'rgba(0,0,0,0.3)' }}>
+    <div style={{ background: C.bgCard, border: `2px solid ${C.gold}`, borderRadius: '4px', overflow: 'hidden', marginBottom: '28px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 22px', borderBottom: `1px solid ${C.border}`, background: 'rgba(196,168,130,0.06)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <span style={{ color: C.text, fontSize: '15px' }}>{title}</span>
-          {badge && <span style={{ fontSize: '10px', color: C.green, background: C.greenDim, border: `1px solid ${C.greenBorder}`, borderRadius: '10px', padding: '2px 8px', fontFamily: C.mono }}>{badge}</span>}
-          <span style={{ fontSize: '11px', color: C.goldDim, fontFamily: C.mono }}>✎ editable</span>
+          <span style={{ color: C.text, fontSize: FONT_LG, fontFamily: C.serif }}>{title}</span>
+          {badge && <span style={{ fontSize: '10px', color: C.green, background: C.greenDim, border: `1px solid ${C.greenBorder}`, borderRadius: '12px', padding: '2px 10px', fontFamily: C.mono }}>{badge}</span>}
+          <span style={{ fontSize: '11px', color: C.gold, fontFamily: C.mono, background: 'rgba(196,168,130,0.1)', padding: '2px 10px', borderRadius: '3px', border: `1px solid rgba(196,168,130,0.3)` }}>✎ Click to edit</span>
         </div>
-        <button onClick={copy} style={{
-          display: 'flex', alignItems: 'center', gap: '6px', padding: '7px 18px',
-          borderRadius: '3px', border: `1px solid ${copyState === 'copied' ? C.greenBorder : C.border}`,
-          background: copyState === 'copied' ? C.greenDim : 'transparent',
-          color: copyState === 'copied' ? C.green : C.gold,
-          cursor: 'pointer', fontFamily: C.mono, fontSize: '11px', letterSpacing: '1px', transition: 'all 0.2s',
-        }}>
-          {copyState === 'copied' ? '✓ Copied to clipboard' : '⎘ Copy'}
-        </button>
+        <CopyBtn getText={() => value} />
       </div>
       <textarea
         value={value}
         onChange={e => onChange(e.target.value)}
         style={{
-          width: '100%', minHeight: '420px',
-          background: 'transparent', border: 'none', outline: 'none',
-          padding: '22px 26px', color: C.textDim,
-          fontSize: '14px', lineHeight: 1.85,
+          width: '100%', minHeight: '400px',
+          background: 'rgba(196,168,130,0.03)', border: 'none', outline: 'none',
+          padding: '24px 28px', color: C.textDim,
+          fontSize: FONT_BASE, lineHeight: 1.85,
           fontFamily: C.serif, resize: 'vertical', boxSizing: 'border-box',
+          cursor: 'text',
         }}
       />
     </div>
@@ -251,23 +218,22 @@ export function TopNav({ onHome, moduleName }) {
   return (
     <div style={{
       position: 'sticky', top: 0, zIndex: 100,
-      background: 'rgba(12,20,28,0.97)',
-      backdropFilter: 'blur(10px)',
-      borderBottom: `1px solid rgba(196,168,130,0.15)`,
+      background: '#0a141e',
+      borderBottom: `1px solid rgba(196,168,130,0.25)`,
       padding: '0 clamp(16px,3vw,32px)',
-      height: '54px',
+      height: '56px',
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
     }}>
-      <button onClick={onHome} style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
-        <span style={{ fontSize: 'clamp(15px,2vw,18px)', color: C.text, fontFamily: C.serif }}>
+      <button onClick={onHome} style={{ display: 'flex', alignItems: 'center', gap: '14px', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+        <span style={{ fontSize: 'clamp(16px,2vw,20px)', color: C.text, fontFamily: C.serif }}>
           Clarity<span style={{ color: C.gold }}>Chart</span>
         </span>
-        <span style={{ fontSize: '10px', color: 'rgba(196,168,130,0.4)', fontFamily: C.mono, letterSpacing: '1.5px', paddingLeft: '12px', borderLeft: `1px solid rgba(196,168,130,0.2)` }}>
-          ← HOME
+        <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: C.gold, fontFamily: C.mono, letterSpacing: '1px', paddingLeft: '14px', borderLeft: `1px solid rgba(196,168,130,0.3)` }}>
+          ← Home
         </span>
       </button>
       {moduleName && (
-        <span style={{ fontSize: '11px', color: C.goldDim, fontFamily: C.mono, letterSpacing: '2px', textTransform: 'uppercase' }}>
+        <span style={{ fontSize: '12px', color: C.textDim, fontFamily: C.mono, letterSpacing: '2px', textTransform: 'uppercase' }}>
           {moduleName}
         </span>
       )}
@@ -280,13 +246,12 @@ export function BackBtn({ onClick, label = 'Back' }) {
   return (
     <button onClick={onClick} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
       style={{
-        display: 'flex', alignItems: 'center', gap: '6px',
-        background: 'none',
-        border: `1px solid ${hov ? C.borderHover : C.border}`,
-        borderRadius: '3px',
-        color: hov ? C.gold : C.goldDim,
-        padding: '9px 18px', cursor: 'pointer',
-        fontFamily: C.mono, fontSize: '11px', letterSpacing: '1.5px',
+        display: 'flex', alignItems: 'center', gap: '8px',
+        background: hov ? 'rgba(196,168,130,0.1)' : 'transparent',
+        border: `1px solid ${hov ? C.gold : C.border}`,
+        borderRadius: '4px', color: hov ? C.gold : C.textDim,
+        padding: '10px 20px', cursor: 'pointer',
+        fontFamily: C.mono, fontSize: FONT_MONO, letterSpacing: '1.5px',
         transition: 'all 0.15s',
       }}>
       ‹ {label}
@@ -296,28 +261,27 @@ export function BackBtn({ onClick, label = 'Back' }) {
 
 export function ProgressSteps({ steps, current, onStepClick }) {
   return (
-    <div style={{ display: 'flex', gap: '6px', marginBottom: '32px' }}>
+    <div style={{ display: 'flex', gap: '8px', marginBottom: '36px' }}>
       {steps.map((label, i) => {
         const done = i < current;
         const active = i === current;
         const clickable = done && onStepClick;
         return (
           <div key={i} onClick={() => clickable && onStepClick(i)}
-            style={{ flex: 1, cursor: clickable ? 'pointer' : 'default' }}
-            title={clickable ? `Return to ${label}` : ''}>
+            style={{ flex: 1, cursor: clickable ? 'pointer' : 'default' }}>
             <div style={{
-              height: '3px', borderRadius: '2px',
-              background: active ? C.gold : done ? C.goldDim : C.border,
-              marginBottom: '6px', transition: 'background 0.2s',
+              height: '4px', borderRadius: '2px', marginBottom: '8px',
+              background: active ? C.gold : done ? 'rgba(196,168,130,0.6)' : 'rgba(196,168,130,0.15)',
+              transition: 'background 0.3s',
             }} />
             <div style={{
-              fontSize: 'clamp(9px,1vw,11px)', letterSpacing: '1.5px',
-              fontFamily: C.mono, transition: 'color 0.2s',
-              color: active ? C.gold : done ? C.goldDim : 'rgba(196,168,130,0.3)',
+              fontSize: FONT_MONO, letterSpacing: '1px', fontFamily: C.mono,
+              color: active ? C.gold : done ? C.textDim : 'rgba(196,168,130,0.35)',
               textDecoration: clickable ? 'underline' : 'none',
-              textDecorationColor: 'rgba(196,168,130,0.3)',
+              textDecorationColor: 'rgba(196,168,130,0.4)',
+              transition: 'color 0.2s',
             }}>
-              {i + 1}. {label.toUpperCase()}
+              {i + 1}. {label}
             </div>
           </div>
         );
@@ -327,47 +291,54 @@ export function ProgressSteps({ steps, current, onStepClick }) {
 }
 
 export function ProgressLoader({ steps, currentStep, message }) {
+  const [animKey, setAnimKey] = useState(0);
+  useEffect(() => { setAnimKey(k => k + 1); }, [currentStep]);
+
   return (
     <div style={{
-      background: 'rgba(20,32,45,0.98)',
-      border: `1px solid rgba(196,168,130,0.25)`,
-      borderRadius: '4px',
-      padding: '40px clamp(20px,4vw,48px)',
-      textAlign: 'center',
+      background: C.bgCard, border: `1px solid ${C.border}`,
+      borderRadius: '4px', padding: 'clamp(28px,4vw,48px)', textAlign: 'center',
     }}>
-      <div style={{ fontSize: '12px', letterSpacing: '3px', color: C.gold, fontFamily: C.mono, marginBottom: '32px' }}>
-        {message || 'GENERATING...'}
+      <div style={{ fontSize: '13px', letterSpacing: '3px', color: C.gold, fontFamily: C.mono, marginBottom: '36px', textTransform: 'uppercase' }}>
+        {message || 'Generating...'}
       </div>
       {steps && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', maxWidth: '400px', margin: '0 auto' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: '420px', margin: '0 auto' }}>
           {steps.map((step, i) => {
             const done = i < currentStep;
             const active = i === currentStep;
             return (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                 <div style={{
-                  width: '24px', height: '24px', borderRadius: '50%', flexShrink: 0,
-                  border: `2px solid ${done ? C.green : active ? C.gold : C.border}`,
-                  background: done ? C.green : 'transparent',
+                  width: '28px', height: '28px', borderRadius: '50%', flexShrink: 0,
+                  border: `2px solid ${done ? C.green : active ? C.gold : 'rgba(196,168,130,0.2)'}`,
+                  background: done ? C.green : active ? 'rgba(196,168,130,0.1)' : 'transparent',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '11px', color: done ? '#0f1923' : active ? C.gold : C.goldDim,
+                  fontSize: '12px', color: done ? '#0f1923' : active ? C.gold : 'rgba(196,168,130,0.3)',
                   transition: 'all 0.4s',
+                  flexShrink: 0,
                 }}>
                   {done ? '✓' : active ? '◉' : i + 1}
                 </div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ height: '4px', background: 'rgba(196,168,130,0.1)', borderRadius: '2px', overflow: 'hidden' }}>
-                    <div style={{
-                      height: '100%', borderRadius: '2px', transition: 'width 0.6s ease',
-                      background: done ? C.green : active ? C.gold : 'transparent',
-                      width: done ? '100%' : active ? '65%' : '0%',
-                    }} />
+                  <div style={{ height: '5px', background: 'rgba(196,168,130,0.1)', borderRadius: '3px', overflow: 'hidden' }}>
+                    <div
+                      key={`${animKey}-${i}`}
+                      style={{
+                        height: '100%', borderRadius: '3px',
+                        background: done ? C.green : active ? C.gold : 'transparent',
+                        width: done ? '100%' : '0%',
+                        animation: active ? 'progressFill 1.8s ease-out forwards' : 'none',
+                        transition: done ? 'none' : 'width 0.5s',
+                      }}
+                    />
                   </div>
                 </div>
                 <div style={{
-                  fontSize: '12px', fontFamily: C.mono, letterSpacing: '1px',
-                  color: done ? C.green : active ? C.gold : C.goldDim,
+                  fontSize: FONT_MONO, fontFamily: C.mono, letterSpacing: '1px',
+                  color: done ? C.green : active ? C.gold : 'rgba(196,168,130,0.35)',
                   minWidth: '160px', textAlign: 'left',
+                  transition: 'color 0.3s',
                 }}>
                   {step}
                 </div>
@@ -386,20 +357,17 @@ export function Collapsible({ title, children, defaultOpen = false }) {
     <div style={{ marginBottom: '20px' }}>
       <button onClick={() => setOpen(!open)} style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        width: '100%', background: 'rgba(196,168,130,0.05)',
-        border: `1px solid ${C.border}`, borderRadius: open ? '3px 3px 0 0' : '3px',
-        padding: '11px 16px', cursor: 'pointer', color: C.goldDim,
-        fontFamily: C.mono, fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase',
+        width: '100%', background: open ? 'rgba(196,168,130,0.1)' : 'rgba(196,168,130,0.05)',
+        border: `1px solid ${C.border}`, borderRadius: open ? '4px 4px 0 0' : '4px',
+        padding: '12px 18px', cursor: 'pointer', color: C.textDim,
+        fontFamily: C.mono, fontSize: FONT_MONO, letterSpacing: '2px', textTransform: 'uppercase',
         transition: 'all 0.15s',
-      }}
-        onMouseEnter={e => e.currentTarget.style.background = 'rgba(196,168,130,0.1)'}
-        onMouseLeave={e => e.currentTarget.style.background = 'rgba(196,168,130,0.05)'}
-      >
+      }}>
         <span>{title}</span>
-        <span style={{ transition: 'transform 0.2s', transform: open ? 'rotate(180deg)' : 'none', fontSize: '14px' }}>▾</span>
+        <span style={{ transition: 'transform 0.2s', transform: open ? 'rotate(180deg)' : 'none', fontSize: '16px', color: C.gold }}>▾</span>
       </button>
       {open && (
-        <div style={{ border: `1px solid ${C.border}`, borderTop: 'none', borderRadius: '0 0 3px 3px', padding: '16px' }}>
+        <div style={{ border: `1px solid ${C.border}`, borderTop: 'none', borderRadius: '0 0 4px 4px', padding: '18px', background: 'rgba(0,0,0,0.2)' }}>
           {children}
         </div>
       )}
@@ -409,9 +377,7 @@ export function Collapsible({ title, children, defaultOpen = false }) {
 
 export function useUnsavedWarning(hasContent) {
   useEffect(() => {
-    const handler = (e) => {
-      if (hasContent) { e.preventDefault(); e.returnValue = ''; }
-    };
+    const handler = (e) => { if (hasContent) { e.preventDefault(); e.returnValue = ''; } };
     window.addEventListener('beforeunload', handler);
     return () => window.removeEventListener('beforeunload', handler);
   }, [hasContent]);

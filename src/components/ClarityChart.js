@@ -70,7 +70,7 @@ export default function ClarityChart() {
         <header style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', padding: '36px 0 28px', borderBottom: `1px solid ${C.border}`, marginBottom: '44px' }}>
           <div>
             <div style={{ fontSize: '10px', letterSpacing: '4px', color: C.goldDim, fontFamily: C.mono, marginBottom: '4px' }}>CLINICAL DOCUMENTATION PLATFORM</div>
-            <div style={{ fontSize: 'clamp(22px, 3vw, 32px)', color: C.text }}>Clarity<span style={{ color: C.gold }}>Chart</span></div>
+            <div style={{ fontSize: 'clamp(24px, 3vw, 34px)', color: C.text }}>Clarity<span style={{ color: C.gold }}>Chart</span></div>
             <div style={{ fontSize: '12px', color: 'rgba(196,168,130,0.45)', marginTop: '4px', fontStyle: 'italic' }}>Built exclusively for hospice</div>
           </div>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(196,168,130,0.08)', border: `1px solid ${C.border}`, borderRadius: '20px', padding: '5px 14px', fontSize: '11px', color: C.gold, fontFamily: C.mono }}>
@@ -94,11 +94,11 @@ export default function ClarityChart() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '18px' }}>
 
           {/* Admission Pathway */}
-          <div style={{ background: 'rgba(20,32,45,0.98)', border: `1px solid rgba(196,168,130,0.25)`, borderRadius: '4px' }}>
+          <div style={{ background: C.bgCard, border: `1px solid rgba(196,168,130,0.25)`, borderRadius: '4px' }}>
             <div style={{ padding: '16px 20px 12px', borderBottom: `1px solid ${C.border}`, display: 'flex', alignItems: 'center', gap: '12px' }}>
               <div style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(196,168,130,0.1)', border: `1px solid rgba(196,168,130,0.25)`, borderRadius: '2px', fontSize: '14px' }}>✦</div>
               <div>
-                <div style={{ fontSize: 'clamp(13px, 1.5vw, 15px)', color: C.text }}>Admission Pathway</div>
+                <div style={{ fontSize: 'clamp(14px, 1.5vw, 16px)', color: C.text }}>Admission Pathway</div>
                 <div style={{ fontSize: '10px', color: C.goldDim, fontFamily: C.mono }}>New patient enrollment</div>
               </div>
             </div>
@@ -109,11 +109,11 @@ export default function ClarityChart() {
           </div>
 
           {/* Ongoing Care Pathway */}
-          <div style={{ background: 'rgba(20,32,45,0.98)', border: `1px solid rgba(196,168,130,0.25)`, borderRadius: '4px' }}>
+          <div style={{ background: C.bgCard, border: `1px solid rgba(196,168,130,0.25)`, borderRadius: '4px' }}>
             <div style={{ padding: '16px 20px 12px', borderBottom: '1px solid rgba(74,144,164,0.15)', display: 'flex', alignItems: 'center', gap: '12px' }}>
               <div style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: C.blueDim, border: `1px solid ${C.blueBorder}`, borderRadius: '2px', fontSize: '14px' }}>◎</div>
               <div>
-                <div style={{ fontSize: 'clamp(13px, 1.5vw, 15px)', color: C.text }}>Ongoing Care Pathway</div>
+                <div style={{ fontSize: 'clamp(14px, 1.5vw, 16px)', color: C.text }}>Ongoing Care Pathway</div>
                 <div style={{ fontSize: '10px', color: 'rgba(74,144,164,0.5)', fontFamily: C.mono }}>Visit notes · Recertification</div>
               </div>
             </div>

@@ -97,23 +97,22 @@ export function Btn({ children, onClick, variant = 'primary', disabled, style })
   };
   const variants = {
     primary: {
-      background: disabled ? '#d1d5db' : hov ? '#6d5210' : C.gold,
-      color: '#ffffff',
-      boxShadow: disabled ? 'none' : hov ? '0 2px 8px rgba(139,105,20,0.35)' : '0 1px 4px rgba(139,105,20,0.25)',
+      background: disabled ? 'rgba(196,168,130,0.3)' : hov ? '#c4a070' : C.gold,
+      color: '#1a2535',
+      boxShadow: disabled ? 'none' : hov ? '0 2px 8px rgba(196,168,130,0.3)' : '0 1px 4px rgba(196,168,130,0.2)',
     },
     secondary: {
-      background: hov ? C.goldLight : '#ffffff',
+      background: hov ? 'rgba(196,168,130,0.15)' : 'transparent',
       color: C.gold,
       border: `1.5px solid ${hov ? C.gold : C.goldBorder}`,
-      boxShadow: hov ? '0 1px 4px rgba(139,105,20,0.15)' : 'none',
     },
     ghost: {
-      background: hov ? '#f3f4f6' : 'transparent',
+      background: hov ? 'rgba(196,168,130,0.08)' : 'transparent',
       color: C.textFaint,
       border: `1px solid ${hov ? C.border : 'transparent'}`,
     },
     danger: {
-      background: hov ? C.redDim : 'transparent',
+      background: hov ? 'rgba(240,128,128,0.15)' : 'transparent',
       color: C.red,
       border: `1.5px solid ${C.redBorder}`,
     },
@@ -147,7 +146,7 @@ export function VoiceBtn({ onTranscript, label = 'Dictate' }) {
   return (
     <button onClick={toggle} style={{
       display: 'inline-flex', alignItems: 'center', gap: '8px',
-      background: on ? '#fff1f2' : C.goldLight,
+      background: on ? 'rgba(240,128,128,0.15)' : 'rgba(196,168,130,0.1)',
       border: `1.5px solid ${on ? C.redBorder : C.goldBorder}`,
       borderRadius: '6px',
       color: on ? C.red : C.gold,
@@ -200,8 +199,8 @@ function CopyBtn({ getText }) {
       display: 'inline-flex', alignItems: 'center', gap: '7px',
       padding: '8px 18px', borderRadius: '6px',
       border: `1.5px solid ${state === 'copied' ? C.greenBorder : C.border}`,
-      background: state === 'copied' ? C.greenDim : '#ffffff',
-      color: state === 'copied' ? C.green : C.textFaint,
+      background: state === 'copied' ? C.greenDim : 'transparent',
+      color: state === 'copied' ? C.green : C.textDim,
       cursor: 'pointer', fontFamily: C.mono, fontSize: F.mono,
       letterSpacing: '1px', fontWeight: '600',
       transition: 'all 0.2s', whiteSpace: 'nowrap',
@@ -344,9 +343,9 @@ export function BackBtn({ onClick, label = 'Back' }) {
     <button onClick={onClick} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
       style={{
         display: 'inline-flex', alignItems: 'center', gap: '8px',
-        background: hov ? C.goldLight : '#ffffff',
+        background: hov ? 'rgba(196,168,130,0.15)' : 'transparent',
         border: `1.5px solid ${hov ? C.gold : C.border}`,
-        borderRadius: '6px', color: hov ? C.gold : C.textFaint,
+        borderRadius: '6px', color: hov ? C.gold : C.textDim,
         padding: '10px 20px', cursor: 'pointer',
         fontFamily: C.mono, fontSize: F.mono,
         fontWeight: '600', letterSpacing: '1px',
@@ -460,7 +459,7 @@ export function Collapsible({ title, children, defaultOpen = false }) {
     <div style={{ marginBottom: '20px' }}>
       <button onClick={() => setOpen(!open)} style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        width: '100%', background: open ? C.goldLight : '#f9fafb',
+        width: '100%', background: open ? 'rgba(196,168,130,0.12)' : 'rgba(0,0,0,0.15)',
         border: `1px solid ${open ? C.goldBorder : C.border}`,
         borderRadius: open ? '6px 6px 0 0' : '6px',
         padding: '12px 18px', cursor: 'pointer', color: C.textDim,

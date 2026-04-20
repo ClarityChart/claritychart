@@ -3,11 +3,11 @@ import { useState, useRef, useEffect } from 'react';
 import { C } from './tokens';
 
 const F = {
-  mono: '13px',
-  sm: 'clamp(14px, 1.2vw, 15px)',
-  base: 'clamp(16px, 1.5vw, 17px)',
-  lg: 'clamp(19px, 1.8vw, 21px)',
-  xl: 'clamp(23px, 2.2vw, 27px)',
+  mono: '14px',
+  sm: 'clamp(15px, 1.3vw, 16px)',
+  base: 'clamp(17px, 1.6vw, 19px)',
+  lg: 'clamp(21px, 2vw, 24px)',
+  xl: 'clamp(26px, 2.5vw, 32px)',
 };
 
 export function Textarea({ value, onChange, placeholder, rows = 4, mono }) {

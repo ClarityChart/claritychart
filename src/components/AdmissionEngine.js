@@ -43,8 +43,8 @@ export default function AdmissionEngine({ onBack }) {
           <button onClick={onBack} style={{ background: 'none', border: 'none', color: C.goldDim, cursor: 'pointer', fontFamily: C.mono, fontSize: '12px', letterSpacing: '2px', padding: 0, marginBottom: '12px', display: 'block' }}>
             PLATFORM HOME
           </button>
-          <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontFamily: C.mono, marginBottom: '4px' }}>ADMISSION ENGINE</div>
-          <div style={{ fontSize: 'clamp(20px,2.5vw,26px)', color: '#f8f0e4', fontWeight: 'bold' }}>New Patient Admission</div>
+          <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '4px' }}>ADMISSION ENGINE</div>
+          <div style={{ fontSize: 'clamp(26px,2.8vw,32px)', color: '#0d1117', fontWeight: '800', letterSpacing: '-0.5px', fontFamily: 'Georgia, serif' }}>New Patient Admission</div>
           <div style={{ fontSize: '13px', color: C.gold, marginTop: '4px', fontStyle: 'italic' }}>Choose how you would like to proceed</div>
         </div>
 
@@ -83,8 +83,8 @@ function ModeCard({ title, subtitle, description, badge, badgeColor, icon, onCli
         <span style={{ fontSize: '12px', color: badgeColor, background: `${badgeColor}18`, border: `1px solid ${badgeColor}40`, borderRadius: '10px', padding: '2px 10px', fontFamily: C.mono, letterSpacing: '1px' }}>{badge}</span>
       </div>
       <div style={{ fontSize: '16px', color: C.text, marginBottom: '4px' }}>{title}</div>
-      <div style={{ fontSize: '13px', color: C.gold, fontFamily: C.mono, letterSpacing: '1px', marginBottom: '12px' }}>{subtitle}</div>
-      <div style={{ fontSize: '14px', color: C.textDim, lineHeight: 1.6, fontStyle: 'italic' }}>{description}</div>
+      <div style={{ fontSize: '13px', color: '#0d1117', fontFamily: C.sans, fontWeight: '600', letterSpacing: '1px', marginBottom: '12px' }}>{subtitle}</div>
+      <div style={{ fontSize: '15px', color: '#2d3748', fontWeight: '400', lineHeight: 1.6, fontStyle: 'italic' }}>{description}</div>
       <div style={{ marginTop: '20px', fontSize: '11px', color: hov ? C.gold : C.border, fontFamily: C.mono, letterSpacing: '1px', transition: 'color 0.15s' }}>
         ENTER {title.toUpperCase()} →
       </div>
@@ -258,8 +258,8 @@ function DemoMode({ onBack, onBackHome }) {
         <div style={{ padding: '28px 0 24px', borderBottom: `1px solid ${C.border}`, marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
           <div>
             <TopNav onHome={onBack} moduleName='Admission Engine' />
-            <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontFamily: C.mono, marginBottom: '4px' }}>DEMO MODE</div>
-            <div style={{ fontSize: 'clamp(20px,2.5vw,26px)', color: '#f8f0e4', fontWeight: 'bold' }}>
+            <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '4px' }}>DEMO MODE</div>
+            <div style={{ fontSize: 'clamp(26px,2.8vw,32px)', color: '#0d1117', fontWeight: '800', letterSpacing: '-0.5px', fontFamily: 'Georgia, serif' }}>
               {stage === 'select' && 'Select Demo Patient'}
               {stage === 'build' && (patient?.name + ' — Documents')}
               {stage === 'encounter' && 'Admission Encounter'}
@@ -305,10 +305,10 @@ function DemoMode({ onBack, onBackHome }) {
                     <div style={{ width: '48px', height: '48px', borderRadius: '2px', background: `${p.color}18`, border: `1px solid ${p.color}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', color: p.color, fontFamily: C.mono, flexShrink: 0 }}>{p.name}</div>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: '15px', color: C.text, marginBottom: '4px' }}>{p.diagnosis}</div>
-                      <div style={{ fontSize: '13px', color: C.gold, fontFamily: C.mono, marginBottom: '4px' }}>{p.tagline}</div>
+                      <div style={{ fontSize: '13px', color: '#0d1117', fontFamily: C.sans, fontWeight: '600', marginBottom: '4px' }}>{p.tagline}</div>
                       {p.snapshot && <div style={{ fontSize: '11px', color: 'rgba(196,168,130,0.5)', fontFamily: C.mono }}>{p.snapshot}</div>}
                     </div>
-                    <div style={{ fontSize: '13px', color: C.gold, fontFamily: C.mono }}>{p.documents.length} documents</div>
+                    <div style={{ fontSize: '13px', color: '#0d1117', fontFamily: C.sans, fontWeight: '600' }}>{p.documents.length} documents</div>
                     <div style={{ fontSize: '16px', color: C.border }}>›</div>
                   </div>
                 );
@@ -321,7 +321,7 @@ function DemoMode({ onBack, onBackHome }) {
           <div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '28px' }}>
               <div>
-                <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontFamily: C.mono, marginBottom: '12px', display: 'flex', justifyContent: 'space-between' }}>
+                <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '12px', display: 'flex', justifyContent: 'space-between' }}>
                   <span>CHART DOCUMENTS</span>
                   <button onClick={loadAll} style={{ background: C.gold, border: 'none', color: '#0f1923', cursor: 'pointer', fontFamily: C.mono, fontSize: '12px', letterSpacing: '1px', padding: '6px 14px', borderRadius: '2px', fontWeight: 'bold' }}>Load All Documents</button>
                 </div>
@@ -343,7 +343,7 @@ function DemoMode({ onBack, onBackHome }) {
                 </div>
               </div>
               <div>
-                <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontFamily: C.mono, marginBottom: '12px' }}>WORKSPACE ({droppedDocs.length} documents)</div>
+                <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '12px' }}>WORKSPACE ({droppedDocs.length} documents)</div>
                 <div onDragOver={e => { e.preventDefault(); setDragOver(true); }} onDragLeave={() => setDragOver(false)} onDrop={handleDrop}
                   style={{ minHeight: '240px', border: `2px dashed ${dragOver ? C.gold : C.border}`, borderRadius: '2px', padding: '16px', transition: 'all 0.15s', background: dragOver ? 'rgba(196,168,130,0.06)' : 'rgba(0,0,0,0.1)' }}>
                   {droppedDocs.length === 0 ? (
@@ -380,9 +380,9 @@ function DemoMode({ onBack, onBackHome }) {
         {stage === 'encounter' && !loading && (
           <div>
             <div style={{ background: 'rgba(196,168,130,0.04)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '14px 18px', marginBottom: '24px' }}>
-              <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontFamily: C.mono, marginBottom: '10px' }}>DIAGNOSES</div>
+              <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '10px' }}>DIAGNOSES</div>
               <div style={{ fontSize: '13px', color: C.text, marginBottom: '4px' }}><span style={{ color: C.goldDim, fontSize: '11px', fontFamily: C.mono }}>Primary: </span>{patient?.diagnosis}</div>
-              {patient?.secondaryDx && <div style={{ fontSize: '14px', color: C.textDim, marginTop: '4px' }}><span style={{ color: C.goldDim, fontSize: '11px', fontFamily: C.mono }}>Secondary: </span>{patient?.secondaryDx}</div>}
+              {patient?.secondaryDx && <div style={{ fontSize: '15px', color: '#2d3748', fontWeight: '400', marginTop: '4px' }}><span style={{ color: C.goldDim, fontSize: '11px', fontFamily: C.mono }}>Secondary: </span>{patient?.secondaryDx}</div>}
             </div>
 
             {recordSummaries && (
@@ -392,7 +392,7 @@ function DemoMode({ onBack, onBackHome }) {
                   const isHeader = line.startsWith('[') && line.endsWith(']');
                   if (isHeader) return <div key={i} style={{ fontSize: '11px', color: C.gold, fontFamily: C.mono, letterSpacing: '1px', marginTop: '14px', marginBottom: '4px' }}>{line}</div>;
                   if (!line.trim()) return <div key={i} style={{ height: '4px' }} />;
-                  return <div key={i} style={{ fontSize: '14px', color: C.textDim, lineHeight: 1.6 }}>{line}</div>;
+                  return <div key={i} style={{ fontSize: '15px', color: '#2d3748', fontWeight: '400', lineHeight: 1.6 }}>{line}</div>;
                 })}
               </div>
             )}
@@ -412,7 +412,7 @@ function DemoMode({ onBack, onBackHome }) {
         {stage === 'narrative' && !loading && (
           <div>
             <Collapsible title="Transcribed Encounter Narrative" defaultOpen={false}>
-              <div style={{ background: 'rgba(10,20,32,0.8)', borderRadius: '2px', padding: '14px 16px', maxHeight: '200px', overflowY: 'auto', fontSize: '14px', color: C.textDim, lineHeight: 1.7, fontFamily: C.serif, whiteSpace: 'pre-wrap' }}>{encounter}</div>
+              <div style={{ background: 'rgba(10,20,32,0.8)', borderRadius: '2px', padding: '14px 16px', maxHeight: '200px', overflowY: 'auto', fontSize: '15px', color: '#2d3748', fontWeight: '400', lineHeight: 1.7, fontFamily: C.serif, whiteSpace: 'pre-wrap' }}>{encounter}</div>
             </Collapsible>
             {narrative && <div style={{ marginBottom: '28px' }}><EditableDraft title="Admission Narrative — Draft" value={narrative} onChange={setNarrative} badge="DRAFT" /></div>}
             <div style={{ marginBottom: '24px' }}>
@@ -438,7 +438,7 @@ function DemoMode({ onBack, onBackHome }) {
             {cti && <DocOutput title="Certificate of Terminal Illness" content={cti} />}
             {narrative && (
               <div style={{ marginTop: '28px' }}>
-                <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontFamily: C.mono, marginBottom: '12px' }}>ADMISSION NARRATIVE — FOR REFERENCE</div>
+                <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '12px' }}>ADMISSION NARRATIVE — FOR REFERENCE</div>
                 <div style={{ background: 'rgba(10,20,32,0.7)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '20px 24px', maxHeight: '400px', overflowY: 'auto', fontFamily: C.serif }}>
                   {narrative.split('\n').map((line, i) => {
                     const isHeader = /^[A-Z][A-Z\s\/\(\)\-,]{4,}$/.test(line.trim()) && line.trim().length > 3;
@@ -583,8 +583,8 @@ function ClinicalMode({ onBack, onBackHome }) {
         <div style={{ padding: '28px 0 24px', borderBottom: `1px solid ${C.border}`, marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
           <div>
             <TopNav onHome={onBack} moduleName='Admission Engine' />
-            <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontFamily: C.mono, marginBottom: '4px' }}>CLINICAL MODE</div>
-            <div style={{ fontSize: 'clamp(20px,2.5vw,26px)', color: '#f8f0e4', fontWeight: 'bold' }}>
+            <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '4px' }}>CLINICAL MODE</div>
+            <div style={{ fontSize: 'clamp(26px,2.8vw,32px)', color: '#0d1117', fontWeight: '800', letterSpacing: '-0.5px', fontFamily: 'Georgia, serif' }}>
               {stage === 1 && 'Diagnosis'}
               {stage === 2 && 'Upload Records'}
               {stage === 3 && 'Admission Encounter'}
@@ -615,12 +615,12 @@ function ClinicalMode({ onBack, onBackHome }) {
 
         {stage === 1 && !loading && (
           <div>
-            <div style={{ background: 'rgba(196,168,130,0.05)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '14px 18px', marginBottom: '24px', fontSize: '13px', color: C.gold, fontFamily: C.mono, lineHeight: 1.6 }}>
+            <div style={{ background: 'rgba(196,168,130,0.05)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '14px 18px', marginBottom: '24px', fontSize: '13px', color: '#0d1117', fontFamily: C.sans, fontWeight: '600', lineHeight: 1.6 }}>
               The physician determines the primary terminal diagnosis. ClarityChart organizes all documentation around this diagnosis.
             </div>
             <div style={{ fontSize: '11px', color: C.gold, fontFamily: C.mono, letterSpacing: '2px', marginBottom: '8px' }}>PRIMARY TERMINAL DIAGNOSIS <span style={{ color: '#e07070' }}>*</span></div>
             <Input value={primaryDx} onChange={setPrimaryDx} placeholder="e.g., Chronic diastolic heart failure (HFpEF), end-stage" />
-            <div style={{ fontSize: '13px', color: C.gold, fontFamily: C.mono, letterSpacing: '2px', marginTop: '22px', marginBottom: '8px' }}>SECONDARY / CONTRIBUTING DIAGNOSES</div>
+            <div style={{ fontSize: '13px', color: '#0d1117', fontFamily: C.sans, fontWeight: '600', letterSpacing: '2px', marginTop: '22px', marginBottom: '8px' }}>SECONDARY / CONTRIBUTING DIAGNOSES</div>
             <Textarea value={secondaryDx} onChange={setSecondaryDx} placeholder="e.g., CKD stage 4, Type 2 diabetes mellitus, hypertension..." rows={3} />
             <div style={{ marginTop: '28px', display: 'flex', justifyContent: 'flex-end' }}>
               <Btn onClick={() => { if (!primaryDx.trim()) { setError('Primary diagnosis is required.'); return; } setError(''); setStage(2); }}>Continue → Records</Btn>
@@ -655,9 +655,9 @@ function ClinicalMode({ onBack, onBackHome }) {
           <div>
             {/* Diagnoses summary */}
             <div style={{ background: 'rgba(196,168,130,0.04)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '14px 18px', marginBottom: '24px' }}>
-              <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontFamily: C.mono, marginBottom: '10px' }}>DIAGNOSES</div>
+              <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '10px' }}>DIAGNOSES</div>
               <div style={{ fontSize: '13px', color: C.text, marginBottom: '4px' }}><span style={{ color: C.goldDim, fontSize: '11px', fontFamily: C.mono }}>Primary: </span>{primaryDx}</div>
-              {secondaryDx && <div style={{ fontSize: '14px', color: C.textDim, marginTop: '4px' }}><span style={{ color: C.goldDim, fontSize: '11px', fontFamily: C.mono }}>Secondary: </span>{secondaryDx}</div>}
+              {secondaryDx && <div style={{ fontSize: '15px', color: '#2d3748', fontWeight: '400', marginTop: '4px' }}><span style={{ color: C.goldDim, fontSize: '11px', fontFamily: C.mono }}>Secondary: </span>{secondaryDx}</div>}
             </div>
 
             {/* Record summaries */}
@@ -668,7 +668,7 @@ function ClinicalMode({ onBack, onBackHome }) {
                   const isHeader = line.startsWith('[') && line.endsWith(']');
                   if (isHeader) return <div key={i} style={{ fontSize: '11px', color: C.gold, fontFamily: C.mono, letterSpacing: '1px', marginTop: '14px', marginBottom: '4px' }}>{line}</div>;
                   if (!line.trim()) return <div key={i} style={{ height: '4px' }} />;
-                  return <div key={i} style={{ fontSize: '14px', color: C.textDim, lineHeight: 1.6 }}>{line}</div>;
+                  return <div key={i} style={{ fontSize: '15px', color: '#2d3748', fontWeight: '400', lineHeight: 1.6 }}>{line}</div>;
                 })}
               </div>
             )}
@@ -693,7 +693,7 @@ function ClinicalMode({ onBack, onBackHome }) {
           <div>
             {/* Transcribed encounter - collapsible */}
             <Collapsible title="Transcribed Encounter Narrative" defaultOpen={false}>
-              <div style={{ background: 'rgba(10,20,32,0.8)', borderRadius: '2px', padding: '14px 16px', maxHeight: '200px', overflowY: 'auto', fontSize: '14px', color: C.textDim, lineHeight: 1.7, fontFamily: C.serif, whiteSpace: 'pre-wrap' }}>
+              <div style={{ background: 'rgba(10,20,32,0.8)', borderRadius: '2px', padding: '14px 16px', maxHeight: '200px', overflowY: 'auto', fontSize: '15px', color: '#2d3748', fontWeight: '400', lineHeight: 1.7, fontFamily: C.serif, whiteSpace: 'pre-wrap' }}>
                 {encounter}
               </div>
             </Collapsible>
@@ -735,7 +735,7 @@ function ClinicalMode({ onBack, onBackHome }) {
             {/* Admission Narrative for reference */}
             {narrative && (
               <div style={{ marginTop: '28px' }}>
-                <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontFamily: C.mono, marginBottom: '12px' }}>ADMISSION NARRATIVE — FOR REFERENCE</div>
+                <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '12px' }}>ADMISSION NARRATIVE — FOR REFERENCE</div>
                 <div style={{ background: 'rgba(10,20,32,0.7)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '20px 24px', maxHeight: '400px', overflowY: 'auto', fontFamily: C.serif }}>
                   {narrative.split('\n').map((line, i) => {
                     const isHeader = /^[A-Z][A-Z\s\/\(\)\-,]{4,}$/.test(line.trim()) && line.trim().length > 3;

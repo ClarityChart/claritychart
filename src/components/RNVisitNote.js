@@ -283,8 +283,8 @@ ${form.narrative}`;
             <button onClick={onBack} style={{ background: 'none', border: 'none', color: C.gold, cursor: 'pointer', fontFamily: C.mono, fontSize: '14px', letterSpacing: '2px', padding: 0, marginBottom: '12px', display: 'block' }}>
               PLATFORM HOME
             </button>
-            <div style={{ fontSize: '14px', letterSpacing: '3px', color: C.gold, fontFamily: C.mono, marginBottom: '4px' }}>RN VISIT NOTE</div>
-            <div style={{ fontSize: '20px', color: C.text }}>
+            <div style={{ fontSize: '14px', fontSize: '11px', letterSpacing: '3px', color: C.gold, fontFamily: C.mono, fontWeight: '700', textTransform: 'uppercase', marginBottom: '4px' }}>RN VISIT NOTE</div>
+            <div style={{ fontSize: 'clamp(26px,2.8vw,32px)', color: '#0d1117', fontWeight: '800', letterSpacing: '-0.5px', fontFamily: 'Georgia, serif' }}>
               {step === 1 ? 'Select Clinical Scenario' : step === 2 ? sc?.name : 'Visit Note'}
             </div>
           </div>
@@ -357,7 +357,7 @@ ${form.narrative}`;
               <div style={{ background: 'rgba(196,168,130,0.06)', border: `1px solid ${C.border}`, borderRadius: '6px', padding: '12px 16px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <span style={{ fontSize: '18px' }}>{sc.icon}</span>
                 <div>
-                  <div style={{ fontSize: '13px', color: C.gold, fontFamily: C.mono, letterSpacing: '0.5px' }}>{sc.name}</div>
+                  <div style={{ fontSize: '13px', color: '#0d1117', fontFamily: C.sans, fontWeight: '600', letterSpacing: '0.5px' }}>{sc.name}</div>
                   <div style={{ fontSize: '14px', color: C.gold, fontStyle: 'italic', marginTop: '2px' }}>{sc.hint}</div>
                 </div>
               </div>
@@ -406,7 +406,7 @@ ${form.narrative}`;
               <div style={{ background: C.goldLight, border: `1px solid ${C.goldBorder}`, borderRadius: '6px', padding: '14px 16px', marginBottom: '16px' }}>
                 <div style={{ fontSize: '14px', letterSpacing: '2px', color: C.gold, fontFamily: C.mono, marginBottom: '10px' }}>SPEAK TO THESE POINTS</div>
                 {sc.prompts.map((p, i) => (
-                  <div key={i} style={{ fontSize: '13px', color: C.textDim, marginBottom: '6px', display: 'flex', gap: '8px', lineHeight: 1.4 }}>
+                  <div key={i} style={{ fontSize: '15px', color: '#2d3748', fontWeight: '400', marginBottom: '6px', display: 'flex', gap: '8px', lineHeight: 1.4 }}>
                     <span style={{ color: C.gold, fontWeight: 'bold', flexShrink: 0 }}>→</span>
                     <span>{p}</span>
                   </div>
@@ -447,7 +447,7 @@ ${form.narrative}`;
         {loading && (
           <div style={{ background: '#ffffff', border: `1px solid ${C.border}`, borderRadius: '6px', padding: '60px 40px', textAlign: 'center' }}>
             <div style={{ width: '44px', height: '44px', border: `3px solid ${C.border}`, borderTopColor: C.gold, borderRadius: '50%', margin: '0 auto 20px', animation: 'spin 0.8s linear infinite' }} />
-            <div style={{ fontSize: '20px', color: C.text, marginBottom: '8px' }}>Drafting your note...</div>
+            <div style={{ fontSize: 'clamp(26px,2.8vw,32px)', color: '#0d1117', fontWeight: '800', letterSpacing: '-0.5px', fontFamily: 'Georgia, serif', marginBottom: '8px' }}>Drafting your note...</div>
             <div style={{ fontSize: '14px', color: C.gold, fontFamily: C.mono }}>Structuring your clinical input into a compliant hospice visit note</div>
             <div style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '8px', maxWidth: '280px', margin: '24px auto 0', textAlign: 'left' }}>
               {LOADING_STEPS.map((lbl, i) => (

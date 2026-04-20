@@ -39,7 +39,7 @@ function ModCard({ mod, onClick }) {
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', alignItems: 'flex-end' }}>
         {mod.outputs.map(o => (
-          <span key={o} style={{ fontSize: '12px', color: C.gold, fontFamily: C.mono, fontWeight: '600', whiteSpace: 'nowrap' }}>→ {o}</span>
+          <span key={o} style={{ fontSize: '12px', color: '#9a7820', fontFamily: C.mono, fontWeight: '500', whiteSpace: 'nowrap' }}>→ {o}</span>
         ))}
       </div>
       {active && (
@@ -71,7 +71,7 @@ export default function ClarityChart() {
           <div>
             <div style={{ fontSize: '12px', letterSpacing: '4px', color: '#c8b8a4', fontFamily: C.mono, marginBottom: '4px' }}>CLINICAL DOCUMENTATION PLATFORM</div>
             <div style={{ fontSize: 'clamp(24px, 3vw, 34px)', color: C.text }}>Clarity<span style={{ color: C.gold }}>Chart</span></div>
-            <div style={{ fontSize: '15px', color: C.textFaint, marginTop: '6px', fontStyle: 'italic', fontFamily: C.sans }}>Built exclusively for hospice</div>
+            <div style={{ fontSize: '16px', color: '#4a5568', marginTop: '8px', fontStyle: 'italic', fontFamily: C.sans, fontWeight: '400' }}>Built exclusively for hospice</div>
           </div>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(196,168,130,0.08)', border: `1px solid ${C.border}`, borderRadius: '20px', padding: '5px 14px', fontSize: '11px', color: C.gold, fontFamily: C.mono }}>
             <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: C.green, boxShadow: `0 0 6px ${C.green}` }} />

@@ -39,7 +39,7 @@ function ModCard({ mod, onClick }) {
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', alignItems: 'flex-end' }}>
         {mod.outputs.map(o => (
-          <span key={o} style={{ fontSize: '16px', color: '#9a7820', fontFamily: C.mono, fontWeight: '500', whiteSpace: 'nowrap' }}>→ {o}</span>
+          <span key={o} style={{ fontSize: '16px', color: '#b8966a', fontFamily: C.mono, fontWeight: '500', whiteSpace: 'nowrap' }}>→ {o}</span>
         ))}
       </div>
       {active && (
@@ -71,7 +71,7 @@ export default function ClarityChart() {
           <div>
             <div style={{ fontSize: '16px', letterSpacing: '4px', color: '#c8b8a4', fontFamily: C.mono, marginBottom: '4px' }}>CLINICAL DOCUMENTATION PLATFORM</div>
             <div style={{ fontSize: 'clamp(28px, 3vw, 38px)', color: C.text }}>Clarity<span style={{ color: C.gold }}>Chart</span></div>
-            <div style={{ fontSize: '20px', color: '#4a5568', marginTop: '8px', fontStyle: 'italic', fontFamily: C.sans, fontWeight: '400' }}>Built exclusively for hospice</div>
+            <div style={{ fontSize: '20px', color: '#9a8c78', marginTop: '8px', fontStyle: 'italic', fontFamily: C.sans, fontWeight: '400' }}>Built exclusively for hospice</div>
           </div>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(196,168,130,0.08)', border: `1px solid ${C.border}`, borderRadius: '20px', padding: '5px 14px', fontSize: '15px', color: C.gold, fontFamily: C.mono }}>
             <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: C.green, boxShadow: `0 0 6px ${C.green}` }} />
@@ -94,7 +94,7 @@ export default function ClarityChart() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '18px' }}>
 
           {/* Admission Pathway */}
-          <div style={{ background: '#ffffff', border: `1px solid rgba(196,168,130,0.25)`, borderRadius: '6px' }}>
+          <div style={{ background: '#2d4460', border: `1px solid rgba(196,168,130,0.25)`, borderRadius: '6px' }}>
             <div style={{ padding: '16px 20px 12px', borderBottom: `1px solid ${C.border}`, display: 'flex', alignItems: 'center', gap: '12px' }}>
               <div style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(196,168,130,0.1)', border: `1px solid rgba(196,168,130,0.25)`, borderRadius: '6px', fontSize: '18px' }}>✦</div>
               <div>
@@ -109,7 +109,7 @@ export default function ClarityChart() {
           </div>
 
           {/* Ongoing Care Pathway */}
-          <div style={{ background: '#ffffff', border: `1px solid rgba(196,168,130,0.25)`, borderRadius: '6px' }}>
+          <div style={{ background: '#2d4460', border: `1px solid rgba(196,168,130,0.25)`, borderRadius: '6px' }}>
             <div style={{ padding: '16px 20px 12px', borderBottom: '1px solid rgba(74,144,164,0.15)', display: 'flex', alignItems: 'center', gap: '12px' }}>
               <div style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: C.blueDim, border: `1px solid ${C.blueBorder}`, borderRadius: '6px', fontSize: '18px' }}>◎</div>
               <div>

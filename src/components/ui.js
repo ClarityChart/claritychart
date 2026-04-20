@@ -19,7 +19,7 @@ export function Textarea({ value, onChange, placeholder, rows = 4, mono }) {
       rows={rows}
       style={{
         width: '100%',
-        background: '#ffffff',
+        background: '#2d4460',
         border: `1.5px solid ${C.border}`,
         borderRadius: '6px',
         color: C.text,
@@ -53,7 +53,7 @@ export function Input({ value, onChange, placeholder }) {
       placeholder={placeholder}
       style={{
         width: '100%',
-        background: '#ffffff',
+        background: '#2d4460',
         border: `1.5px solid ${C.border}`,
         borderRadius: '6px',
         color: C.text,
@@ -237,7 +237,7 @@ export function DocOutput({ title, content, badge }) {
       <div style={{
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
         padding: '16px 24px', borderBottom: `1px solid ${C.border}`,
-        background: C.goldLight,
+        background: 'rgba(196,168,130,0.08)',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <span style={{ color: C.text, fontSize: F.lg, fontFamily: C.sans, fontWeight: '600' }}>{title}</span>
@@ -266,7 +266,7 @@ export function EditableDraft({ title, value, onChange, badge }) {
       <div style={{
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
         padding: '16px 24px', borderBottom: `1px solid ${C.border}`,
-        background: C.goldLight,
+        background: 'rgba(196,168,130,0.08)',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <span style={{ color: C.text, fontSize: F.lg, fontFamily: C.sans, fontWeight: '600' }}>{title}</span>
@@ -290,7 +290,7 @@ export function EditableDraft({ title, value, onChange, badge }) {
         onChange={e => onChange(e.target.value)}
         style={{
           width: '100%', minHeight: '420px',
-          background: '#ffffff', border: 'none', outline: 'none',
+          background: '#2d4460', border: 'none', outline: 'none',
           padding: '24px 28px', color: C.textDim,
           fontSize: F.base, lineHeight: 1.85,
           fontFamily: C.serif, resize: 'vertical', boxSizing: 'border-box',
@@ -425,7 +425,7 @@ export function ProgressLoader({ steps, currentStep, message }) {
                   {done ? '✓' : active ? '◉' : i + 1}
                 </div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ height: '5px', background: '#f3f4f6', borderRadius: '3px', overflow: 'hidden' }}>
+                  <div style={{ height: '5px', background: 'rgba(0,0,0,0.15)', borderRadius: '3px', overflow: 'hidden' }}>
                     <div
                       key={`${animKey}-${i}`}
                       style={{
@@ -475,7 +475,7 @@ export function Collapsible({ title, children, defaultOpen = false }) {
         <div style={{
           border: `1px solid ${C.goldBorder}`, borderTop: 'none',
           borderRadius: '0 0 6px 6px', padding: '20px',
-          background: '#ffffff',
+          background: '#2d4460',
         }}>
           {children}
         </div>

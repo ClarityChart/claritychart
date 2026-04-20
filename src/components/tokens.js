@@ -1,6 +1,6 @@
 export const C = {
   // Backgrounds
-  bg: '#1a2535',
+  bg: '#243650',
   bgCard: '#243650',
   bgCardHover: '#2c4060',
   bgCardActive: '#304868',

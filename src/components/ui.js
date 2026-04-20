@@ -491,3 +491,100 @@ export function useUnsavedWarning(hasContent) {
   }, [hasContent]);
 }
 // Mon Apr 20 08:15:32 PDT 2026
+
+// PageShell — consistent wrapper for every stage in every module
+export function PageShell({
+  // Navigation
+  onHome,
+  moduleName,
+  // Progress
+  steps,
+  currentStep,
+  onStepClick,
+  // Page header
+  title,
+  subtitle,
+  badge,
+  // Footer navigation
+  onBack,
+  backLabel = 'Back',
+  primaryAction,
+  primaryLabel,
+  primaryDisabled,
+  secondaryAction,
+  secondaryLabel,
+  // Content
+  children,
+  // Options
+  hideProgress = false,
+  maxWidth = '900px',
+}) {
+  return (
+    <div style={{ minHeight: '100vh', backgroundColor: C.bg, fontFamily: C.sans, color: C.text }}>
+      {/* Sticky top nav */}
+      <TopNav onHome={onHome} moduleName={moduleName} />
+
+      <div style={{ maxWidth, margin: '0 auto', padding: '0 clamp(20px,3vw,48px) 100px' }}>
+
+        {/* Progress steps */}
+        {steps && !hideProgress && (
+          <div style={{ paddingTop: '28px' }}>
+            <ProgressSteps
+              steps={steps}
+              current={currentStep}
+              onStepClick={onStepClick}
+            />
+          </div>
+        )}
+
+        {/* Page header */}
+        {title && (
+          <div style={{ paddingTop: steps ? '8px' : '32px', paddingBottom: '28px', borderBottom: `1px solid ${C.border}`, marginBottom: '32px' }}>
+            {badge && (
+              <div style={{ fontSize: '11px', letterSpacing: '3px', color: C.gold, fontFamily: C.mono, fontWeight: '700', textTransform: 'uppercase', marginBottom: '8px' }}>
+                {badge}
+              </div>
+            )}
+            <div style={{ fontSize: 'clamp(24px,2.8vw,32px)', color: C.text, fontWeight: '800', fontFamily: C.serif, letterSpacing: '-0.5px' }}>
+              {title}
+            </div>
+            {subtitle && (
+              <div style={{ fontSize: '16px', color: C.textFaint, marginTop: '6px', fontStyle: 'italic' }}>
+                {subtitle}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Page content */}
+        {children}
+
+        {/* Sticky footer with back + primary action */}
+        {(onBack || primaryAction) && (
+          <div style={{
+            position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 50,
+            background: 'rgba(26,37,53,0.97)',
+            borderTop: `2px solid rgba(196,168,130,0.2)`,
+            padding: '16px clamp(20px,3vw,48px)',
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            backdropFilter: 'blur(8px)',
+          }}>
+            <div>
+              {onBack && <BackBtn onClick={onBack} label={backLabel} />}
+            </div>
+            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+              {secondaryAction && (
+                <Btn variant="secondary" onClick={secondaryAction}>{secondaryLabel}</Btn>
+              )}
+              {primaryAction && (
+                <Btn onClick={primaryAction} disabled={primaryDisabled} style={{ padding: '12px 32px' }}>
+                  {primaryLabel}
+                </Btn>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

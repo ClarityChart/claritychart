@@ -1,7 +1,7 @@
 'use client';
 import { useState, useRef } from 'react';
 import { C } from './tokens';
-import { TopNav, ErrorBox, EditableDraft, BackBtn, Btn } from './ui';
+import { TopNav, ErrorBox, EditableDraft, BackBtn, Btn, PageShell, ProgressSteps } from './ui';
 
 const SCENARIOS = {
   routine: {
@@ -264,17 +264,10 @@ ${form.narrative}`;
     setNoteOutput(''); setError('');
   };
 
+  const rnSteps = ['Scenario', 'Clinical Details', 'Visit Note'];
+  const rnStepIndex = step - 1;
+
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: C.bg, fontFamily: C.sans, color: C.text }}>
-      <style>{`
-        @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes voicePulse{0%,100%{box-shadow:0 0 0 2px rgba(220,80,80,0.3)}50%{box-shadow:0 0 0 5px rgba(220,80,80,0.1)}}
-        * { box-sizing: border-box; }
-        input:focus, select:focus, textarea:focus { border-color: ${C.gold} !important; outline: none; }
-        input::placeholder, textarea::placeholder { color: rgba(196,168,130,0.3); }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: rgba(196,168,130,0.2); border-radius: 3px; }
-      `}</style>
 
       <div style={{ maxWidth: '880px', margin: '0 auto', padding: '0 28px 80px' }}>
 
@@ -437,10 +430,7 @@ ${form.narrative}`;
 
             <ErrorBox message={error} />
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '28px', paddingTop: '24px', borderTop: `1px solid ${C.border}` }}>
-              <button onClick={() => setStep(1)} style={{ padding: '10px 22px', borderRadius: '6px', border: `1px solid ${C.border}`, background: 'transparent', color: C.gold, cursor: 'pointer', fontFamily: C.mono, fontSize: '17px', letterSpacing: '2px' }}>Back</button>
-              <button onClick={generate} style={{ padding: '11px 28px', borderRadius: '6px', border: 'none', background: C.gold, color: '#0f1923', cursor: 'pointer', fontFamily: C.mono, fontSize: '17px', letterSpacing: '2px' }}>Generate Note</button>
-            </div>
+
           </div>
         )}
 
@@ -474,7 +464,7 @@ ${form.narrative}`;
         )}
 
       </div>
-    </div>
+    </PageShell>
   );
 }
 

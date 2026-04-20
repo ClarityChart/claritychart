@@ -274,6 +274,7 @@ function DemoMode({ onBack, onBackHome }) {
   const demoTitles = ['Documents', 'Encounter', 'Narrative', 'CTI'];
   const demoStageMap = { select: 0, build: 0, encounter: 1, narrative: 2, cti: 3 };
   const demoCurrentStep = demoStageMap[stage] !== undefined ? demoStageMap[stage] : 0;
+  if (typeof window !== 'undefined') console.log('Stage:', stage, 'CurrentStep:', demoCurrentStep);
   const demoTitlesDisplay = {
     select: 'Select Demo Patient',
     build: patient?.name + ' — Documents',

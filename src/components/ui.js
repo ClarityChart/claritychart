@@ -97,8 +97,8 @@ export function Btn({ children, onClick, variant = 'primary', disabled, style })
   };
   const variants = {
     primary: {
-      background: disabled ? 'rgba(196,168,130,0.3)' : hov ? '#c4a070' : C.gold,
-      color: '#1a2535',
+      background: disabled ? 'rgba(196,168,130,0.3)' : hov ? '#c4a070' : '#cc0000',
+      color: '#ffffff',
       boxShadow: disabled ? 'none' : hov ? '0 2px 8px rgba(196,168,130,0.3)' : '0 1px 4px rgba(196,168,130,0.2)',
     },
     secondary: {

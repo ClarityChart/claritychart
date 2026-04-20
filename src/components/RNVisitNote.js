@@ -265,7 +265,7 @@ ${form.narrative}`;
   };
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: C.bg, fontFamily: C.serif, color: C.text }}>
+    <div style={{ minHeight: '100vh', backgroundColor: C.bg, fontFamily: C.sans, color: C.text }}>
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes voicePulse{0%,100%{box-shadow:0 0 0 2px rgba(220,80,80,0.3)}50%{box-shadow:0 0 0 5px rgba(220,80,80,0.1)}}
@@ -280,10 +280,10 @@ ${form.narrative}`;
 
         <div style={{ padding: '28px 0 24px', borderBottom: `1px solid ${C.border}`, marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
           <div>
-            <button onClick={onBack} style={{ background: 'none', border: 'none', color: '#d4b896', cursor: 'pointer', fontFamily: C.mono, fontSize: '14px', letterSpacing: '2px', padding: 0, marginBottom: '12px', display: 'block' }}>
+            <button onClick={onBack} style={{ background: 'none', border: 'none', color: C.gold, cursor: 'pointer', fontFamily: C.mono, fontSize: '14px', letterSpacing: '2px', padding: 0, marginBottom: '12px', display: 'block' }}>
               PLATFORM HOME
             </button>
-            <div style={{ fontSize: '14px', letterSpacing: '3px', color: '#d4b896', fontFamily: C.mono, marginBottom: '4px' }}>RN VISIT NOTE</div>
+            <div style={{ fontSize: '14px', letterSpacing: '3px', color: C.gold, fontFamily: C.mono, marginBottom: '4px' }}>RN VISIT NOTE</div>
             <div style={{ fontSize: '20px', color: C.text }}>
               {step === 1 ? 'Select Clinical Scenario' : step === 2 ? sc?.name : 'Visit Note'}
             </div>
@@ -314,30 +314,30 @@ ${form.narrative}`;
         </div>
 
         {step === 1 && (
-          <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: '2px', padding: '32px' }}>
+          <div style={{ background: '#ffffff', border: `1px solid ${C.border}`, borderRadius: '6px', padding: '32px' }}>
             <div style={{ fontSize: '22px', color: C.text, marginBottom: '8px' }}>What type of visit is this?</div>
-            <div style={{ fontSize: '13px', color: '#d4b896', marginBottom: '28px', fontStyle: 'italic' }}>
+            <div style={{ fontSize: '13px', color: C.gold, marginBottom: '28px', fontStyle: 'italic' }}>
               Select the scenario that best describes today's visit. This shapes the questions and note structure.
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
               {Object.entries(SCENARIOS).map(([key, scenario]) => (
                 <div key={key} onClick={() => setSelected(key)} style={{
                   border: `1px solid ${selected === key ? C.gold : C.border}`,
-                  borderRadius: '2px', padding: '14px 16px', cursor: 'pointer',
+                  borderRadius: '6px', padding: '14px 16px', cursor: 'pointer',
                   background: selected === key ? 'rgba(196,168,130,0.08)' : 'rgba(255,255,255,0.02)',
                   display: 'flex', alignItems: 'flex-start', gap: '12px', transition: 'all 0.15s',
                 }}>
                   <span style={{ fontSize: '18px', flexShrink: 0 }}>{scenario.icon}</span>
                   <div>
                     <div style={{ fontSize: '13px', color: C.text, fontFamily: C.mono, letterSpacing: '0.5px', marginBottom: '3px' }}>{scenario.name}</div>
-                    <div style={{ fontSize: '14px', color: '#d4b896', fontStyle: 'italic' }}>{scenario.hint}</div>
+                    <div style={{ fontSize: '14px', color: C.gold, fontStyle: 'italic' }}>{scenario.hint}</div>
                   </div>
                 </div>
               ))}
             </div>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '28px', paddingTop: '24px', borderTop: `1px solid ${C.border}` }}>
               <button disabled={!selected} onClick={() => setStep(2)} style={{
-                padding: '11px 24px', borderRadius: '2px', border: 'none',
+                padding: '11px 24px', borderRadius: '6px', border: 'none',
                 background: selected ? C.gold : C.border, color: selected ? '#0f1923' : C.goldDim,
                 cursor: selected ? 'pointer' : 'not-allowed', fontFamily: C.mono,
                 fontSize: '13px', letterSpacing: '2px', textTransform: 'uppercase',
@@ -347,18 +347,18 @@ ${form.narrative}`;
         )}
 
         {step === 2 && !loading && (
-          <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: '2px', padding: '32px' }}>
+          <div style={{ background: '#ffffff', border: `1px solid ${C.border}`, borderRadius: '6px', padding: '32px' }}>
             <div style={{ fontSize: '22px', color: C.text, marginBottom: '6px' }}>Clinical Details</div>
-            <div style={{ fontSize: '13px', color: '#d4b896', marginBottom: '24px', fontStyle: 'italic' }}>
+            <div style={{ fontSize: '13px', color: C.gold, marginBottom: '24px', fontStyle: 'italic' }}>
               Fill in what you observed. Speak freely in the narrative field — the AI will structure it.
             </div>
 
             {sc && (
-              <div style={{ background: 'rgba(196,168,130,0.06)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '12px 16px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div style={{ background: 'rgba(196,168,130,0.06)', border: `1px solid ${C.border}`, borderRadius: '6px', padding: '12px 16px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <span style={{ fontSize: '18px' }}>{sc.icon}</span>
                 <div>
                   <div style={{ fontSize: '13px', color: C.gold, fontFamily: C.mono, letterSpacing: '0.5px' }}>{sc.name}</div>
-                  <div style={{ fontSize: '14px', color: '#d4b896', fontStyle: 'italic', marginTop: '2px' }}>{sc.hint}</div>
+                  <div style={{ fontSize: '14px', color: C.gold, fontStyle: 'italic', marginTop: '2px' }}>{sc.hint}</div>
                 </div>
               </div>
             )}
@@ -375,7 +375,7 @@ ${form.narrative}`;
                 <FormInput value={form.dx} onChange={v => upd('dx', v)} placeholder="e.g. End-stage dementia, Alzheimers type" />
               </FormField>
               <FormField label="Care Setting">
-                <select value={form.setting} onChange={e => upd('setting', e.target.value)} style={{ width: '100%', background: 'rgba(0,0,0,0.3)', border: `1px solid ${C.border}`, borderRadius: '2px', color: C.text, padding: '9px 13px', fontFamily: C.serif, fontSize: '13px', outline: 'none' }}>
+                <select value={form.setting} onChange={e => upd('setting', e.target.value)} style={{ width: '100%', background: '#ffffff', border: `1px solid ${C.border}`, borderRadius: '6px', color: C.text, padding: '9px 13px', fontFamily: C.sans, fontSize: '13px', outline: 'none' }}>
                   <option value="">Select...</option>
                   {['Memory care facility','Skilled nursing facility','Assisted living facility','Private home','Family home','Residential hospice'].map(o => <option key={o} style={{ background: '#0f1923' }}>{o}</option>)}
                 </select>
@@ -403,10 +403,10 @@ ${form.narrative}`;
 
             <FieldDivider>Clinical Narrative *</FieldDivider>
             {sc && (
-              <div style={{ background: 'rgba(196,168,130,0.04)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '14px 16px', marginBottom: '16px' }}>
+              <div style={{ background: C.goldLight, border: `1px solid ${C.goldBorder}`, borderRadius: '6px', padding: '14px 16px', marginBottom: '16px' }}>
                 <div style={{ fontSize: '14px', letterSpacing: '2px', color: C.gold, fontFamily: C.mono, marginBottom: '10px' }}>SPEAK TO THESE POINTS</div>
                 {sc.prompts.map((p, i) => (
-                  <div key={i} style={{ fontSize: '13px', color: '#d8c8b4', marginBottom: '6px', display: 'flex', gap: '8px', lineHeight: 1.4 }}>
+                  <div key={i} style={{ fontSize: '13px', color: C.textDim, marginBottom: '6px', display: 'flex', gap: '8px', lineHeight: 1.4 }}>
                     <span style={{ color: C.gold, fontWeight: 'bold', flexShrink: 0 }}>→</span>
                     <span>{p}</span>
                   </div>
@@ -421,12 +421,12 @@ ${form.narrative}`;
                   onChange={e => upd('narrative', e.target.value)}
                   rows={9}
                   placeholder="Describe what you observed and did during the visit. Speak naturally — include patient appearance, behavior, any changes from last visit, interventions, family interactions, and staff communications."
-                  style={{ width: '100%', background: 'rgba(0,0,0,0.3)', border: `1px solid ${C.border}`, borderRadius: '2px', color: C.text, padding: '12px 14px', paddingBottom: '52px', fontFamily: C.serif, fontSize: '13px', lineHeight: 1.65, resize: 'vertical', outline: 'none', boxSizing: 'border-box' }}
+                  style={{ width: '100%', background: '#ffffff', border: `1px solid ${C.border}`, borderRadius: '6px', color: C.text, padding: '12px 14px', paddingBottom: '52px', fontFamily: C.sans, fontSize: '13px', lineHeight: 1.65, resize: 'vertical', outline: 'none', boxSizing: 'border-box' }}
                 />
                 <button onClick={toggleVoice} style={{
                   position: 'absolute', right: '10px', bottom: '10px',
                   background: isRecording ? 'rgba(220,80,80,0.8)' : C.gold,
-                  border: 'none', borderRadius: '2px', color: isRecording ? '#fff' : '#0f1923',
+                  border: 'none', borderRadius: '6px', color: isRecording ? '#fff' : '#0f1923',
                   padding: '6px 14px', cursor: 'pointer', fontFamily: C.mono,
                   fontSize: '14px', letterSpacing: '1px', display: 'flex', alignItems: 'center', gap: '5px',
                 }}>
@@ -438,17 +438,17 @@ ${form.narrative}`;
             <ErrorBox message={error} />
 
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '28px', paddingTop: '24px', borderTop: `1px solid ${C.border}` }}>
-              <button onClick={() => setStep(1)} style={{ padding: '10px 22px', borderRadius: '2px', border: `1px solid ${C.border}`, background: 'transparent', color: C.gold, cursor: 'pointer', fontFamily: C.mono, fontSize: '13px', letterSpacing: '2px' }}>Back</button>
-              <button onClick={generate} style={{ padding: '11px 28px', borderRadius: '2px', border: 'none', background: C.gold, color: '#0f1923', cursor: 'pointer', fontFamily: C.mono, fontSize: '13px', letterSpacing: '2px' }}>Generate Note</button>
+              <button onClick={() => setStep(1)} style={{ padding: '10px 22px', borderRadius: '6px', border: `1px solid ${C.border}`, background: 'transparent', color: C.gold, cursor: 'pointer', fontFamily: C.mono, fontSize: '13px', letterSpacing: '2px' }}>Back</button>
+              <button onClick={generate} style={{ padding: '11px 28px', borderRadius: '6px', border: 'none', background: C.gold, color: '#0f1923', cursor: 'pointer', fontFamily: C.mono, fontSize: '13px', letterSpacing: '2px' }}>Generate Note</button>
             </div>
           </div>
         )}
 
         {loading && (
-          <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: '2px', padding: '60px 40px', textAlign: 'center' }}>
+          <div style={{ background: '#ffffff', border: `1px solid ${C.border}`, borderRadius: '6px', padding: '60px 40px', textAlign: 'center' }}>
             <div style={{ width: '44px', height: '44px', border: `3px solid ${C.border}`, borderTopColor: C.gold, borderRadius: '50%', margin: '0 auto 20px', animation: 'spin 0.8s linear infinite' }} />
             <div style={{ fontSize: '20px', color: C.text, marginBottom: '8px' }}>Drafting your note...</div>
-            <div style={{ fontSize: '14px', color: '#d4b896', fontFamily: C.mono }}>Structuring your clinical input into a compliant hospice visit note</div>
+            <div style={{ fontSize: '14px', color: C.gold, fontFamily: C.mono }}>Structuring your clinical input into a compliant hospice visit note</div>
             <div style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '8px', maxWidth: '280px', margin: '24px auto 0', textAlign: 'left' }}>
               {LOADING_STEPS.map((lbl, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px', color: loadingStep === i ? C.gold : loadingStep > i ? C.goldDim : 'rgba(196,168,130,0.25)', fontFamily: C.mono }}>
@@ -480,7 +480,7 @@ ${form.narrative}`;
 
 function FieldDivider({ children }) {
   return (
-    <div style={{ fontSize: '14px', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', color: '#d4b896', padding: '14px 0 8px', borderBottom: `1px solid rgba(196,168,130,0.15)`, marginBottom: '16px', fontFamily: 'Courier New, monospace' }}>
+    <div style={{ fontSize: '14px', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', color: C.gold, padding: '14px 0 8px', borderBottom: `1px solid rgba(196,168,130,0.15)`, marginBottom: '16px', fontFamily: 'Courier New, monospace' }}>
       {children}
     </div>
   );
@@ -498,6 +498,6 @@ function FormField({ label, children }) {
 function FormInput({ value, onChange, placeholder }) {
   return (
     <input value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder}
-      style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(196,168,130,0.15)', borderRadius: '2px', color: '#f0e8dc', padding: '9px 13px', fontFamily: 'Georgia, serif', fontSize: '13px', outline: 'none', width: '100%' }} />
+      style={{ background: '#ffffff', border: '1px solid rgba(196,168,130,0.15)', borderRadius: '6px', color: '#f0e8dc', padding: '9px 13px', fontFamily: C.sans, fontSize: '13px', outline: 'none', width: '100%' }} />
   );
 }

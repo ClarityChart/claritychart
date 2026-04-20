@@ -1,40 +1,51 @@
-// Responsive font sizing utility
-export function clamp(min, preferred, max) {
-  return `clamp(${min}px, ${preferred}, ${max}px)`;
-}
-
 export const C = {
   // Backgrounds
-  bg: '#0f1923',
-  bgCard: '#1e3045',
-  bgCardHover: '#254060',
-  bgCardActive: '#2a4870',
+  bg: '#f4f6f9',
+  bgCard: '#ffffff',
+  bgCardHover: '#f8f9fc',
+  bgCardActive: '#f0f4f9',
 
-  // Borders  
-  border: 'rgba(196,168,130,0.4)',
-  borderHover: '#c4a882',
+  // Nav (kept dark for brand anchor)
+  bgNav: '#1a2535',
+  bgNavHover: '#243548',
 
-  // Gold - brighter and more visible
-  gold: '#d4b896',
-  goldDim: '#a08060',
-  goldFaint: 'rgba(196,168,130,0.15)',
+  // Borders
+  border: '#d1d5db',
+  borderHover: '#b8962a',
+  borderAccent: '#b8962a',
 
-  // Text - much brighter
-  text: '#f8f0e4',
-  textDim: '#d8c8b4',
-  textFaint: '#a09080',
+  // Gold accent (darkened for WCAG AA on white)
+  gold: '#8b6914',
+  goldDim: '#a07820',
+  goldLight: '#fdf6e3',
+  goldBorder: '#d4b896',
+
+  // Text
+  text: '#111827',
+  textDim: '#374151',
+  textFaint: '#6b7280',
+
+  // Nav text (light for dark nav)
+  textNav: '#f0e8d8',
+  textNavDim: '#c4b898',
 
   // Green
-  green: '#5dc48e',
-  greenDim: 'rgba(93,196,142,0.15)',
-  greenBorder: 'rgba(93,196,142,0.5)',
+  green: '#166534',
+  greenDim: '#dcfce7',
+  greenBorder: '#86efac',
 
   // Blue
-  blue: '#5aaac0',
-  blueDim: 'rgba(90,170,192,0.15)',
-  blueBorder: 'rgba(90,170,192,0.5)',
+  blue: '#1e40af',
+  blueDim: '#dbeafe',
+  blueBorder: '#93c5fd',
+
+  // Red
+  red: '#991b1b',
+  redDim: '#fee2e2',
+  redBorder: '#fca5a5',
 
   // Fonts
-  mono: "Courier New, monospace",
+  sans: "Inter, -apple-system, system-ui, sans-serif",
   serif: "Georgia, 'Times New Roman', serif",
+  mono: "ui-monospace, 'Cascadia Code', 'Courier New', monospace",
 };

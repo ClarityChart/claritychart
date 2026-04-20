@@ -22,7 +22,7 @@ export default function RecertSuite({ onBack }) {
   if (pathway === 'md') return <MDPathway onBack={() => setPathway(null)} onBackHome={onBack} />;
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: C.bg, fontFamily: C.serif, color: C.text }}>
+    <div style={{ minHeight: '100vh', backgroundColor: C.bg, fontFamily: C.sans, color: C.text }}>
       <style>{`::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:rgba(196,168,130,0.2);border-radius:3px}`}</style>
       <div style={{ maxWidth: '860px', margin: '0 auto', padding: '0 28px 80px' }}>
         <div style={{ padding: '28px 0 24px', borderBottom: `1px solid ${C.border}`, marginBottom: '48px' }}>
@@ -30,7 +30,7 @@ export default function RecertSuite({ onBack }) {
             PLATFORM HOME
           </button>
           <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontFamily: C.mono, marginBottom: '4px' }}>RECERTIFICATION SUITE</div>
-          <div style={{ fontSize: 'clamp(20px,2.5vw,26px)', color: '#f8f0e4', fontWeight: 'bold' }}>Select Your Pathway</div>
+          <div style={{ fontSize: 'clamp(20px,2.5vw,26px)', color: C.text, fontWeight: 'bold' }}>Select Your Pathway</div>
           <div style={{ fontSize: '13px', color: C.gold, marginTop: '4px', fontStyle: 'italic' }}>Each clinician completes their portion independently</div>
         </div>
 
@@ -69,8 +69,8 @@ function PathwayCard({ title, role, description, outputs, color, onClick }) {
   const [hov, setHov] = useState(false);
   return (
     <div onClick={onClick} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-      style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '20px 24px', background: hov ? C.bgCardHover : C.bgCard, border: `1px solid ${hov ? C.borderHover : C.border}`, borderRadius: '2px', cursor: 'pointer', transition: 'all 0.15s' }}>
-      <div style={{ width: '4px', alignSelf: 'stretch', background: color, borderRadius: '2px', flexShrink: 0, opacity: 0.6 }} />
+      style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '20px 24px', background: hov ? C.bgCardHover : C.bgCard, border: `1px solid ${hov ? C.borderHover : C.border}`, borderRadius: '6px', cursor: 'pointer', transition: 'all 0.15s' }}>
+      <div style={{ width: '4px', alignSelf: 'stretch', background: color, borderRadius: '6px', flexShrink: 0, opacity: 0.6 }} />
       <div style={{ flex: 1 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' }}>
           <div style={{ fontSize: '15px', color: C.text }}>{title}</div>
@@ -131,14 +131,14 @@ function RNPathway({ onBack, onBackHome }) {
   const stageLabels = ['Prior Note', 'RN Assessment', 'Review & Done'];
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: C.bg, fontFamily: C.serif, color: C.text }}>
+    <div style={{ minHeight: '100vh', backgroundColor: C.bg, fontFamily: C.sans, color: C.text }}>
       <style>{`textarea::placeholder,input::placeholder{color:rgba(196,168,130,0.3)}textarea:focus,input:focus{outline:none}::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:rgba(196,168,130,0.2);border-radius:3px}@keyframes bounce{0%,80%,100%{transform:scale(0.6);opacity:0.4}40%{transform:scale(1);opacity:1}}`}</style>
       <div style={{ maxWidth: '860px', margin: '0 auto', padding: '0 28px 80px' }}>
         <div style={{ padding: '28px 0 24px', borderBottom: `1px solid ${C.border}`, marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
           <div>
             <button onClick={onBack} style={{ background: 'none', border: 'none', color: C.goldDim, cursor: 'pointer', fontFamily: C.mono, fontSize: '12px', letterSpacing: '2px', padding: 0, marginBottom: '12px', display: 'block' }}>RECERTIFICATION SUITE</button>
             <div style={{ fontSize: '12px', letterSpacing: '3px', color: C.gold, fontFamily: C.mono, marginBottom: '4px' }}>RN PATHWAY</div>
-            <div style={{ fontSize: 'clamp(20px,2.5vw,26px)', color: '#f8f0e4', fontWeight: 'bold' }}>{stage === 0 ? 'Prior Note' : stage === 1 ? 'RN Assessment' : 'RN Narrative Review'}</div>
+            <div style={{ fontSize: 'clamp(20px,2.5vw,26px)', color: C.text, fontWeight: 'bold' }}>{stage === 0 ? 'Prior Note' : stage === 1 ? 'RN Assessment' : 'RN Narrative Review'}</div>
           </div>
           <Btn variant="ghost" onClick={() => { setStage(0); setRnNarrative(''); setError(''); }}>Reset</Btn>
         </div>
@@ -151,7 +151,7 @@ function RNPathway({ onBack, onBackHome }) {
           />
         )}
 
-        {error && <div style={{ background: 'rgba(224,112,112,0.08)', border: '1px solid rgba(224,112,112,0.3)', borderRadius: '2px', padding: '10px 16px', color: '#e07070', fontSize: '12px', fontFamily: C.mono, marginBottom: '20px' }}>{error}</div>}
+        {error && <div style={{ background: 'rgba(224,112,112,0.08)', border: '1px solid rgba(224,112,112,0.3)', borderRadius: '6px', padding: '10px 16px', color: '#e07070', fontSize: '12px', fontFamily: C.mono, marginBottom: '20px' }}>{error}</div>}
 
         {(loading || extracting) && (
           <ProgressLoader
@@ -163,7 +163,7 @@ function RNPathway({ onBack, onBackHome }) {
 
         {stage === 0 && !extracting && (
           <div>
-            <div style={{ background: 'rgba(196,168,130,0.05)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '14px 18px', marginBottom: '24px', fontSize: '13px', color: C.gold, fontFamily: C.mono, lineHeight: 1.6 }}>
+            <div style={{ background: C.goldLight, border: `1px solid ${C.goldBorder}`, borderRadius: '6px', padding: '14px 18px', marginBottom: '24px', fontSize: '13px', color: C.gold, fontFamily: C.mono, lineHeight: 1.6 }}>
               Paste the prior RN Recert note to display last period status above each domain. Skip for first recertifications.
             </div>
             <div style={{ fontSize: '11px', color: C.gold, fontFamily: C.mono, letterSpacing: '2px', marginBottom: '8px' }}>PRIOR RN RECERTIFICATION NARRATIVE</div>
@@ -178,7 +178,7 @@ function RNPathway({ onBack, onBackHome }) {
         {stage === 1 && !loading && (
           <div>
             {priorSummaries && (
-              <div style={{ background: 'rgba(76,175,130,0.06)', border: `1px solid ${C.greenBorder}`, borderRadius: '2px', padding: '12px 18px', marginBottom: '24px', fontSize: '12px', color: C.green, fontFamily: C.mono, display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div style={{ background: 'rgba(76,175,130,0.06)', border: `1px solid ${C.greenBorder}`, borderRadius: '6px', padding: '12px 18px', marginBottom: '24px', fontSize: '12px', color: C.green, fontFamily: C.mono, display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <span>✓</span><span>Prior note analyzed — last period status shown above each domain</span>
               </div>
             )}
@@ -220,7 +220,7 @@ function RNPathway({ onBack, onBackHome }) {
                     <VoiceBtn onTranscript={t => setField(domain.key, inputs[domain.key] ? inputs[domain.key] + ' ' + t : t)} />
                   </div>
                   {hasPrior && (
-                    <div style={{ background: 'rgba(74,144,164,0.08)', border: `1px solid ${C.blueBorder}`, borderRadius: '2px', padding: '8px 12px', marginBottom: '8px', fontSize: '12px', color: C.blue, fontFamily: C.mono, lineHeight: 1.5 }}>
+                    <div style={{ background: 'rgba(74,144,164,0.08)', border: `1px solid ${C.blueBorder}`, borderRadius: '6px', padding: '8px 12px', marginBottom: '8px', fontSize: '12px', color: C.blue, fontFamily: C.mono, lineHeight: 1.5 }}>
                       <span style={{ fontSize: '12px', letterSpacing: '1px', opacity: 0.7 }}>LAST PERIOD: </span>{prior}
                     </div>
                   )}
@@ -237,7 +237,7 @@ function RNPathway({ onBack, onBackHome }) {
 
         {stage === 2 && !loading && (
           <div>
-            <div style={{ background: 'rgba(196,168,130,0.05)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '12px 18px', marginBottom: '16px', fontSize: '13px', color: C.gold, fontFamily: C.mono, lineHeight: 1.6 }}>
+            <div style={{ background: C.goldLight, border: `1px solid ${C.goldBorder}`, borderRadius: '6px', padding: '12px 18px', marginBottom: '16px', fontSize: '13px', color: C.gold, fontFamily: C.mono, lineHeight: 1.6 }}>
               Review and edit the narrative before finalizing. Use Copy to share with the physician for the recertification note.
             </div>
             <EditableDraft title="RN Recertification Narrative" value={rnNarrative} onChange={setRnNarrative} badge="DRAFT" />
@@ -280,20 +280,20 @@ function F2FPathway({ onBack, onBackHome }) {
   const reset = () => { setInputs({ diagnosis: '', patientId: '', age: '', sex: '', certPeriod: '', fast: '', pps: '', kps: '', weight: '', f2fDate: '', f2fConductedBy: '', f2fFindings: '' }); setF2fNote(''); setError(''); };
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: C.bg, fontFamily: C.serif, color: C.text }}>
+    <div style={{ minHeight: '100vh', backgroundColor: C.bg, fontFamily: C.sans, color: C.text }}>
       <style>{`textarea::placeholder,input::placeholder{color:rgba(196,168,130,0.3)}textarea:focus,input:focus{outline:none}::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:rgba(196,168,130,0.2);border-radius:3px}@keyframes bounce{0%,80%,100%{transform:scale(0.6);opacity:0.4}40%{transform:scale(1);opacity:1}}`}</style>
       <div style={{ maxWidth: '860px', margin: '0 auto', padding: '0 28px 80px' }}>
         <div style={{ padding: '28px 0 24px', borderBottom: `1px solid ${C.border}`, marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
           <div>
             <button onClick={onBack} style={{ background: 'none', border: 'none', color: C.goldDim, cursor: 'pointer', fontFamily: C.mono, fontSize: '12px', letterSpacing: '2px', padding: 0, marginBottom: '12px', display: 'block' }}>RECERTIFICATION SUITE</button>
             <div style={{ fontSize: '12px', letterSpacing: '3px', color: C.blue, fontFamily: C.mono, marginBottom: '4px' }}>F2F PATHWAY</div>
-            <div style={{ fontSize: 'clamp(20px,2.5vw,26px)', color: '#f8f0e4', fontWeight: 'bold' }}>Face-to-Face Encounter Note</div>
+            <div style={{ fontSize: 'clamp(20px,2.5vw,26px)', color: C.text, fontWeight: 'bold' }}>Face-to-Face Encounter Note</div>
             <div style={{ fontSize: '13px', color: C.gold, marginTop: '4px', fontStyle: 'italic' }}>Physician · Nurse Practitioner · Physician Assistant</div>
           </div>
           {(f2fNote || inputs.f2fFindings) && <Btn variant="ghost" onClick={reset}>Reset</Btn>}
         </div>
 
-        {error && <div style={{ background: 'rgba(224,112,112,0.08)', border: '1px solid rgba(224,112,112,0.3)', borderRadius: '2px', padding: '10px 16px', color: '#e07070', fontSize: '12px', fontFamily: C.mono, marginBottom: '20px' }}>{error}</div>}
+        {error && <div style={{ background: 'rgba(224,112,112,0.08)', border: '1px solid rgba(224,112,112,0.3)', borderRadius: '6px', padding: '10px 16px', color: '#e07070', fontSize: '12px', fontFamily: C.mono, marginBottom: '20px' }}>{error}</div>}
 
         {loading && (
           <ProgressLoader
@@ -387,20 +387,20 @@ function MDPathway({ onBack, onBackHome }) {
   const reset = () => { setInputs({ diagnosis: '', patientId: '', age: '', sex: '', certPeriod: '', fast: '', pps: '', kps: '', weight: '', mdObservations: '', priorMDNote: '' }); setRnNarrative(''); setF2fNote(''); setMdNote(''); setError(''); };
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: C.bg, fontFamily: C.serif, color: C.text }}>
+    <div style={{ minHeight: '100vh', backgroundColor: C.bg, fontFamily: C.sans, color: C.text }}>
       <style>{`textarea::placeholder,input::placeholder{color:rgba(196,168,130,0.3)}textarea:focus,input:focus{outline:none}::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:rgba(196,168,130,0.2);border-radius:3px}@keyframes bounce{0%,80%,100%{transform:scale(0.6);opacity:0.4}40%{transform:scale(1);opacity:1}}`}</style>
       <div style={{ maxWidth: '860px', margin: '0 auto', padding: '0 28px 80px' }}>
         <div style={{ padding: '28px 0 24px', borderBottom: `1px solid ${C.border}`, marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
           <div>
             <button onClick={onBack} style={{ background: 'none', border: 'none', color: C.goldDim, cursor: 'pointer', fontFamily: C.mono, fontSize: '12px', letterSpacing: '2px', padding: 0, marginBottom: '12px', display: 'block' }}>RECERTIFICATION SUITE</button>
             <div style={{ fontSize: '12px', letterSpacing: '3px', color: C.green, fontFamily: C.mono, marginBottom: '4px' }}>PHYSICIAN PATHWAY</div>
-            <div style={{ fontSize: 'clamp(20px,2.5vw,26px)', color: '#f8f0e4', fontWeight: 'bold' }}>Physician Recertification Note</div>
+            <div style={{ fontSize: 'clamp(20px,2.5vw,26px)', color: C.text, fontWeight: 'bold' }}>Physician Recertification Note</div>
             <div style={{ fontSize: '13px', color: C.gold, marginTop: '4px', fontStyle: 'italic' }}>Paste RN narrative and F2F note — generate physician recertification</div>
           </div>
           {(mdNote || rnNarrative) && <Btn variant="ghost" onClick={reset}>Reset</Btn>}
         </div>
 
-        {error && <div style={{ background: 'rgba(224,112,112,0.08)', border: '1px solid rgba(224,112,112,0.3)', borderRadius: '2px', padding: '10px 16px', color: '#e07070', fontSize: '12px', fontFamily: C.mono, marginBottom: '20px' }}>{error}</div>}
+        {error && <div style={{ background: 'rgba(224,112,112,0.08)', border: '1px solid rgba(224,112,112,0.3)', borderRadius: '6px', padding: '10px 16px', color: '#e07070', fontSize: '12px', fontFamily: C.mono, marginBottom: '20px' }}>{error}</div>}
 
         {loading && (
           <ProgressLoader

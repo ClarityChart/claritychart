@@ -303,7 +303,7 @@ function DemoMode({ onBack, onBackHome }) {
             current={currentStageNum - 1}
             onStepClick={(i) => {
               const stageMap = ['select', 'build', 'encounter', 'narrative', 'cti'];
-              if (i < currentStageNum - 1) setStage(stageMap[i + 1]);
+              if (i + 1 < currentStageNum) setStage(stageMap[i + 1]);
             }}
           />
         )}
@@ -384,7 +384,8 @@ function DemoMode({ onBack, onBackHome }) {
                 </div>
               </div>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <BackBtn onClick={() => setStage('select')} label="Patient" />
               <Btn onClick={summarizeAndContinue} disabled={droppedDocs.length === 0} style={{ padding: '12px 32px' }}>
                 {droppedDocs.length > 0 ? 'Summarize & Continue →' : 'Add Documents First'}
               </Btn>

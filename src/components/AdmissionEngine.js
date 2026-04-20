@@ -119,6 +119,7 @@ function PatientCard({ id, p, onClick }) {
   );
 }
 
+// v2 rebuild
 function DemoMode({ onBack, onBackHome }) {
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [droppedDocs, setDroppedDocs] = useState([]);

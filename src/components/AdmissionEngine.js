@@ -271,31 +271,46 @@ function DemoMode({ onBack, onBackHome }) {
   const stageTitles = ['Patient', 'Documents', 'Encounter', 'Narrative', 'CTI'];
   const currentStageNum = stageLabels[stage] || 1;
 
-  return (
-    <div style={{ minHeight: '100vh', backgroundColor: C.bg, fontFamily: C.serif, color: C.text }}>
-      <style>{`
-        textarea::placeholder{color:rgba(196,168,130,0.3)}textarea:focus{outline:none}
-        ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:rgba(196,168,130,0.2);border-radius:3px}
-        @keyframes bounce{0%,80%,100%{transform:scale(0.6);opacity:0.4}40%{transform:scale(1);opacity:1}}
-        @keyframes voicePulse{0%,100%{box-shadow:0 0 0 2px rgba(220,80,80,0.3)}50%{box-shadow:0 0 0 5px rgba(220,80,80,0.1)}}
-        .doc-card{transition:all 0.15s;cursor:grab}.doc-card:hover{border-color:rgba(196,168,130,0.4)!important;background:rgba(196,168,130,0.08)!important}
-      `}</style>
-      <div style={{ maxWidth: '960px', margin: '0 auto', padding: '0 28px 80px' }}>
+  const demoTitles = ['Patient', 'Documents', 'Encounter', 'Narrative', 'CTI'];
+  const demoStageMap = { select: 0, build: 1, encounter: 2, narrative: 3, cti: 4 };
+  const demoCurrentStep = demoStageMap[stage] || 0;
+  const demoTitlesDisplay = {
+    select: 'Select Demo Patient',
+    build: patient?.name + ' — Documents',
+    encounter: 'Admission Encounter',
+    narrative: 'Admission Narrative',
+    cti: 'Certificate of Terminal Illness',
+  };
+  const demoPrimaryActions = {
+    build: { action: summarizeAndContinue, label: 'Summarize & Continue →', disabled: droppedDocs.length === 0 },
+    encounter: { action: generateNarrative, label: 'Generate Admission Narrative →', disabled: !encounter.trim() },
+    narrative: { action: generateCTI, label: 'Create Certificate of Terminal Illness →', disabled: false },
+  };
+  const demoBackTargets = { build: 'select', encounter: 'build', narrative: 'encounter', cti: 'narrative' };
+  const demoBackLabels = { build: 'Patients', encounter: 'Documents', narrative: 'Encounter', cti: 'Narrative' };
 
-        <div style={{ padding: '28px 0 24px', borderBottom: `1px solid ${C.border}`, marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-          <div>
-            <TopNav onHome={onBack} moduleName='Admission Engine' />
-            <div style={{ fontSize: '16px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '4px' }}>DEMO MODE</div>
-            <div style={{ fontSize: 'clamp(30px,2.8vw,36px)', color: '#f0e8dc', fontWeight: '800', letterSpacing: '-0.5px', fontFamily: 'Georgia, serif' }}>
-              {stage === 'select' && 'Select Demo Patient'}
-              {stage === 'build' && (patient?.name + ' — Documents')}
-              {stage === 'encounter' && 'Admission Encounter'}
-              {stage === 'narrative' && 'Admission Narrative'}
-              {stage === 'cti' && 'Certificate of Terminal Illness'}
-            </div>
-          </div>
-          {stage !== 'select' && <Btn variant="ghost" onClick={reset}>← Patients</Btn>}
-        </div>
+  return (
+    <PageShell
+      onHome={onBackHome}
+      moduleName="Admission Engine"
+      badge="DEMO MODE"
+      steps={stage !== 'select' ? demoTitles : null}
+      currentStep={demoCurrentStep}
+      onStepClick={(i) => {
+        const stageArr = ['select', 'build', 'encounter', 'narrative', 'cti'];
+        if (i < demoCurrentStep) setStage(stageArr[i]);
+      }}
+      title={demoTitlesDisplay[stage]}
+      onBack={stage !== 'select' ? () => setStage(demoBackTargets[stage]) : onBack}
+      backLabel={stage !== 'select' ? demoBackLabels[stage] : 'Admission Engine'}
+      primaryAction={!loading && demoPrimaryActions[stage]?.action}
+      primaryLabel={demoPrimaryActions[stage]?.label}
+      primaryDisabled={demoPrimaryActions[stage]?.disabled}
+      secondaryAction={stage === 'narrative' ? reset : stage === 'cti' ? reset : null}
+      secondaryLabel={stage === 'narrative' ? 'New Patient' : stage === 'cti' ? 'New Patient' : null}
+    >
+      <style>{`.doc-card{transition:all 0.15s;cursor:grab}.doc-card:hover{border-color:rgba(196,168,130,0.4)!important;background:rgba(196,168,130,0.08)!important}`}</style>
+      <div>
 
         {stage !== 'select' && (
           <ProgressSteps
@@ -384,12 +399,7 @@ function DemoMode({ onBack, onBackHome }) {
                 </div>
               </div>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <BackBtn onClick={() => setStage('select')} label="Patient" />
-              <Btn onClick={summarizeAndContinue} disabled={droppedDocs.length === 0} style={{ padding: '12px 32px' }}>
-                {droppedDocs.length > 0 ? 'Summarize & Continue →' : 'Add Documents First'}
-              </Btn>
-            </div>
+
           </div>
         )}
 
@@ -418,10 +428,7 @@ function DemoMode({ onBack, onBackHome }) {
               <VoiceBtn onTranscript={t => setEncounter(p => p ? p + ' ' + t : t)} />
             </div>
             <Textarea value={encounter} onChange={setEncounter} placeholder="Describe findings from the admission visit..." rows={12} />
-            <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'space-between' }}>
-              <BackBtn onClick={() => setStage('build')} label="Documents" />
-              <Btn onClick={generateNarrative} disabled={!encounter.trim()} style={{ padding: '12px 32px' }}>Generate Admission Narrative →</Btn>
-            </div>
+
           </div>
         )}
 
@@ -439,13 +446,7 @@ function DemoMode({ onBack, onBackHome }) {
                 <Btn variant="secondary" onClick={applyEdits} disabled={!editRequest.trim()}>Apply Edits</Btn>
               </div>
             </div>
-            <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: '24px', display: 'flex', justifyContent: 'space-between', gap: '12px' }}>
-              <BackBtn onClick={() => setStage('encounter')} label="Encounter" />
-              <div style={{ display: 'flex', gap: '12px' }}>
-                <Btn variant="secondary" onClick={reset}>New Patient</Btn>
-                <Btn onClick={generateCTI} style={{ padding: '12px 24px' }}>Create Certificate of Terminal Illness →</Btn>
-              </div>
-            </div>
+
           </div>
         )}
 
@@ -473,10 +474,9 @@ function DemoMode({ onBack, onBackHome }) {
         )}
 
       </div>
-    </div>
+    </PageShell>
   );
 }
-
 function ClinicalMode({ onBack, onBackHome }) {
   const [stage, setStage] = useState(1);
   const [primaryDx, setPrimaryDx] = useState('');

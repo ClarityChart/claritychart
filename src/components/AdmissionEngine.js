@@ -298,6 +298,7 @@ function DemoMode({ onBack, onBackHome }) {
       currentStep={demoCurrentStep}
       onStepClick={(i) => {
         const stageArr = ['build', 'encounter', 'narrative', 'cti'];
+        console.log('Step clicked:', i, 'current:', demoCurrentStep, 'target:', stageArr[i]);
         if (i < demoCurrentStep) setStage(stageArr[i]);
       }}
       title={demoTitlesDisplay[stage]}

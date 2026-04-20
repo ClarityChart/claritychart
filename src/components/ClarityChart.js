@@ -21,7 +21,7 @@ function ModCard({ mod, onClick }) {
       onMouseLeave={() => setHov(false)}
       style={{
         display: 'flex', alignItems: 'center', gap: '12px', padding: '16px 18px', width: '100%',
-        background: hov && active ? C.bgCardHover : '#ffffff',
+        background: hov && active ? C.bgCardHover : C.bgCard,
         border: `1.5px solid ${hov && active ? C.gold : C.border}`,
         borderRadius: '6px', cursor: active ? 'pointer' : 'default',
         textAlign: 'left', transition: 'all 0.15s',

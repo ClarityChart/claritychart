@@ -92,6 +92,33 @@ function ModeCard({ title, subtitle, description, badge, badgeColor, icon, onCli
   );
 }
 
+function PatientCard({ id, p, onClick }) {
+  const [hov, setHov] = useState(false);
+  return (
+    <div
+      onClick={onClick}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        display: 'flex', alignItems: 'center', gap: '20px',
+        padding: '20px 24px',
+        background: hov ? '#344f6e' : '#2d4460',
+        border: `1px solid ${hov ? 'rgba(196,168,130,0.6)' : 'rgba(196,168,130,0.3)'}`,
+        borderRadius: '6px', cursor: 'pointer', transition: 'all 0.15s',
+      }}
+    >
+      <div style={{ width: '48px', height: '48px', borderRadius: '6px', background: `${p.color}28`, border: `1px solid ${p.color}60`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', color: p.color, fontFamily: C.mono, flexShrink: 0, fontWeight: '700' }}>{p.name}</div>
+      <div style={{ flex: 1 }}>
+        <div style={{ fontSize: '18px', color: '#f0e8dc', marginBottom: '4px', fontWeight: '600' }}>{p.diagnosis}</div>
+        <div style={{ fontSize: '15px', color: 'rgba(196,168,130,0.8)', fontFamily: C.mono, marginBottom: '3px' }}>{p.tagline}</div>
+        {p.snapshot && <div style={{ fontSize: '13px', color: 'rgba(196,168,130,0.5)', fontFamily: C.mono }}>{p.snapshot}</div>}
+      </div>
+      <div style={{ fontSize: '14px', color: 'rgba(196,168,130,0.6)', fontFamily: C.mono }}>{p.documents.length} docs</div>
+      <div style={{ fontSize: '20px', color: hov ? '#d4b896' : 'rgba(196,168,130,0.4)' }}>›</div>
+    </div>
+  );
+}
+
 function DemoMode({ onBack, onBackHome }) {
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [droppedDocs, setDroppedDocs] = useState([]);
@@ -298,19 +325,7 @@ function DemoMode({ onBack, onBackHome }) {
               {PATIENT_LIST.map(id => {
                 const p = DEMO_PATIENTS[id];
                 return (
-                  <div key={id} onClick={() => selectPatient(id)}
-                    style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '20px 24px', background: 'rgba(20,32,45,0.98)', border: `1px solid ${C.border}`, borderRadius: '2px', cursor: 'pointer', transition: 'all 0.15s' }}
-                    onMouseEnter={e => { e.currentTarget.style.background = '#344f6e'; e.currentTarget.style.borderColor = 'rgba(196,168,130,0.6)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.background = '#2d4460'; e.currentTarget.style.borderColor = 'rgba(196,168,130,0.3)'; }}>
-                    <div style={{ width: '48px', height: '48px', borderRadius: '2px', background: `${p.color}18`, border: `1px solid ${p.color}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px', color: p.color, fontFamily: C.mono, flexShrink: 0 }}>{p.name}</div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: '19px', color: C.text, marginBottom: '4px' }}>{p.diagnosis}</div>
-                      <div style={{ fontSize: '17px', color: '#f0e8dc', fontFamily: C.sans, fontWeight: '600', marginBottom: '4px' }}>{p.tagline}</div>
-                      {p.snapshot && <div style={{ fontSize: '15px', color: 'rgba(196,168,130,0.5)', fontFamily: C.mono }}>{p.snapshot}</div>}
-                    </div>
-                    <div style={{ fontSize: '17px', color: '#f0e8dc', fontFamily: C.sans, fontWeight: '600' }}>{p.documents.length} documents</div>
-                    <div style={{ fontSize: '20px', color: C.border }}>›</div>
-                  </div>
+                  <PatientCard key={id} id={id} p={p} onClick={() => selectPatient(id)} />
                 );
               })}
             </div>

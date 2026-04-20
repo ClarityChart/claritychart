@@ -1,48 +1,48 @@
 export const C = {
   // Backgrounds
-  bg: '#f4f6f9',
+  bg: '#eef0f4',
   bgCard: '#ffffff',
-  bgCardHover: '#f8f9fc',
-  bgCardActive: '#f0f4f9',
+  bgCardHover: '#f8f6f1',
+  bgCardActive: '#f0ece4',
 
-  // Nav (kept dark for brand anchor)
+  // Nav (dark anchor)
   bgNav: '#1a2535',
   bgNavHover: '#243548',
 
-  // Borders
-  border: '#d1d5db',
-  borderHover: '#b8962a',
-  borderAccent: '#b8962a',
+  // Borders — much stronger
+  border: '#b8bcc8',
+  borderHover: '#8b6914',
+  borderAccent: '#8b6914',
 
-  // Gold accent (darkened for WCAG AA on white)
-  gold: '#8b6914',
-  goldDim: '#a07820',
-  goldLight: '#fdf6e3',
-  goldBorder: '#d4b896',
+  // Gold — darker and richer for light backgrounds
+  gold: '#7a5c0f',
+  goldDim: '#9a7820',
+  goldLight: '#fdf0d0',
+  goldBorder: '#c4963c',
 
-  // Text
-  text: '#111827',
-  textDim: '#374151',
-  textFaint: '#6b7280',
+  // Text — maximum contrast
+  text: '#0d1117',
+  textDim: '#2d3748',
+  textFaint: '#4a5568',
 
-  // Nav text (light for dark nav)
+  // Nav text
   textNav: '#f0e8d8',
   textNavDim: '#c4b898',
 
   // Green
-  green: '#166534',
-  greenDim: '#dcfce7',
-  greenBorder: '#86efac',
+  green: '#1a6b3c',
+  greenDim: '#d4f4e2',
+  greenBorder: '#6abf8a',
 
   // Blue
-  blue: '#1e40af',
+  blue: '#1a4fa0',
   blueDim: '#dbeafe',
-  blueBorder: '#93c5fd',
+  blueBorder: '#7aaee0',
 
   // Red
-  red: '#991b1b',
-  redDim: '#fee2e2',
-  redBorder: '#fca5a5',
+  red: '#8b1a1a',
+  redDim: '#fde8e8',
+  redBorder: '#f0a0a0',
 
   // Fonts
   sans: "Inter, -apple-system, system-ui, sans-serif",

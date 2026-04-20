@@ -22,7 +22,7 @@ function ModCard({ mod, onClick }) {
       style={{
         display: 'flex', alignItems: 'center', gap: '12px', padding: '16px 18px', width: '100%',
         background: hov && active ? C.bgCardHover : '#ffffff',
-        border: `1px solid ${hov && active ? C.borderHover : C.border}`,
+        border: `1.5px solid ${hov && active ? C.gold : C.border}`,
         borderRadius: '6px', cursor: active ? 'pointer' : 'default',
         textAlign: 'left', transition: 'all 0.15s',
         opacity: mod.status === 'queued' ? 0.45 : 1, marginBottom: '4px',
@@ -39,7 +39,7 @@ function ModCard({ mod, onClick }) {
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', alignItems: 'flex-end' }}>
         {mod.outputs.map(o => (
-          <span key={o} style={{ fontSize: '12px', color: C.textFaint, fontFamily: C.mono, fontWeight: '500', whiteSpace: 'nowrap' }}>→ {o}</span>
+          <span key={o} style={{ fontSize: '12px', color: C.gold, fontFamily: C.mono, fontWeight: '600', whiteSpace: 'nowrap' }}>→ {o}</span>
         ))}
       </div>
       {active && (

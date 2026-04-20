@@ -20,7 +20,7 @@ export function Textarea({ value, onChange, placeholder, rows = 4, mono }) {
       style={{
         width: '100%',
         background: '#ffffff',
-        border: `1px solid ${C.border}`,
+        border: `1.5px solid ${C.border}`,
         borderRadius: '6px',
         color: C.text,
         padding: '12px 16px',
@@ -54,7 +54,7 @@ export function Input({ value, onChange, placeholder }) {
       style={{
         width: '100%',
         background: '#ffffff',
-        border: `1px solid ${C.border}`,
+        border: `1.5px solid ${C.border}`,
         borderRadius: '6px',
         color: C.text,
         padding: '11px 16px',
@@ -229,10 +229,10 @@ export function DocOutput({ title, content, badge }) {
   });
   return (
     <div style={{
-      background: C.bgCard, border: `1px solid ${C.border}`,
-      borderTop: `3px solid ${C.gold}`,
-      borderRadius: '6px', overflow: 'hidden', marginBottom: '28px',
-      boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+      background: C.bgCard, border: `1.5px solid ${C.border}`,
+      borderTop: `4px solid ${C.gold}`,
+      borderRadius: '8px', overflow: 'hidden', marginBottom: '28px',
+      boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
     }}>
       <div style={{
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
@@ -259,9 +259,9 @@ export function DocOutput({ title, content, badge }) {
 export function EditableDraft({ title, value, onChange, badge }) {
   return (
     <div style={{
-      background: C.bgCard, border: `2px solid ${C.gold}`,
-      borderRadius: '6px', overflow: 'hidden', marginBottom: '28px',
-      boxShadow: '0 2px 8px rgba(139,105,20,0.12)',
+      background: C.bgCard, border: `2.5px solid ${C.gold}`,
+      borderRadius: '8px', overflow: 'hidden', marginBottom: '28px',
+      boxShadow: '0 4px 12px rgba(122,92,15,0.18)',
     }}>
       <div style={{
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
@@ -393,9 +393,9 @@ export function ProgressLoader({ steps, currentStep, message }) {
   useEffect(() => { setAnimKey(k => k + 1); }, [currentStep]);
   return (
     <div style={{
-      background: C.bgCard, border: `1px solid ${C.border}`,
-      borderTop: `3px solid ${C.gold}`,
-      borderRadius: '6px', padding: 'clamp(28px,4vw,48px)',
+      background: C.bgCard, border: `1.5px solid ${C.border}`,
+      borderTop: `4px solid ${C.gold}`,
+      borderRadius: '8px', padding: 'clamp(28px,4vw,48px)',
       textAlign: 'center',
       boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
     }}>

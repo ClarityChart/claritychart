@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { C } from './tokens';
-import { Textarea, Input, Btn, VoiceBtn, DocOutput, TopNav, ErrorBox, EditableDraft, BackBtn, ProgressSteps, ProgressLoader, useUnsavedWarning } from './ui';
+import { Textarea, Input, Btn, VoiceBtn, DocOutput, TopNav, ErrorBox, EditableDraft, BackBtn, ProgressSteps, ProgressLoader, useUnsavedWarning, PageShell } from './ui';
 import { DECLINE_DOMAINS, buildPriorExtractionSystem, buildRNRecertSystem, buildF2FSystem, buildMDRecertSystem } from './recertPrompts';
 
 const EMPTY_INPUTS = {
@@ -22,69 +22,43 @@ export default function RecertSuite({ onBack }) {
   if (pathway === 'md') return <MDPathway onBack={() => setPathway(null)} onBackHome={onBack} />;
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: C.bg, fontFamily: C.sans, color: C.text }}>
-      <style>{`::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:rgba(196,168,130,0.2);border-radius:3px}`}</style>
-      <div style={{ maxWidth: '860px', margin: '0 auto', padding: '0 28px 80px' }}>
-        <div style={{ padding: '28px 0 24px', borderBottom: `1px solid ${C.border}`, marginBottom: '48px' }}>
-          <button onClick={onBack} style={{ background: 'none', border: 'none', color: C.goldDim, cursor: 'pointer', fontFamily: C.mono, fontSize: '16px', letterSpacing: '2px', padding: 0, marginBottom: '12px', display: 'block' }}>
-            PLATFORM HOME
-          </button>
-          <div style={{ fontSize: '16px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '4px' }}>RECERTIFICATION SUITE</div>
-          <div style={{ fontSize: 'clamp(30px,2.8vw,36px)', color: '#f0e8dc', fontWeight: '800', letterSpacing: '-0.5px', fontFamily: 'Georgia, serif', fontWeight: 'bold' }}>Select Your Pathway</div>
-          <div style={{ fontSize: '17px', color: C.gold, marginTop: '4px', fontStyle: 'italic' }}>Each clinician completes their portion independently</div>
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <PathwayCard
-            title="RN Recertification Note"
-            role="Hospice RN"
-            description="Complete the nine-domain decline assessment. Review and finalize the RN Recertification Narrative. Optionally paste a prior recert note for interval comparison."
-            outputs={['RN Recertification Narrative']}
-            color={C.gold}
-            onClick={() => setPathway('rn')}
-          />
-          <PathwayCard
-            title="Face-to-Face Encounter Note"
-            role="Physician · NP · PA"
-            description="Enter clinical findings from the face-to-face encounter. Generate the F2F attestation note confirming continued decline related to the terminal diagnosis."
-            outputs={['Face-to-Face Encounter Note']}
-            color={C.blue}
-            onClick={() => setPathway('f2f')}
-          />
-          <PathwayCard
-            title="Physician Recertification Note"
-            role="Physician · Medical Director"
-            description="Paste the completed RN Recert narrative and F2F note. Add any additional observations. Generate the Physician Recertification Note synthesizing both documents."
-            outputs={['Physician Recertification Note']}
-            color={C.green}
-            onClick={() => setPathway('md')}
-          />
-        </div>
+    <PageShell
+      onHome={onBack}
+      moduleName="Recertification Suite"
+      badge="RECERTIFICATION SUITE"
+      title="Select Your Pathway"
+      subtitle="Each clinician completes their portion independently"
+      hideProgress={true}
+    >
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <PathwayCard
+          title="RN Recertification Note"
+          role="Hospice RN"
+          description="Complete the nine-domain decline assessment. Review and finalize the RN Recertification Narrative."
+          outputs={['RN Recertification Narrative']}
+          color={C.gold}
+          onClick={() => setPathway('rn')}
+        />
+        <PathwayCard
+          title="Face-to-Face Encounter Note"
+          role="Physician · NP · PA"
+          description="Enter clinical findings from the face-to-face encounter. Generate the F2F attestation note."
+          outputs={['Face-to-Face Encounter Note']}
+          color={C.blue}
+          onClick={() => setPathway('f2f')}
+        />
+        <PathwayCard
+          title="Physician Recertification Note"
+          role="Physician · Medical Director"
+          description="Paste the completed RN Recert narrative and F2F note. Generate the Physician Recertification Note."
+          outputs={['Physician Recertification Note']}
+          color={C.green}
+          onClick={() => setPathway('md')}
+        />
       </div>
-    </div>
+    </PageShell>
   );
-}
 
-function PathwayCard({ title, role, description, outputs, color, onClick }) {
-  const [hov, setHov] = useState(false);
-  return (
-    <div onClick={onClick} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-      style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '20px 24px', background: hov ? C.bgCardHover : C.bgCard, border: `1px solid ${hov ? C.borderHover : C.border}`, borderRadius: '6px', cursor: 'pointer', transition: 'all 0.15s' }}>
-      <div style={{ width: '4px', alignSelf: 'stretch', background: color, borderRadius: '6px', flexShrink: 0, opacity: 0.6 }} />
-      <div style={{ flex: 1 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' }}>
-          <div style={{ fontSize: '19px', color: C.text }}>{title}</div>
-          <span style={{ fontSize: '16px', color: color, background: `${color}18`, border: `1px solid ${color}40`, borderRadius: '10px', padding: '1px 8px', fontFamily: C.mono, letterSpacing: '0.5px' }}>{role}</span>
-        </div>
-        <div style={{ fontSize: '19px', color: '#c8b8a8', fontWeight: '400', lineHeight: 1.5, fontStyle: 'italic', marginBottom: '8px' }}>{description}</div>
-        <div style={{ display: 'flex', gap: '8px' }}>
-          {outputs.map(o => <span key={o} style={{ fontSize: '16px', color: C.gold, fontFamily: C.mono }}>→ {o}</span>)}
-        </div>
-      </div>
-      <span style={{ color: hov ? C.gold : C.border, fontSize: '24px', transition: 'all 0.15s' }}>›</span>
-    </div>
-  );
-}
 
 function RNPathway({ onBack, onBackHome }) {
   const [stage, setStage] = useState(0);
@@ -130,26 +104,44 @@ function RNPathway({ onBack, onBackHome }) {
 
   const stageLabels = ['Prior Note', 'RN Assessment', 'Review & Done'];
 
-  return (
-    <div style={{ minHeight: '100vh', backgroundColor: C.bg, fontFamily: C.sans, color: C.text }}>
-      <style>{`textarea::placeholder,input::placeholder{color:rgba(196,168,130,0.3)}textarea:focus,input:focus{outline:none}::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:rgba(196,168,130,0.2);border-radius:3px}@keyframes bounce{0%,80%,100%{transform:scale(0.6);opacity:0.4}40%{transform:scale(1);opacity:1}}`}</style>
-      <div style={{ maxWidth: '860px', margin: '0 auto', padding: '0 28px 80px' }}>
-        <div style={{ padding: '28px 0 24px', borderBottom: `1px solid ${C.border}`, marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-          <div>
-            <button onClick={onBack} style={{ background: 'none', border: 'none', color: C.goldDim, cursor: 'pointer', fontFamily: C.mono, fontSize: '16px', letterSpacing: '2px', padding: 0, marginBottom: '12px', display: 'block' }}>RECERTIFICATION SUITE</button>
-            <div style={{ fontSize: '16px', fontSize: '15px', letterSpacing: '3px', color: C.gold, fontFamily: C.mono, fontWeight: '700', textTransform: 'uppercase', marginBottom: '4px' }}>RN PATHWAY</div>
-            <div style={{ fontSize: 'clamp(30px,2.8vw,36px)', color: '#f0e8dc', fontWeight: '800', letterSpacing: '-0.5px', fontFamily: 'Georgia, serif', fontWeight: 'bold' }}>{stage === 0 ? 'Prior Note' : stage === 1 ? 'RN Assessment' : 'RN Narrative Review'}</div>
-          </div>
-          <Btn variant="ghost" onClick={() => { setStage(0); setRnNarrative(''); setError(''); }}>Reset</Btn>
-        </div>
+  const rnTitles = ['Prior Note', 'RN Assessment', 'Review & Done'];
+  const rnBackLabels = ['', 'Prior Note', 'Assessment'];
+  const rnSubtitles = [
+    'Paste prior RN Recert note for interval comparison — or skip',
+    'Complete decline domains to generate RN narrative',
+    'Review and edit before finalizing',
+  ];
 
-        {stage < 3 && (
-          <ProgressSteps
-            steps={stageLabels}
-            current={stage}
-            onStepClick={(i) => { if (i < stage) setStage(i); }}
-          />
-        )}
+  return (
+    <PageShell
+      onHome={onBackHome}
+      moduleName="Recertification Suite"
+      badge="RN PATHWAY"
+      steps={rnTitles}
+      currentStep={stage}
+      onStepClick={(i) => { if (i < stage) setStage(i); }}
+      title={rnTitles[stage] || 'Review & Done'}
+      subtitle={rnSubtitles[stage] || ''}
+      onBack={stage > 0 ? () => setStage(stage - 1) : onBack}
+      backLabel={stage > 0 ? rnBackLabels[stage] : 'Pathways'}
+      secondaryAction={stage === 0 ? () => setStage(1) : null}
+      secondaryLabel="Skip — No Prior Note"
+      primaryAction={
+        stage === 0 && priorNote.trim() ? extractPrior :
+        stage === 1 ? generateRN :
+        null
+      }
+      primaryLabel={
+        stage === 0 ? 'Analyze Prior Note →' :
+        stage === 1 ? 'Generate RN Narrative →' :
+        null
+      }
+      primaryDisabled={
+        (stage === 0 && !priorNote.trim()) ||
+        (stage === 1 && (!inputs.diagnosis.trim() || filledDomains === 0))
+      }
+    >
+      <div>
 
         {error && <div style={{ background: 'rgba(224,112,112,0.08)', border: '1px solid rgba(224,112,112,0.3)', borderRadius: '6px', padding: '10px 16px', color: '#e07070', fontSize: '16px', fontFamily: C.mono, marginBottom: '20px' }}>{error}</div>}
 
@@ -251,7 +243,7 @@ function RNPathway({ onBack, onBackHome }) {
           </div>
         )}
       </div>
-    </div>
+    </PageShell>
   );
 }
 
@@ -280,18 +272,21 @@ function F2FPathway({ onBack, onBackHome }) {
   const reset = () => { setInputs({ diagnosis: '', patientId: '', age: '', sex: '', certPeriod: '', fast: '', pps: '', kps: '', weight: '', f2fDate: '', f2fConductedBy: '', f2fFindings: '' }); setF2fNote(''); setError(''); };
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: C.bg, fontFamily: C.sans, color: C.text }}>
-      <style>{`textarea::placeholder,input::placeholder{color:rgba(196,168,130,0.3)}textarea:focus,input:focus{outline:none}::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:rgba(196,168,130,0.2);border-radius:3px}@keyframes bounce{0%,80%,100%{transform:scale(0.6);opacity:0.4}40%{transform:scale(1);opacity:1}}`}</style>
-      <div style={{ maxWidth: '860px', margin: '0 auto', padding: '0 28px 80px' }}>
-        <div style={{ padding: '28px 0 24px', borderBottom: `1px solid ${C.border}`, marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-          <div>
-            <button onClick={onBack} style={{ background: 'none', border: 'none', color: C.goldDim, cursor: 'pointer', fontFamily: C.mono, fontSize: '16px', letterSpacing: '2px', padding: 0, marginBottom: '12px', display: 'block' }}>RECERTIFICATION SUITE</button>
-            <div style={{ fontSize: '16px', letterSpacing: '3px', color: C.blue, fontFamily: C.mono, marginBottom: '4px' }}>F2F PATHWAY</div>
-            <div style={{ fontSize: 'clamp(30px,2.8vw,36px)', color: '#f0e8dc', fontWeight: '800', letterSpacing: '-0.5px', fontFamily: 'Georgia, serif', fontWeight: 'bold' }}>Face-to-Face Encounter Note</div>
-            <div style={{ fontSize: '17px', color: C.gold, marginTop: '4px', fontStyle: 'italic' }}>Physician · Nurse Practitioner · Physician Assistant</div>
-          </div>
-          {(f2fNote || inputs.f2fFindings) && <Btn variant="ghost" onClick={reset}>Reset</Btn>}
-        </div>
+    <PageShell
+      onHome={onBackHome}
+      moduleName="Recertification Suite"
+      badge="F2F PATHWAY"
+      title="Face-to-Face Encounter Note"
+      subtitle="Physician · Nurse Practitioner · Physician Assistant"
+      onBack={onBack}
+      backLabel="Pathways"
+      primaryAction={!f2fNote && !loading ? generate : null}
+      primaryLabel="Generate F2F Note →"
+      primaryDisabled={!inputs.f2fDate?.trim() || !inputs.f2fFindings?.trim()}
+      secondaryAction={f2fNote ? reset : null}
+      secondaryLabel="New F2F Note"
+    >
+      <div>
 
         {error && <div style={{ background: 'rgba(224,112,112,0.08)', border: '1px solid rgba(224,112,112,0.3)', borderRadius: '6px', padding: '10px 16px', color: '#e07070', fontSize: '16px', fontFamily: C.mono, marginBottom: '20px' }}>{error}</div>}
 
@@ -349,14 +344,10 @@ function F2FPathway({ onBack, onBackHome }) {
         {f2fNote && !loading && (
           <div>
             <DocOutput title="Face-to-Face Encounter Note" content={f2fNote} />
-            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '8px' }}>
-              <Btn variant="secondary" onClick={reset}>New F2F Note</Btn>
-              <Btn variant="secondary" onClick={onBackHome}>Return Home</Btn>
-            </div>
           </div>
         )}
       </div>
-    </div>
+    </PageShell>
   );
 }
 
@@ -387,18 +378,21 @@ function MDPathway({ onBack, onBackHome }) {
   const reset = () => { setInputs({ diagnosis: '', patientId: '', age: '', sex: '', certPeriod: '', fast: '', pps: '', kps: '', weight: '', mdObservations: '', priorMDNote: '' }); setRnNarrative(''); setF2fNote(''); setMdNote(''); setError(''); };
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: C.bg, fontFamily: C.sans, color: C.text }}>
-      <style>{`textarea::placeholder,input::placeholder{color:rgba(196,168,130,0.3)}textarea:focus,input:focus{outline:none}::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:rgba(196,168,130,0.2);border-radius:3px}@keyframes bounce{0%,80%,100%{transform:scale(0.6);opacity:0.4}40%{transform:scale(1);opacity:1}}`}</style>
-      <div style={{ maxWidth: '860px', margin: '0 auto', padding: '0 28px 80px' }}>
-        <div style={{ padding: '28px 0 24px', borderBottom: `1px solid ${C.border}`, marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-          <div>
-            <button onClick={onBack} style={{ background: 'none', border: 'none', color: C.goldDim, cursor: 'pointer', fontFamily: C.mono, fontSize: '16px', letterSpacing: '2px', padding: 0, marginBottom: '12px', display: 'block' }}>RECERTIFICATION SUITE</button>
-            <div style={{ fontSize: '16px', letterSpacing: '3px', color: C.green, fontFamily: C.mono, marginBottom: '4px' }}>PHYSICIAN PATHWAY</div>
-            <div style={{ fontSize: 'clamp(30px,2.8vw,36px)', color: '#f0e8dc', fontWeight: '800', letterSpacing: '-0.5px', fontFamily: 'Georgia, serif', fontWeight: 'bold' }}>Physician Recertification Note</div>
-            <div style={{ fontSize: '17px', color: C.gold, marginTop: '4px', fontStyle: 'italic' }}>Paste RN narrative and F2F note — generate physician recertification</div>
-          </div>
-          {(mdNote || rnNarrative) && <Btn variant="ghost" onClick={reset}>Reset</Btn>}
-        </div>
+    <PageShell
+      onHome={onBackHome}
+      moduleName="Recertification Suite"
+      badge="PHYSICIAN PATHWAY"
+      title="Physician Recertification Note"
+      subtitle="Paste RN narrative and F2F note — generate physician recertification"
+      onBack={onBack}
+      backLabel="Pathways"
+      primaryAction={!mdNote && !loading ? generate : null}
+      primaryLabel="Generate Physician Recert Note →"
+      primaryDisabled={!rnNarrative.trim()}
+      secondaryAction={mdNote ? reset : null}
+      secondaryLabel="New Note"
+    >
+      <div>
 
         {error && <div style={{ background: 'rgba(224,112,112,0.08)', border: '1px solid rgba(224,112,112,0.3)', borderRadius: '6px', padding: '10px 16px', color: '#e07070', fontSize: '16px', fontFamily: C.mono, marginBottom: '20px' }}>{error}</div>}
 
@@ -456,14 +450,10 @@ function MDPathway({ onBack, onBackHome }) {
         {mdNote && !loading && (
           <div>
             <DocOutput title="Physician Recertification Note" content={mdNote} />
-            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '8px' }}>
-              <Btn variant="secondary" onClick={reset}>New Note</Btn>
-              <Btn variant="secondary" onClick={onBackHome}>Return Home</Btn>
-            </div>
           </div>
         )}
       </div>
-    </div>
+    </PageShell>
   );
 }
 

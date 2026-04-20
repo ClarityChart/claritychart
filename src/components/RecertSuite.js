@@ -58,7 +58,7 @@ export default function RecertSuite({ onBack }) {
       </div>
     </PageShell>
   );
-
+}
 
 function RNPathway({ onBack, onBackHome }) {
   const [stage, setStage] = useState(0);

@@ -300,8 +300,8 @@ function DemoMode({ onBack, onBackHome }) {
                 return (
                   <div key={id} onClick={() => selectPatient(id)}
                     style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '20px 24px', background: 'rgba(20,32,45,0.98)', border: `1px solid ${C.border}`, borderRadius: '2px', cursor: 'pointer', transition: 'all 0.15s' }}
-                    onMouseEnter={e => { e.currentTarget.style.background = C.bgCardHover; e.currentTarget.style.borderColor = C.borderHover; }}
-                    onMouseLeave={e => { e.currentTarget.style.background = C.bgCard; e.currentTarget.style.borderColor = C.border; }}>
+                    onMouseEnter={e => { e.currentTarget.style.background = '#344f6e'; e.currentTarget.style.borderColor = 'rgba(196,168,130,0.6)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = '#2d4460'; e.currentTarget.style.borderColor = 'rgba(196,168,130,0.3)'; }}>
                     <div style={{ width: '48px', height: '48px', borderRadius: '2px', background: `${p.color}18`, border: `1px solid ${p.color}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px', color: p.color, fontFamily: C.mono, flexShrink: 0 }}>{p.name}</div>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: '19px', color: C.text, marginBottom: '4px' }}>{p.diagnosis}</div>

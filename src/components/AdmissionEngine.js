@@ -271,9 +271,9 @@ function DemoMode({ onBack, onBackHome }) {
   const stageTitles = ['Patient', 'Documents', 'Encounter', 'Narrative', 'CTI'];
   const currentStageNum = stageLabels[stage] || 1;
 
-  const demoTitles = ['Patient', 'Documents', 'Encounter', 'Narrative', 'CTI'];
-  const demoStageMap = { select: 0, build: 1, encounter: 2, narrative: 3, cti: 4 };
-  const demoCurrentStep = demoStageMap[stage] || 0;
+  const demoTitles = ['Documents', 'Encounter', 'Narrative', 'CTI'];
+  const demoStageMap = { select: 0, build: 0, encounter: 1, narrative: 2, cti: 3 };
+  const demoCurrentStep = demoStageMap[stage] !== undefined ? demoStageMap[stage] : 0;
   const demoTitlesDisplay = {
     select: 'Select Demo Patient',
     build: patient?.name + ' — Documents',
@@ -297,7 +297,7 @@ function DemoMode({ onBack, onBackHome }) {
       steps={stage !== 'select' ? demoTitles : null}
       currentStep={demoCurrentStep}
       onStepClick={(i) => {
-        const stageArr = ['select', 'build', 'encounter', 'narrative', 'cti'];
+        const stageArr = ['build', 'encounter', 'narrative', 'cti'];
         if (i < demoCurrentStep) setStage(stageArr[i]);
       }}
       title={demoTitlesDisplay[stage]}

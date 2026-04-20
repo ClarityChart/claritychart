@@ -40,12 +40,12 @@ export default function AdmissionEngine({ onBack }) {
       <style>{`::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:rgba(196,168,130,0.2);border-radius:3px}`}</style>
       <div style={{ maxWidth: '860px', margin: '0 auto', padding: '0 28px 80px' }}>
         <div style={{ padding: '28px 0 24px', borderBottom: `1px solid ${C.border}`, marginBottom: '48px' }}>
-          <button onClick={onBack} style={{ background: 'none', border: 'none', color: C.goldDim, cursor: 'pointer', fontFamily: C.mono, fontSize: '12px', letterSpacing: '2px', padding: 0, marginBottom: '12px', display: 'block' }}>
+          <button onClick={onBack} style={{ background: 'none', border: 'none', color: C.goldDim, cursor: 'pointer', fontFamily: C.mono, fontSize: '16px', letterSpacing: '2px', padding: 0, marginBottom: '12px', display: 'block' }}>
             PLATFORM HOME
           </button>
-          <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '4px' }}>ADMISSION ENGINE</div>
-          <div style={{ fontSize: 'clamp(26px,2.8vw,32px)', color: '#0d1117', fontWeight: '800', letterSpacing: '-0.5px', fontFamily: 'Georgia, serif' }}>New Patient Admission</div>
-          <div style={{ fontSize: '13px', color: C.gold, marginTop: '4px', fontStyle: 'italic' }}>Choose how you would like to proceed</div>
+          <div style={{ fontSize: '16px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '4px' }}>ADMISSION ENGINE</div>
+          <div style={{ fontSize: 'clamp(30px,2.8vw,36px)', color: '#0d1117', fontWeight: '800', letterSpacing: '-0.5px', fontFamily: 'Georgia, serif' }}>New Patient Admission</div>
+          <div style={{ fontSize: '17px', color: C.gold, marginTop: '4px', fontStyle: 'italic' }}>Choose how you would like to proceed</div>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
@@ -79,13 +79,13 @@ function ModeCard({ title, subtitle, description, badge, badgeColor, icon, onCli
     <div onClick={onClick} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
       style={{ background: hov ? C.bgCardHover : C.bgCard, border: `1px solid ${hov ? C.borderHover : C.border}`, borderRadius: '2px', padding: '28px 24px', cursor: 'pointer', transition: 'all 0.15s' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
-        <div style={{ fontSize: '24px', color: C.gold }}>{icon}</div>
-        <span style={{ fontSize: '12px', color: badgeColor, background: `${badgeColor}18`, border: `1px solid ${badgeColor}40`, borderRadius: '10px', padding: '2px 10px', fontFamily: C.mono, letterSpacing: '1px' }}>{badge}</span>
+        <div style={{ fontSize: '28px', color: C.gold }}>{icon}</div>
+        <span style={{ fontSize: '16px', color: badgeColor, background: `${badgeColor}18`, border: `1px solid ${badgeColor}40`, borderRadius: '10px', padding: '2px 10px', fontFamily: C.mono, letterSpacing: '1px' }}>{badge}</span>
       </div>
-      <div style={{ fontSize: '16px', color: C.text, marginBottom: '4px' }}>{title}</div>
-      <div style={{ fontSize: '13px', color: '#0d1117', fontFamily: C.sans, fontWeight: '600', letterSpacing: '1px', marginBottom: '12px' }}>{subtitle}</div>
-      <div style={{ fontSize: '15px', color: '#2d3748', fontWeight: '400', lineHeight: 1.6, fontStyle: 'italic' }}>{description}</div>
-      <div style={{ marginTop: '20px', fontSize: '11px', color: hov ? C.gold : C.border, fontFamily: C.mono, letterSpacing: '1px', transition: 'color 0.15s' }}>
+      <div style={{ fontSize: '20px', color: C.text, marginBottom: '4px' }}>{title}</div>
+      <div style={{ fontSize: '17px', color: '#0d1117', fontFamily: C.sans, fontWeight: '600', letterSpacing: '1px', marginBottom: '12px' }}>{subtitle}</div>
+      <div style={{ fontSize: '19px', color: '#2d3748', fontWeight: '400', lineHeight: 1.6, fontStyle: 'italic' }}>{description}</div>
+      <div style={{ marginTop: '20px', fontSize: '15px', color: hov ? C.gold : C.border, fontFamily: C.mono, letterSpacing: '1px', transition: 'color 0.15s' }}>
         ENTER {title.toUpperCase()} →
       </div>
     </div>
@@ -258,8 +258,8 @@ function DemoMode({ onBack, onBackHome }) {
         <div style={{ padding: '28px 0 24px', borderBottom: `1px solid ${C.border}`, marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
           <div>
             <TopNav onHome={onBack} moduleName='Admission Engine' />
-            <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '4px' }}>DEMO MODE</div>
-            <div style={{ fontSize: 'clamp(26px,2.8vw,32px)', color: '#0d1117', fontWeight: '800', letterSpacing: '-0.5px', fontFamily: 'Georgia, serif' }}>
+            <div style={{ fontSize: '16px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '4px' }}>DEMO MODE</div>
+            <div style={{ fontSize: 'clamp(30px,2.8vw,36px)', color: '#0d1117', fontWeight: '800', letterSpacing: '-0.5px', fontFamily: 'Georgia, serif' }}>
               {stage === 'select' && 'Select Demo Patient'}
               {stage === 'build' && (patient?.name + ' — Documents')}
               {stage === 'encounter' && 'Admission Encounter'}
@@ -293,7 +293,7 @@ function DemoMode({ onBack, onBackHome }) {
 
         {stage === 'select' && (
           <div>
-            <div style={{ fontSize: '13px', color: C.goldDim, marginBottom: '24px', fontStyle: 'italic' }}>Select a patient to load their chart documents.</div>
+            <div style={{ fontSize: '17px', color: C.goldDim, marginBottom: '24px', fontStyle: 'italic' }}>Select a patient to load their chart documents.</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {PATIENT_LIST.map(id => {
                 const p = DEMO_PATIENTS[id];
@@ -302,14 +302,14 @@ function DemoMode({ onBack, onBackHome }) {
                     style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '20px 24px', background: 'rgba(20,32,45,0.98)', border: `1px solid ${C.border}`, borderRadius: '2px', cursor: 'pointer', transition: 'all 0.15s' }}
                     onMouseEnter={e => { e.currentTarget.style.background = C.bgCardHover; e.currentTarget.style.borderColor = C.borderHover; }}
                     onMouseLeave={e => { e.currentTarget.style.background = C.bgCard; e.currentTarget.style.borderColor = C.border; }}>
-                    <div style={{ width: '48px', height: '48px', borderRadius: '2px', background: `${p.color}18`, border: `1px solid ${p.color}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', color: p.color, fontFamily: C.mono, flexShrink: 0 }}>{p.name}</div>
+                    <div style={{ width: '48px', height: '48px', borderRadius: '2px', background: `${p.color}18`, border: `1px solid ${p.color}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px', color: p.color, fontFamily: C.mono, flexShrink: 0 }}>{p.name}</div>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: '15px', color: C.text, marginBottom: '4px' }}>{p.diagnosis}</div>
-                      <div style={{ fontSize: '13px', color: '#0d1117', fontFamily: C.sans, fontWeight: '600', marginBottom: '4px' }}>{p.tagline}</div>
-                      {p.snapshot && <div style={{ fontSize: '11px', color: 'rgba(196,168,130,0.5)', fontFamily: C.mono }}>{p.snapshot}</div>}
+                      <div style={{ fontSize: '19px', color: C.text, marginBottom: '4px' }}>{p.diagnosis}</div>
+                      <div style={{ fontSize: '17px', color: '#0d1117', fontFamily: C.sans, fontWeight: '600', marginBottom: '4px' }}>{p.tagline}</div>
+                      {p.snapshot && <div style={{ fontSize: '15px', color: 'rgba(196,168,130,0.5)', fontFamily: C.mono }}>{p.snapshot}</div>}
                     </div>
-                    <div style={{ fontSize: '13px', color: '#0d1117', fontFamily: C.sans, fontWeight: '600' }}>{p.documents.length} documents</div>
-                    <div style={{ fontSize: '16px', color: C.border }}>›</div>
+                    <div style={{ fontSize: '17px', color: '#0d1117', fontFamily: C.sans, fontWeight: '600' }}>{p.documents.length} documents</div>
+                    <div style={{ fontSize: '20px', color: C.border }}>›</div>
                   </div>
                 );
               })}
@@ -321,9 +321,9 @@ function DemoMode({ onBack, onBackHome }) {
           <div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '28px' }}>
               <div>
-                <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '12px', display: 'flex', justifyContent: 'space-between' }}>
+                <div style={{ fontSize: '16px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '12px', display: 'flex', justifyContent: 'space-between' }}>
                   <span>CHART DOCUMENTS</span>
-                  <button onClick={loadAll} style={{ background: C.gold, border: 'none', color: '#0f1923', cursor: 'pointer', fontFamily: C.mono, fontSize: '12px', letterSpacing: '1px', padding: '6px 14px', borderRadius: '2px', fontWeight: 'bold' }}>Load All Documents</button>
+                  <button onClick={loadAll} style={{ background: C.gold, border: 'none', color: '#0f1923', cursor: 'pointer', fontFamily: C.mono, fontSize: '16px', letterSpacing: '1px', padding: '6px 14px', borderRadius: '2px', fontWeight: 'bold' }}>Load All Documents</button>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   {patient.documents.map(doc => {
@@ -331,37 +331,37 @@ function DemoMode({ onBack, onBackHome }) {
                     return (
                       <div key={doc.id} className="doc-card" draggable={!isDropped} onDragStart={() => !isDropped && handleDragStart(doc)} onDragEnd={handleDragEnd}
                         style={{ padding: '10px 14px', background: isDropped ? 'rgba(76,175,130,0.06)' : C.bgCard, border: `1px solid ${isDropped ? C.greenBorder : C.border}`, borderRadius: '2px', opacity: isDropped ? 0.5 : 1, cursor: isDropped ? 'default' : 'grab', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <span style={{ fontSize: '14px', flexShrink: 0 }}>{isDropped ? '✓' : '⠿'}</span>
+                        <span style={{ fontSize: '18px', flexShrink: 0 }}>{isDropped ? '✓' : '⠿'}</span>
                         <div style={{ flex: 1 }}>
-                          <div style={{ fontSize: '12px', color: isDropped ? C.green : C.text, fontFamily: C.mono }}>{doc.type}</div>
-                          <div style={{ fontSize: '12px', color: C.gold }}>{doc.date}</div>
+                          <div style={{ fontSize: '16px', color: isDropped ? C.green : C.text, fontFamily: C.mono }}>{doc.type}</div>
+                          <div style={{ fontSize: '16px', color: C.gold }}>{doc.date}</div>
                         </div>
-                        {!isDropped && <span style={{ fontSize: '12px', color: C.gold, fontFamily: C.mono }}>drag →</span>}
+                        {!isDropped && <span style={{ fontSize: '16px', color: C.gold, fontFamily: C.mono }}>drag →</span>}
                       </div>
                     );
                   })}
                 </div>
               </div>
               <div>
-                <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '12px' }}>WORKSPACE ({droppedDocs.length} documents)</div>
+                <div style={{ fontSize: '16px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '12px' }}>WORKSPACE ({droppedDocs.length} documents)</div>
                 <div onDragOver={e => { e.preventDefault(); setDragOver(true); }} onDragLeave={() => setDragOver(false)} onDrop={handleDrop}
                   style={{ minHeight: '240px', border: `2px dashed ${dragOver ? C.gold : C.border}`, borderRadius: '2px', padding: '16px', transition: 'all 0.15s', background: dragOver ? 'rgba(196,168,130,0.06)' : 'rgba(0,0,0,0.1)' }}>
                   {droppedDocs.length === 0 ? (
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '180px', color: C.goldDim, fontFamily: C.mono, fontSize: '11px', letterSpacing: '1px', textAlign: 'center', gap: '8px' }}>
-                      <div style={{ fontSize: '24px', opacity: 0.4 }}>⊕</div>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '180px', color: C.goldDim, fontFamily: C.mono, fontSize: '15px', letterSpacing: '1px', textAlign: 'center', gap: '8px' }}>
+                      <div style={{ fontSize: '28px', opacity: 0.4 }}>⊕</div>
                       <div>DRAG DOCUMENTS HERE</div>
-                      <div style={{ fontSize: '12px', opacity: 0.6 }}>or click LOAD ALL</div>
+                      <div style={{ fontSize: '16px', opacity: 0.6 }}>or click LOAD ALL</div>
                     </div>
                   ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                       {droppedDocs.map(doc => (
                         <div key={doc.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 12px', background: 'rgba(196,168,130,0.06)', border: `1px solid ${C.border}`, borderRadius: '2px' }}>
-                          <span style={{ fontSize: '12px', color: C.green }}>✓</span>
+                          <span style={{ fontSize: '16px', color: C.green }}>✓</span>
                           <div style={{ flex: 1 }}>
-                            <div style={{ fontSize: '14px', color: C.text, fontFamily: C.mono }}>{doc.type}</div>
-                            <div style={{ fontSize: '12px', color: C.gold }}>{doc.date}</div>
+                            <div style={{ fontSize: '18px', color: C.text, fontFamily: C.mono }}>{doc.type}</div>
+                            <div style={{ fontSize: '16px', color: C.gold }}>{doc.date}</div>
                           </div>
-                          <button onClick={() => removeDoc(doc.id)} style={{ background: 'none', border: 'none', color: C.goldDim, cursor: 'pointer', fontSize: '14px', padding: '0 4px' }}>×</button>
+                          <button onClick={() => removeDoc(doc.id)} style={{ background: 'none', border: 'none', color: C.goldDim, cursor: 'pointer', fontSize: '18px', padding: '0 4px' }}>×</button>
                         </div>
                       ))}
                     </div>
@@ -380,25 +380,25 @@ function DemoMode({ onBack, onBackHome }) {
         {stage === 'encounter' && !loading && (
           <div>
             <div style={{ background: 'rgba(196,168,130,0.04)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '14px 18px', marginBottom: '24px' }}>
-              <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '10px' }}>DIAGNOSES</div>
-              <div style={{ fontSize: '13px', color: C.text, marginBottom: '4px' }}><span style={{ color: C.goldDim, fontSize: '11px', fontFamily: C.mono }}>Primary: </span>{patient?.diagnosis}</div>
-              {patient?.secondaryDx && <div style={{ fontSize: '15px', color: '#2d3748', fontWeight: '400', marginTop: '4px' }}><span style={{ color: C.goldDim, fontSize: '11px', fontFamily: C.mono }}>Secondary: </span>{patient?.secondaryDx}</div>}
+              <div style={{ fontSize: '16px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '10px' }}>DIAGNOSES</div>
+              <div style={{ fontSize: '17px', color: C.text, marginBottom: '4px' }}><span style={{ color: C.goldDim, fontSize: '15px', fontFamily: C.mono }}>Primary: </span>{patient?.diagnosis}</div>
+              {patient?.secondaryDx && <div style={{ fontSize: '19px', color: '#2d3748', fontWeight: '400', marginTop: '4px' }}><span style={{ color: C.goldDim, fontSize: '15px', fontFamily: C.mono }}>Secondary: </span>{patient?.secondaryDx}</div>}
             </div>
 
             {recordSummaries && (
               <div style={{ background: 'rgba(74,144,164,0.06)', border: `1px solid ${C.blueBorder}`, borderRadius: '2px', padding: '16px 18px', marginBottom: '24px' }}>
-                <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.blue, fontFamily: C.mono, marginBottom: '12px' }}>RECORD SUMMARIES</div>
+                <div style={{ fontSize: '16px', letterSpacing: '2px', color: C.blue, fontFamily: C.mono, marginBottom: '12px' }}>RECORD SUMMARIES</div>
                 {recordSummaries.split('\n').map((line, i) => {
                   const isHeader = line.startsWith('[') && line.endsWith(']');
-                  if (isHeader) return <div key={i} style={{ fontSize: '11px', color: C.gold, fontFamily: C.mono, letterSpacing: '1px', marginTop: '14px', marginBottom: '4px' }}>{line}</div>;
+                  if (isHeader) return <div key={i} style={{ fontSize: '15px', color: C.gold, fontFamily: C.mono, letterSpacing: '1px', marginTop: '14px', marginBottom: '4px' }}>{line}</div>;
                   if (!line.trim()) return <div key={i} style={{ height: '4px' }} />;
-                  return <div key={i} style={{ fontSize: '15px', color: '#2d3748', fontWeight: '400', lineHeight: 1.6 }}>{line}</div>;
+                  return <div key={i} style={{ fontSize: '19px', color: '#2d3748', fontWeight: '400', lineHeight: 1.6 }}>{line}</div>;
                 })}
               </div>
             )}
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-              <div style={{ fontSize: '11px', fontFamily: C.mono, letterSpacing: '2px', color: C.gold }}>ADMISSION ENCOUNTER NARRATIVE</div>
+              <div style={{ fontSize: '15px', fontFamily: C.mono, letterSpacing: '2px', color: C.gold }}>ADMISSION ENCOUNTER NARRATIVE</div>
               <VoiceBtn onTranscript={t => setEncounter(p => p ? p + ' ' + t : t)} />
             </div>
             <Textarea value={encounter} onChange={setEncounter} placeholder="Describe findings from the admission visit..." rows={12} />
@@ -412,12 +412,12 @@ function DemoMode({ onBack, onBackHome }) {
         {stage === 'narrative' && !loading && (
           <div>
             <Collapsible title="Transcribed Encounter Narrative" defaultOpen={false}>
-              <div style={{ background: 'rgba(10,20,32,0.8)', borderRadius: '2px', padding: '14px 16px', maxHeight: '200px', overflowY: 'auto', fontSize: '15px', color: '#2d3748', fontWeight: '400', lineHeight: 1.7, fontFamily: C.serif, whiteSpace: 'pre-wrap' }}>{encounter}</div>
+              <div style={{ background: 'rgba(10,20,32,0.8)', borderRadius: '2px', padding: '14px 16px', maxHeight: '200px', overflowY: 'auto', fontSize: '19px', color: '#2d3748', fontWeight: '400', lineHeight: 1.7, fontFamily: C.serif, whiteSpace: 'pre-wrap' }}>{encounter}</div>
             </Collapsible>
             {narrative && <div style={{ marginBottom: '28px' }}><EditableDraft title="Admission Narrative — Draft" value={narrative} onChange={setNarrative} badge="DRAFT" /></div>}
             <div style={{ marginBottom: '24px' }}>
-              <div style={{ fontSize: '11px', color: C.gold, fontFamily: C.mono, letterSpacing: '2px', marginBottom: '8px' }}>REQUEST EDITS</div>
-              <div style={{ fontSize: '13px', color: C.gold, marginBottom: '8px', fontStyle: 'italic' }}>Describe any changes needed — the AI will revise the narrative accordingly.</div>
+              <div style={{ fontSize: '15px', color: C.gold, fontFamily: C.mono, letterSpacing: '2px', marginBottom: '8px' }}>REQUEST EDITS</div>
+              <div style={{ fontSize: '17px', color: C.gold, marginBottom: '8px', fontStyle: 'italic' }}>Describe any changes needed — the AI will revise the narrative accordingly.</div>
               <Textarea value={editRequest} onChange={setEditRequest} placeholder="e.g., Change the weight to 118 lbs. Add that patient has a stage 2 sacral wound..." rows={4} />
               <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'flex-end' }}>
                 <Btn variant="secondary" onClick={applyEdits} disabled={!editRequest.trim()}>Apply Edits</Btn>
@@ -438,13 +438,13 @@ function DemoMode({ onBack, onBackHome }) {
             {cti && <DocOutput title="Certificate of Terminal Illness" content={cti} />}
             {narrative && (
               <div style={{ marginTop: '28px' }}>
-                <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '12px' }}>ADMISSION NARRATIVE — FOR REFERENCE</div>
+                <div style={{ fontSize: '16px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '12px' }}>ADMISSION NARRATIVE — FOR REFERENCE</div>
                 <div style={{ background: 'rgba(10,20,32,0.7)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '20px 24px', maxHeight: '400px', overflowY: 'auto', fontFamily: C.serif }}>
                   {narrative.split('\n').map((line, i) => {
                     const isHeader = /^[A-Z][A-Z\s\/\(\)\-,]{4,}$/.test(line.trim()) && line.trim().length > 3;
-                    if (isHeader) return <div key={i} style={{ color: C.gold, fontFamily: C.mono, fontSize: '11px', letterSpacing: '2px', marginTop: '18px', marginBottom: '5px', paddingBottom: '4px', borderBottom: `1px solid rgba(196,168,130,0.12)` }}>{line}</div>;
+                    if (isHeader) return <div key={i} style={{ color: C.gold, fontFamily: C.mono, fontSize: '15px', letterSpacing: '2px', marginTop: '18px', marginBottom: '5px', paddingBottom: '4px', borderBottom: `1px solid rgba(196,168,130,0.12)` }}>{line}</div>;
                     if (!line.trim()) return <div key={i} style={{ height: '6px' }} />;
-                    return <div key={i} style={{ color: C.textDim, fontSize: '13px', lineHeight: 1.75 }}>{line}</div>;
+                    return <div key={i} style={{ color: C.textDim, fontSize: '17px', lineHeight: 1.75 }}>{line}</div>;
                   })}
                 </div>
               </div>
@@ -583,8 +583,8 @@ function ClinicalMode({ onBack, onBackHome }) {
         <div style={{ padding: '28px 0 24px', borderBottom: `1px solid ${C.border}`, marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
           <div>
             <TopNav onHome={onBack} moduleName='Admission Engine' />
-            <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '4px' }}>CLINICAL MODE</div>
-            <div style={{ fontSize: 'clamp(26px,2.8vw,32px)', color: '#0d1117', fontWeight: '800', letterSpacing: '-0.5px', fontFamily: 'Georgia, serif' }}>
+            <div style={{ fontSize: '16px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '4px' }}>CLINICAL MODE</div>
+            <div style={{ fontSize: 'clamp(30px,2.8vw,36px)', color: '#0d1117', fontWeight: '800', letterSpacing: '-0.5px', fontFamily: 'Georgia, serif' }}>
               {stage === 1 && 'Diagnosis'}
               {stage === 2 && 'Upload Records'}
               {stage === 3 && 'Admission Encounter'}
@@ -615,12 +615,12 @@ function ClinicalMode({ onBack, onBackHome }) {
 
         {stage === 1 && !loading && (
           <div>
-            <div style={{ background: 'rgba(196,168,130,0.05)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '14px 18px', marginBottom: '24px', fontSize: '13px', color: '#0d1117', fontFamily: C.sans, fontWeight: '600', lineHeight: 1.6 }}>
+            <div style={{ background: 'rgba(196,168,130,0.05)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '14px 18px', marginBottom: '24px', fontSize: '17px', color: '#0d1117', fontFamily: C.sans, fontWeight: '600', lineHeight: 1.6 }}>
               The physician determines the primary terminal diagnosis. ClarityChart organizes all documentation around this diagnosis.
             </div>
-            <div style={{ fontSize: '11px', color: C.gold, fontFamily: C.mono, letterSpacing: '2px', marginBottom: '8px' }}>PRIMARY TERMINAL DIAGNOSIS <span style={{ color: '#e07070' }}>*</span></div>
+            <div style={{ fontSize: '15px', color: C.gold, fontFamily: C.mono, letterSpacing: '2px', marginBottom: '8px' }}>PRIMARY TERMINAL DIAGNOSIS <span style={{ color: '#e07070' }}>*</span></div>
             <Input value={primaryDx} onChange={setPrimaryDx} placeholder="e.g., Chronic diastolic heart failure (HFpEF), end-stage" />
-            <div style={{ fontSize: '13px', color: '#0d1117', fontFamily: C.sans, fontWeight: '600', letterSpacing: '2px', marginTop: '22px', marginBottom: '8px' }}>SECONDARY / CONTRIBUTING DIAGNOSES</div>
+            <div style={{ fontSize: '17px', color: '#0d1117', fontFamily: C.sans, fontWeight: '600', letterSpacing: '2px', marginTop: '22px', marginBottom: '8px' }}>SECONDARY / CONTRIBUTING DIAGNOSES</div>
             <Textarea value={secondaryDx} onChange={setSecondaryDx} placeholder="e.g., CKD stage 4, Type 2 diabetes mellitus, hypertension..." rows={3} />
             <div style={{ marginTop: '28px', display: 'flex', justifyContent: 'flex-end' }}>
               <Btn onClick={() => { if (!primaryDx.trim()) { setError('Primary diagnosis is required.'); return; } setError(''); setStage(2); }}>Continue → Records</Btn>
@@ -631,12 +631,12 @@ function ClinicalMode({ onBack, onBackHome }) {
         {stage === 2 && !loading && (
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-              <div style={{ fontSize: '13px', color: C.gold, fontStyle: 'italic' }}>Paste text from available records. All fields optional. Include dates where possible.</div>
-              <div style={{ fontSize: '11px', fontFamily: C.mono, color: docCount > 0 ? C.green : C.goldDim }}>{docCount}/{DOC_FIELDS.length} loaded</div>
+              <div style={{ fontSize: '17px', color: C.gold, fontStyle: 'italic' }}>Paste text from available records. All fields optional. Include dates where possible.</div>
+              <div style={{ fontSize: '15px', fontFamily: C.mono, color: docCount > 0 ? C.green : C.goldDim }}>{docCount}/{DOC_FIELDS.length} loaded</div>
             </div>
             {DOC_FIELDS.map(({key, label, placeholder}) => (
               <div key={key} style={{ marginBottom: '20px' }}>
-                <div style={{ fontSize: '11px', fontFamily: C.mono, letterSpacing: '1.5px', color: docs[key]?.trim() ? C.gold : C.textDim, marginBottom: '6px' }}>
+                <div style={{ fontSize: '15px', fontFamily: C.mono, letterSpacing: '1.5px', color: docs[key]?.trim() ? C.gold : C.textDim, marginBottom: '6px' }}>
                   {docs[key]?.trim() ? '✓ ' : '○ '}{label.toUpperCase()}
                 </div>
                 <Textarea value={docs[key] || ''} onChange={v => setDocs(d => ({...d,[key]:v}))} placeholder={placeholder} rows={docs[key]?.trim() ? 4 : 2} mono />
@@ -655,27 +655,27 @@ function ClinicalMode({ onBack, onBackHome }) {
           <div>
             {/* Diagnoses summary */}
             <div style={{ background: 'rgba(196,168,130,0.04)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '14px 18px', marginBottom: '24px' }}>
-              <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '10px' }}>DIAGNOSES</div>
-              <div style={{ fontSize: '13px', color: C.text, marginBottom: '4px' }}><span style={{ color: C.goldDim, fontSize: '11px', fontFamily: C.mono }}>Primary: </span>{primaryDx}</div>
-              {secondaryDx && <div style={{ fontSize: '15px', color: '#2d3748', fontWeight: '400', marginTop: '4px' }}><span style={{ color: C.goldDim, fontSize: '11px', fontFamily: C.mono }}>Secondary: </span>{secondaryDx}</div>}
+              <div style={{ fontSize: '16px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '10px' }}>DIAGNOSES</div>
+              <div style={{ fontSize: '17px', color: C.text, marginBottom: '4px' }}><span style={{ color: C.goldDim, fontSize: '15px', fontFamily: C.mono }}>Primary: </span>{primaryDx}</div>
+              {secondaryDx && <div style={{ fontSize: '19px', color: '#2d3748', fontWeight: '400', marginTop: '4px' }}><span style={{ color: C.goldDim, fontSize: '15px', fontFamily: C.mono }}>Secondary: </span>{secondaryDx}</div>}
             </div>
 
             {/* Record summaries */}
             {recordSummaries && (
               <div style={{ background: 'rgba(74,144,164,0.06)', border: `1px solid ${C.blueBorder}`, borderRadius: '2px', padding: '16px 18px', marginBottom: '24px' }}>
-                <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.blue, fontFamily: C.mono, marginBottom: '12px' }}>RECORD SUMMARIES</div>
+                <div style={{ fontSize: '16px', letterSpacing: '2px', color: C.blue, fontFamily: C.mono, marginBottom: '12px' }}>RECORD SUMMARIES</div>
                 {recordSummaries.split('\n').map((line, i) => {
                   const isHeader = line.startsWith('[') && line.endsWith(']');
-                  if (isHeader) return <div key={i} style={{ fontSize: '11px', color: C.gold, fontFamily: C.mono, letterSpacing: '1px', marginTop: '14px', marginBottom: '4px' }}>{line}</div>;
+                  if (isHeader) return <div key={i} style={{ fontSize: '15px', color: C.gold, fontFamily: C.mono, letterSpacing: '1px', marginTop: '14px', marginBottom: '4px' }}>{line}</div>;
                   if (!line.trim()) return <div key={i} style={{ height: '4px' }} />;
-                  return <div key={i} style={{ fontSize: '15px', color: '#2d3748', fontWeight: '400', lineHeight: 1.6 }}>{line}</div>;
+                  return <div key={i} style={{ fontSize: '19px', color: '#2d3748', fontWeight: '400', lineHeight: 1.6 }}>{line}</div>;
                 })}
               </div>
             )}
 
             {/* Encounter narrative */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-              <div style={{ fontSize: '11px', fontFamily: C.mono, letterSpacing: '2px', color: C.gold }}>
+              <div style={{ fontSize: '15px', fontFamily: C.mono, letterSpacing: '2px', color: C.gold }}>
                 ADMISSION ENCOUNTER NARRATIVE <span style={{ color: '#e07070' }}>*</span>
               </div>
               <VoiceBtn onTranscript={t => setEncounter(p => p ? p + ' ' + t : t)} />
@@ -693,7 +693,7 @@ function ClinicalMode({ onBack, onBackHome }) {
           <div>
             {/* Transcribed encounter - collapsible */}
             <Collapsible title="Transcribed Encounter Narrative" defaultOpen={false}>
-              <div style={{ background: 'rgba(10,20,32,0.8)', borderRadius: '2px', padding: '14px 16px', maxHeight: '200px', overflowY: 'auto', fontSize: '15px', color: '#2d3748', fontWeight: '400', lineHeight: 1.7, fontFamily: C.serif, whiteSpace: 'pre-wrap' }}>
+              <div style={{ background: 'rgba(10,20,32,0.8)', borderRadius: '2px', padding: '14px 16px', maxHeight: '200px', overflowY: 'auto', fontSize: '19px', color: '#2d3748', fontWeight: '400', lineHeight: 1.7, fontFamily: C.serif, whiteSpace: 'pre-wrap' }}>
                 {encounter}
               </div>
             </Collapsible>
@@ -707,8 +707,8 @@ function ClinicalMode({ onBack, onBackHome }) {
 
             {/* Edit request box */}
             <div style={{ marginBottom: '24px' }}>
-              <div style={{ fontSize: '11px', color: C.gold, fontFamily: C.mono, letterSpacing: '2px', marginBottom: '8px' }}>REQUEST EDITS</div>
-              <div style={{ fontSize: '13px', color: C.gold, marginBottom: '8px', fontStyle: 'italic' }}>
+              <div style={{ fontSize: '15px', color: C.gold, fontFamily: C.mono, letterSpacing: '2px', marginBottom: '8px' }}>REQUEST EDITS</div>
+              <div style={{ fontSize: '17px', color: C.gold, marginBottom: '8px', fontStyle: 'italic' }}>
                 Describe any changes needed — the AI will revise the narrative accordingly.
               </div>
               <Textarea value={editRequest} onChange={setEditRequest} placeholder="e.g., Change the weight to 118 lbs. Add that patient has a stage 2 sacral wound. Remove the mention of prior hospitalization in 2024..." rows={4} />
@@ -735,13 +735,13 @@ function ClinicalMode({ onBack, onBackHome }) {
             {/* Admission Narrative for reference */}
             {narrative && (
               <div style={{ marginTop: '28px' }}>
-                <div style={{ fontSize: '12px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '12px' }}>ADMISSION NARRATIVE — FOR REFERENCE</div>
+                <div style={{ fontSize: '16px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '12px' }}>ADMISSION NARRATIVE — FOR REFERENCE</div>
                 <div style={{ background: 'rgba(10,20,32,0.7)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '20px 24px', maxHeight: '400px', overflowY: 'auto', fontFamily: C.serif }}>
                   {narrative.split('\n').map((line, i) => {
                     const isHeader = /^[A-Z][A-Z\s\/\(\)\-,]{4,}$/.test(line.trim()) && line.trim().length > 3;
-                    if (isHeader) return <div key={i} style={{ color: C.gold, fontFamily: C.mono, fontSize: '11px', letterSpacing: '2px', marginTop: '18px', marginBottom: '5px', paddingBottom: '4px', borderBottom: `1px solid rgba(196,168,130,0.12)` }}>{line}</div>;
+                    if (isHeader) return <div key={i} style={{ color: C.gold, fontFamily: C.mono, fontSize: '15px', letterSpacing: '2px', marginTop: '18px', marginBottom: '5px', paddingBottom: '4px', borderBottom: `1px solid rgba(196,168,130,0.12)` }}>{line}</div>;
                     if (!line.trim()) return <div key={i} style={{ height: '6px' }} />;
-                    return <div key={i} style={{ color: C.textDim, fontSize: '13px', lineHeight: 1.75 }}>{line}</div>;
+                    return <div key={i} style={{ color: C.textDim, fontSize: '17px', lineHeight: 1.75 }}>{line}</div>;
                   })}
                 </div>
               </div>

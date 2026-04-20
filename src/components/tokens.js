@@ -1,9 +1,9 @@
 export const C = {
   // Backgrounds
-  bg: '#eef0f4',
-  bgCard: '#ffffff',
-  bgCardHover: '#f8f6f1',
-  bgCardActive: '#f0ece4',
+  bg: '#1a2535',
+  bgCard: '#243650',
+  bgCardHover: '#2c4060',
+  bgCardActive: '#304868',
 
   // Nav (dark anchor)
   bgNav: '#1a2535',

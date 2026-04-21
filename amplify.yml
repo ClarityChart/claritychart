@@ -6,7 +6,8 @@ frontend:
         - npm ci
     build:
       commands:
-        - env | grep ANTHROPIC_API_KEY >> .env.production
+        - echo "ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY" >> .env.production
+        - echo "Build env check:" && printenv | grep ANTHROPIC
         - npm run build
   artifacts:
     baseDirectory: .next

@@ -41,8 +41,7 @@ Cardiopulmonary status is unchanged with lungs clear bilaterally and O2 saturati
 
 Daughter Susan visits 3-4 times weekly and remains engaged and supportive. Chaplain support has been initiated for Susan this period. Goals of care remain stable: comfort-focused, no hospitalization, no artificial nutrition or hydration.
 
-FAST: 6e. PPS: 40%. KPS: 40%. Weight: 124 lbs.`,on Suite
-// Each patient has data for all three pathways: RN, F2F, and MD
+FAST: 6e. PPS: 40%. KPS: 40%. Weight: 124 lbs.`,
 
 export const RECERT_DEMO_PATIENTS = {
   lm: {
@@ -127,8 +126,7 @@ Cardiopulmonary status is unchanged with lungs clear bilaterally and O2 saturati
 
 Daughter Susan visits 3-4 times weekly and remains engaged and supportive. Chaplain support has been initiated for Susan this period. Goals of care remain stable: comfort-focused, no hospitalization, no artificial nutrition or hydration.
 
-FAST: 6e. PPS: 40%. KPS: 40%. Weight: 124 lbs.`,on Suite
-// Each patient has data for all three pathways: RN, F2F, and MD
+FAST: 6e. PPS: 40%. KPS: 40%. Weight: 124 lbs.`,
 
 export const RECERT_DEMO_PATIENTS = {
   lm: {

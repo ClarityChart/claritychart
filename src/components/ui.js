@@ -588,3 +588,67 @@ export function PageShell({
     </div>
   );
 }
+
+// Document viewer modal
+export function DocModal({ doc, onClose }) {
+  if (!doc) return null;
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: 'fixed', inset: 0, zIndex: 200,
+        background: 'rgba(15,25,35,0.85)',
+        backdropFilter: 'blur(4px)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: 'clamp(16px,3vw,40px)',
+      }}
+    >
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{
+          background: '#1e3045',
+          border: `1px solid rgba(196,168,130,0.4)`,
+          borderTop: `3px solid #d4b896`,
+          borderRadius: '8px',
+          width: '100%',
+          maxWidth: '760px',
+          maxHeight: '85vh',
+          display: 'flex',
+          flexDirection: 'column',
+          boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+        }}
+      >
+        {/* Header */}
+        <div style={{
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          padding: '16px 24px', borderBottom: `1px solid rgba(196,168,130,0.2)`,
+          flexShrink: 0,
+        }}>
+          <div>
+            <div style={{ fontSize: '16px', color: '#f0e8dc', fontWeight: '600', fontFamily: 'Georgia, serif' }}>{doc.type}</div>
+            <div style={{ fontSize: '13px', color: '#b8966a', fontFamily: 'Courier New, monospace', marginTop: '2px' }}>{doc.date}</div>
+          </div>
+          <button
+            onClick={onClose}
+            style={{
+              background: 'rgba(196,168,130,0.1)', border: `1px solid rgba(196,168,130,0.3)`,
+              borderRadius: '6px', color: '#d4b896', cursor: 'pointer',
+              fontFamily: 'Courier New, monospace', fontSize: '13px',
+              padding: '6px 16px', letterSpacing: '1px',
+            }}
+          >
+            ✕ Close
+          </button>
+        </div>
+        {/* Content */}
+        <div style={{
+          padding: '24px 28px', overflowY: 'auto', flex: 1,
+          fontFamily: 'Georgia, serif', fontSize: '15px',
+          color: '#c8b8a8', lineHeight: 1.8, whiteSpace: 'pre-wrap',
+        }}>
+          {doc.content}
+        </div>
+      </div>
+    </div>
+  );
+}

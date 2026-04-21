@@ -451,6 +451,15 @@ ${form.narrative}`;
           </div>
         )}
 
+        {step === 2 && !loading && (
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '28px', paddingTop: '24px', borderTop: `1px solid ${C.border}` }}>
+            <BackBtn onClick={() => setStep(1)} label="Scenarios" />
+            <Btn onClick={generate} disabled={!form.narrative?.trim()} style={{ padding: '12px 32px' }}>
+              Generate Visit Note →
+            </Btn>
+          </div>
+        )}
+
         {step === 3 && !loading && noteOutput && (
           <div>
             <div style={{ display: 'flex', gap: '12px', marginBottom: '24px' }}>

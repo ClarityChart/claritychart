@@ -451,7 +451,6 @@ FAST 6c. PPS 30%. KPS 30%. Weight 112 lbs.`,
 
   lm: {
     id: 'lm',
-    snapshot: 'FAST 6e · 2 falls this period · MAC declining · Stage 1 sacral wound',
     name: 'LM',
     age: 82,
     sex: 'Female',
@@ -459,71 +458,391 @@ FAST 6c. PPS 30%. KPS 30%. Weight 112 lbs.`,
     secondaryDx: 'Hypertension, type 2 diabetes mellitus (diet-controlled), osteoporosis, prior right hip fracture, anemia of chronic disease',
     tagline: '82F · End-stage dementia · Memory care',
     color: '#4a90a4',
+    snapshot: 'FAST 6e · 2 falls this period · MAC declining · Stage 1 sacral wound',
     documents: [
       {
         id: 'lm-hp',
         type: 'History & Physical',
         date: '01/08/2026',
-        content: `HISTORY & PHYSICAL - LM, Age 82, 01/08/2026
-Reason: Progressive dementia with safety concerns, family unable to provide adequate supervision at home.
-PMH: Alzheimer's dementia moderate-to-severe (diagnosed 2019), vascular dementia (MRI 2022: multiple lacunar infarcts), hypertension, T2DM diet-controlled, osteoporosis, right hip fracture (2023, surgical repair), anemia of chronic disease.
-Meds: Donepezil 10mg daily, memantine 10mg BID, metoprolol succinate 25mg daily, aspirin 81mg, calcium carbonate 500mg BID, vitamin D3 1000 IU, mirtazapine 7.5mg QHS.
-Functional: Total assistance all ADLs. Non-ambulatory, wheelchair dependent. Incontinent bowel and bladder. FAST 6e.
-Exam: BP 138/82, HR 76, RR 16, Temp 97.8F, O2 sat 96% RA. Weight: 124 lbs. Frail elderly female, non-verbal, occasional vocalizations. Temporal wasting noted. Bilateral lower extremity contractures developing. MAC: Left 22 cm, Right 22.5 cm.`
+        content: `HISTORY AND PHYSICAL
+Patient: LM | Age: 82 | Sex: Female | DOB: [REDACTED]
+Date: 01/08/2026
+Admitting Provider: [REDACTED], MD
+Setting: Memory Care Facility — Hospice Admission H&P
+
+REASON FOR VISIT:
+Hospice intake evaluation for 82-year-old female with end-stage Alzheimer's dementia with vascular dementia referred by primary care physician following progressive cognitive and functional decline, caregiver concerns regarding safety and quality of life, and family request for comfort-focused care.
+
+HISTORY OF PRESENT ILLNESS:
+LM is an 82-year-old female with a well-established diagnosis of Alzheimer's dementia (diagnosed 2019) complicated by vascular dementia (MRI 2022 demonstrating multiple lacunar infarcts). She has been residing in a memory care facility for approximately 18 months following placement from home due to safety concerns and increasing caregiver burden on her daughter Susan.
+
+Over the past 6 months the patient has experienced significant and progressive decline across multiple domains. She has transitioned from limited verbal communication with short phrases to largely non-verbal with only occasional vocalizations and moaning. She no longer recognizes her daughter on most visits, which has been profoundly distressing to the family. She has become fully dependent for all activities of daily living including bathing, dressing, grooming, toileting, and feeding. She is wheelchair dependent and requires two-person assist for all transfers due to developing lower extremity contractures.
+
+Nutritional decline has been notable — she now requires full feeding assistance and her meal intake has decreased to approximately 50-60% of offered meals over the past 2-3 months. She has experienced weight loss from 128 lbs to 122 lbs over the past 6 weeks. Occasional coughing with thin liquids has prompted thickened liquid orders per speech pathology recommendation.
+
+Two falls have been documented in the current certification period: one on 11/22/2025 (found beside wheelchair, no injury) and one on 12/18/2025 (slid during transfer, bruising right forearm, X-ray negative for fracture). Sleep duration has increased to approximately 18-20 hours per day per memory care staff.
+
+A stage 1 pressure injury to the sacrum (3 cm x 2 cm, non-blanchable erythema, skin intact) was noted on nursing assessment completed 01/10/2026. Repositioning every 2 hours has been initiated.
+
+PAST MEDICAL HISTORY:
+1. Alzheimer's dementia — diagnosed 2019, initially moderate, now end-stage
+2. Vascular dementia — MRI 2022: multiple bilateral lacunar infarcts in basal ganglia and periventricular white matter, moderate cortical atrophy
+3. Hypertension — on metoprolol succinate
+4. Type 2 diabetes mellitus — diet-controlled, no medications required currently
+5. Osteoporosis — on calcium and vitamin D supplementation
+6. Right hip fracture — surgical repair 2023 (intramedullary nail), recovered to prior baseline
+7. Anemia of chronic disease — baseline Hgb 10-11 g/dL
+8. Prior TIA — documented 2020
+
+SURGICAL HISTORY:
+- Right hip ORIF 2023
+- Appendectomy (remote, year unknown)
+
+MEDICATIONS:
+- Donepezil 10mg daily (being discontinued per neurology — no benefit at FAST 6e)
+- Memantine 10mg BID (being discontinued per neurology)
+- Metoprolol succinate 25mg daily
+- Aspirin 81mg daily
+- Calcium carbonate 500mg BID
+- Vitamin D3 1000 IU daily
+- Mirtazapine 7.5mg QHS (appetite stimulation and sleep)
+
+ALLERGIES: Penicillin (rash)
+
+SOCIAL HISTORY:
+- Widowed. One daughter, Susan, who is healthcare proxy and highly involved.
+- Former homemaker
+- No tobacco, no alcohol
+- Born in [REDACTED], lived in this area her entire life
+- Speaks English only
+
+FUNCTIONAL HISTORY (per daughter and facility staff):
+- 18 months ago: Could ambulate with walker, assist with simple ADLs, recognize family, speak in sentences
+- 12 months ago: Required significant ADL assistance, limited communication, knew daughter by name
+- 6 months ago: Wheelchair dependent, recognized daughter inconsistently, short phrases only
+- Current: Non-verbal, does not recognize daughter, fully dependent all ADLs, wheelchair dependent
+
+PHYSICAL EXAMINATION:
+Vital Signs: BP 138/82, HR 76, RR 16, Temp 97.8°F, O2 Sat 96% RA
+Weight: 122 lbs (down from 124 lbs on 12/15/2025, down from 128 lbs 6 weeks ago)
+Height: 5'3" | BMI: 21.5 (declining)
+
+General: Frail elderly female seated in wheelchair. Non-verbal, eyes partially open, occasional moaning vocalization. Appears stated age or older. No acute distress. Temporal and facial wasting visible.
+HEENT: Normocephalic. Eyes open intermittently. Does not track consistently. Pupils equal and reactive to light. No scleral icterus. Mouth: edentulous, oral mucosa moist.
+Neck: Supple. No lymphadenopathy. No JVD.
+Cardiovascular: Regular rate and rhythm. S1, S2 present. No murmurs. No edema of upper extremities. Pulses 2+ bilateral upper extremities.
+Respiratory: Clear to auscultation bilaterally. No wheezes, crackles, or rhonchi. RR 16, unlabored.
+Abdomen: Soft, non-tender, non-distended. Bowel sounds present all quadrants. No organomegaly.
+Extremities: Bilateral lower extremity contractures — hips and knees with limited passive range of motion. No lower extremity edema. Skin intact bilateral lower extremities. No pressure injuries lower extremities.
+Skin: Stage 1 pressure injury sacrum — 3 cm x 2 cm area of non-blanchable erythema, skin intact, no breakdown. Pressure-redistribution cushion in wheelchair. Mild scattered senile purpura bilateral forearms.
+Neurological: Non-verbal. Does not follow commands. Does not track visually with consistency. No focal motor asymmetry appreciated. Muscle tone increased bilateral lower extremities consistent with contractures.
+MAC (Mid-Arm Circumference): Left 22 cm, Right 22 cm (facility records note prior values: Left 22 cm, Right 22.5 cm — declining on right)
+
+ASSESSMENT:
+82-year-old female with end-stage Alzheimer's and vascular dementia meeting criteria for hospice enrollment. FAST stage 6e (unable to dress, bathe, toilet, ambulate; incontinence of bladder and bowel; speech limited to 6 or fewer intelligible words). PPS 40%. KPS 40%. Weight loss, nutritional decline, falls, developing pressure injury, and 18-20 hours sleep per day all consistent with hospice-appropriate trajectory. Prognosis estimated at less than 6 months.
+
+PLAN:
+Hospice enrollment proceeding. Comfort-focused care. Discontinue donepezil and memantine. Continue mirtazapine. PRN comfort medications ordered (morphine, lorazepam, haloperidol PRN agitation). Daughter Susan educated on hospice services and what to expect.`
       },
       {
         id: 'lm-neuro',
         type: 'Specialist Note',
         date: '11/14/2025',
-        content: `NEUROLOGY NOTE - LM, 11/14/2025
-Interval: Progressive decline since last visit 6 months ago. No longer recognizes daughter on most visits. Communication declined from short phrases to largely non-verbal vocalizations. Two falls past 3 months - one bruised hip, no fracture. Requires full feeding assistance, eating time lengthened significantly.
-Cognitive: Unable to complete formal testing. FAST 6e. Oriented to self only.
-MRI brain (2022): Moderate cortical atrophy, multiple bilateral lacunar infarcts in basal ganglia and periventricular white matter.
-Assessment: End-stage Alzheimer's with vascular dementia. FAST 6e. Prognosis consistent with less than 6 months. Hospice referral placed. Discontinue donepezil and memantine - no benefit at this stage.`
+        content: `NEUROLOGY CONSULTATION NOTE
+Patient: LM | Age: 82 | Date: 11/14/2025
+Consulting Neurologist: [REDACTED], MD
+Reason for Consultation: Progressive dementia — follow-up, hospice suitability assessment
+
+INTERVAL HISTORY:
+LM is an 82-year-old female with Alzheimer's dementia and vascular dementia presenting for follow-up evaluation, 6 months since last neurology visit. Per daughter Susan who accompanies patient, there has been significant decline since the last visit. Patient no longer recognizes Susan on most visits — Susan reports that patient "looks right through me." Communication has declined from short 3-5 word phrases to largely non-verbal; patient occasionally vocalizes with moaning but produces no intelligible words.
+
+Functionally, patient has become fully dependent for all ADLs over the past 4-6 months. She is wheelchair dependent and requires two-person assist for transfers. Incontinence of both bladder and bowel has developed. She sleeps approximately 18-20 hours per day.
+
+Two falls have been documented in the past 3 months: one fall beside the wheelchair without injury on 11/22/2025 and a prior fall with bruising to the right forearm (X-ray negative).
+
+Eating has become increasingly difficult. Patient requires full feeding assistance and her intake has decreased. She is now on thickened liquids due to coughing with thin liquids.
+
+COGNITIVE ASSESSMENT:
+Formal cognitive testing not possible — patient cannot follow instructions or participate in structured assessment.
+FAST Stage: 6e (incontinent of urine and stool, speech limited to fewer than 6 intelligible words per day, requires full assistance with all ADLs)
+Orientation: To self only, does not recognize daughter consistently
+Communication: Non-verbal. Occasional moaning. No purposeful communication observed.
+Behavioral: Appears settled today. No agitation noted during examination. Memory care staff report occasional episodes of moaning, especially at night.
+
+NEUROLOGICAL EXAMINATION:
+Motor: Bilateral lower extremity contractures noted at hips and knees. Upper extremities — mild increased tone, no focal weakness. Grip strength diminished bilaterally but symmetric.
+Reflexes: Brisk bilateral lower extremity reflexes. Plantar responses: extensor bilateral (Babinski positive — consistent with upper motor neuron involvement from prior vascular events).
+Cranial Nerves: Limited assessment given non-cooperation. Pupils equal and reactive. Eye movements appear intact to examiner moving into visual field. Facial symmetry intact. Swallow reflex present.
+Gait: Unable to assess — wheelchair dependent.
+Coordination: Unable to assess.
+
+IMAGING REVIEW:
+MRI Brain (2022 — most recent available): Moderate cortical atrophy, diffuse white matter changes, multiple bilateral lacunar infarcts in basal ganglia and periventricular white matter. No large territorial infarcts. No hemorrhage. No mass lesion. Findings consistent with combined Alzheimer's and vascular dementia.
+
+ASSESSMENT:
+End-stage Alzheimer's dementia with vascular dementia, FAST stage 6e. The clinical picture is consistent with the final stages of dementia. There is no treatment available at this stage that would meaningfully alter her trajectory. The following medication changes are recommended:
+
+RECOMMENDATIONS:
+1. Discontinue donepezil — no clinical benefit at FAST 6e; may cause side effects (bradycardia, GI symptoms) without benefit
+2. Discontinue memantine — same rationale; no evidence of benefit at this stage
+3. Continue mirtazapine 7.5mg QHS — may improve appetite and sleep
+4. Hospice referral is appropriate and strongly recommended. Patient meets criteria based on: FAST 6e, inability to ambulate, incontinence, loss of meaningful communication, inability to recognize family, nutritional decline, and weight loss.
+5. Focus on comfort — pain management, skin integrity, oral care, caregiver support
+6. Prognosis: Less than 6 months consistent with FAST 6e and overall trajectory
+
+Follow-up: Hospice will manage ongoing care. Available for phone consultation if needed by hospice team.`
       },
       {
         id: 'lm-nursing',
         type: 'H&P',
         date: '01/10/2026',
-        content: `MEMORY CARE NURSING ASSESSMENT - LM, 01/10/2026
-Cognitive: Non-verbal, occasional moaning vocalizations. Does not follow commands. Inconsistently tracks visual stimuli. Does not recognize family. FAST 6e.
-Functional: Fully dependent all ADLs. Wheelchair dependent, requires two-person assist for transfers due to lower extremity contractures. Incontinent bowel and bladder.
-Nutrition: Requires full feeding assistance. Meal intake approximately 50-60%. Occasional coughing with thin liquids - thickened liquids ordered. Weight: 122 lbs (down from 124 lbs on 12/15/2025). MAC: Left 22 cm, Right 22 cm (prior: Left 22 cm, Right 22.5 cm).
-Skin: Stage 1 pressure injury sacrum - 3 cm x 2 cm non-blanchable erythema, skin intact. Repositioning q2h in place.
-Falls: Two falls this certification period. Fall 1 (11/22/2025): found on floor beside wheelchair, no injury. Fall 2 (12/18/2025): slid from wheelchair during transfer, bruising right forearm, no fracture on X-ray.
-Sleep: Approximately 18-20 hours per day.`
+        content: `MEMORY CARE NURSING ASSESSMENT
+Patient: LM | Date: 01/10/2026
+Completing Nurse: [REDACTED], RN, DON
+Setting: Memory Care Facility
+
+PURPOSE: Comprehensive nursing assessment for hospice intake coordination
+
+COGNITIVE AND BEHAVIORAL STATUS:
+Patient is non-verbal. Does not follow verbal commands. Responds inconsistently to her name with eye opening or brief vocalization. Does not recognize daughter Susan consistently — Susan reports patient has not recognized her by name in approximately 6-8 weeks. Intermittently tracks visual stimuli — sometimes follows movement with eyes, other times eyes are unfocused or closed. No purposeful communication observed. Occasional moaning vocalizations, especially in evenings. No evidence of acute delirium — baseline per facility records.
+
+FAST Stage: 6e
+Behavioral symptoms: Generally settled. Occasional agitation and moaning in evenings. No hitting, biting, or aggressive behaviors documented this month.
+
+FUNCTIONAL STATUS:
+Mobility: Wheelchair dependent. Cannot propel wheelchair independently. Requires two-person assist for all transfers due to bilateral lower extremity contractures. Unable to bear weight for stand-pivot transfers safely — lift equipment used.
+ADLs: Fully dependent for bathing, dressing, grooming, oral care, and toileting. Unable to participate in any ADL task.
+Continence: Incontinent of both bladder and bowel. Brief style adult incontinence products in use. No catheter. Toileting program in place every 2 hours with minimal effectiveness given incontinence pattern.
+Sleep: Approximately 18-20 hours per day per nursing staff log. Wakes briefly for meals and cares. Sleep-wake cycle disruption noted — sometimes awake 2-4am with moaning.
+
+NUTRITION AND HYDRATION:
+Feeding: Requires full feeding assistance. Takes 30-45 minutes per meal due to slow pace, frequent rest breaks, and occasional refusal.
+Intake: Approximately 50-60% of offered meals. Intake has decreased from approximately 75% 3 months ago.
+Diet: Mechanical soft with thickened liquids (nectar-thick) per speech pathology 10/2025.
+Aspiration precautions: Head of bed elevated 30 degrees during and 30 minutes after meals. Upright positioning maintained. Oral care performed after meals.
+Weight trend: 128 lbs (11/01/2025) → 126 lbs (12/01/2025) → 124 lbs (12/15/2025) → 122 lbs (01/10/2026). Consistent downward trend — 6 lb loss over 10 weeks.
+MAC: Left 22 cm, Right 22 cm. Previous documented: Left 22 cm, Right 22.5 cm (10/2025). Slight decline on right.
+Supplements: Ensure Plus 8 oz offered BID — patient accepting approximately 50%.
+
+SKIN INTEGRITY:
+Stage 1 Pressure Injury — Sacrum:
+Location: Sacrum, midline
+Dimensions: 3 cm x 2 cm
+Stage: 1 (non-blanchable erythema, skin intact)
+Wound bed: Intact, no open area
+Periwound: Mild warmth, no induration, no satellite lesions
+Contributing factors: Limited mobility, incontinence, nutritional decline, bony prominence
+Interventions: Repositioning every 2 hours, pressure redistribution mattress in place, heel floats when in bed, barrier cream applied, foam dressing for pressure relief in sitting position
+No other pressure injuries identified.
+
+FALLS:
+Fall 1 — 11/22/2025: Found on floor beside wheelchair. No injury. Witnesses: None. Suspected slid from wheelchair. Lap belt in place after this incident.
+Fall 2 — 12/18/2025: Found during transfer by aide. Patient slid partially out of wheelchair. Bruising right forearm. X-ray: negative for fracture. Incident report completed. Two-person assist for all transfers implemented.
+
+PAIN ASSESSMENT:
+Unable to self-report. Pain behavioral assessment using PAINAD scale: Score 0-1 at rest (no behavioral indicators of pain). Score 2-3 with personal care/repositioning (mild grimacing, brief vocalizations with movement). Currently no scheduled pain medications. PRN acetaminophen 325mg available — used 2-3 times per week for cares.
+
+RESPIRATORY:
+RR 16, unlabored. Lungs clear to auscultation bilaterally. O2 saturation 96% on room air. No supplemental oxygen required. No signs of respiratory distress at rest. Oral secretions managed with good oral care — no suctioning required.
+
+ELIMINATION:
+Bowel: Last bowel movement 01/09/2026. On scheduled miralax daily. No signs of impaction on assessment. Abdomen soft and non-tender.
+Bladder: Incontinent. Brief changed every 2 hours and as needed. No signs of UTI — no odor, no apparent discomfort with cares.
+
+ORAL CARE:
+Oral hygiene performed BID by nursing staff. Edentulous — denture fitting concerns, patient does not tolerate dentures. Oral mucosa moist and intact. No lesions, no thrush.
+
+PSYCHOSOCIAL:
+Daughter Susan visits 3-4 times per week, typically 1-2 hours per visit. Susan is tearful at times but engaged and asks thoughtful questions. She has been educated on what to expect as dementia progresses. She participates in care when present — holds patient's hand, plays music patient enjoyed (classical music, 1940s-50s era). Staff notes patient appears to respond to familiar voices and touch with brief eye opening and calming of vocalizations.
+Chaplaincy: Memory care chaplain visits monthly. Susan has accepted chaplain support for herself.
+
+ADVANCE DIRECTIVES:
+DNR/DNI confirmed — on file. POLST: DNR, no hospitalization, comfort-focused care only. No artificial nutrition or hydration. Susan designated healthcare proxy — documents on file.`
       },
       {
         id: 'lm-wound',
         type: 'Wound Care Note',
         date: '01/14/2026',
-        content: `WOUND CARE NOTE - LM, Memory Care, 01/14/2026
-Location: Sacrum. Stage 1 pressure injury. Dimensions: 3.2 cm x 2.1 cm.
-Wound bed: Non-blanchable erythema, skin intact. Periwound: mild warmth, no signs of infection. Exudate: none.
-Contributing factors: Limited mobility, incontinence, nutritional decline (albumin 3.1 g/dL), bony prominence.
-Care: Area cleansed, barrier cream applied, foam dressing for pressure relief.
-Plan: Reassess in 3 days. Repositioning q2h. Pressure-redistribution cushion in place. Nutritional consultation recommended.`
+        content: `WOUND CARE NOTE
+Patient: LM | Date: 01/14/2026
+Wound Care Nurse: [REDACTED], RN, CWCN
+Memory Care Facility
+
+WOUND ASSESSMENT — VISIT #3
+
+WOUND IDENTIFICATION:
+Location: Sacrum, midline
+Classification: Stage 1 Pressure Injury
+Date first identified: 01/08/2026
+Duration: 6 days
+
+WOUND MEASUREMENTS:
+Today: Length 3.2 cm | Width 2.1 cm (slight increase from initial 3 cm x 2 cm)
+Depth: 0 cm (no open area, skin intact)
+Tunneling: None
+Undermining: None
+
+WOUND BED:
+Status: Intact skin. Non-blanchable erythema when pressure applied.
+Color: Persistent redness, darker in center
+Epithelialization: N/A — skin intact, no open wound
+Eschar/Slough: None
+
+PERIWOUND TISSUE:
+Color: Surrounding erythema, fading at 2 cm from wound edge
+Temperature: Mild warmth to touch, slightly warmer than surrounding skin
+Edema: None
+Maceration: None
+Skin integrity: Surrounding skin intact, mild dryness noted, barrier cream applied
+
+WOUND DRAINAGE:
+Amount: None (skin intact)
+Type: N/A
+Odor: None
+
+PAIN ASSESSMENT:
+Patient unable to self-report. Behavioral indicators during wound assessment: mild grimacing with repositioning, brief vocalization with application of barrier cream. PAINAD score 2 during procedure. Pre-medication: acetaminophen 325mg given 30 minutes prior.
+
+INFECTION ASSESSMENT:
+No signs of infection: skin intact, no purulence, no surrounding cellulitis beyond expected erythema, no fever (Temp 97.8°F today). No wound culture indicated at this time.
+
+TREATMENT PERFORMED TODAY:
+1. Patient repositioned to left lateral decubitus with pillows for support
+2. Sacral area cleansed gently with pH-balanced skin cleanser and soft cloth — patient tolerated with minimal discomfort
+3. Area thoroughly dried with gentle patting motion
+4. 3M Cavilon No Sting Barrier Film applied to protect skin surface
+5. Mepilex Border Lite foam dressing applied to provide pressure relief and moisture balance
+6. Patient repositioned to pressure-offloading position — documentation of turn in nursing log
+7. Pressure redistribution chair cushion confirmed in place in wheelchair
+
+CONTRIBUTING FACTORS ADDRESSED:
+Immobility: Turn and position schedule every 2 hours confirmed with nursing staff. Bed is equipped with alternating pressure mattress overlay.
+Incontinence: Incontinence briefs changed every 2 hours and PRN. Barrier cream applied to perianal and sacral area with every brief change.
+Nutrition: Albumin 3.1 g/dL (01/12/2026). Low albumin significantly impairs wound healing potential. Dietitian notified. Ensure Plus BID continuing. Dietary consult recommended for protein supplementation.
+Friction/Shear: Repositioning using draw sheet and lift equipment. Staff education reinforced on lifting technique.
+
+WOUND TRAJECTORY ASSESSMENT:
+Slight enlargement from 3 cm x 2 cm to 3.2 cm x 2.1 cm over 6 days. Stage 1 has not progressed to Stage 2 (skin intact). However, wound is not improving despite interventions, likely due to significant contributing factors (immobility, incontinence, hypoalbuminemia). Goals in context of hospice care are wound stabilization and prevention of progression, comfort, and prevention of infection. Complete healing is unlikely given patient's overall clinical status.
+
+PLAN:
+- Continue current wound care regimen every 2-3 days
+- Notify hospice RN and MD if wound progresses to Stage 2 or beyond
+- Monitor for signs of infection at each assessment
+- Reassess in 3 days
+- Continue nutritional interventions
+- Reinforce turning schedule with facility staff
+- Family (Susan) notified of wound status — educated on pressure injury prevention and what to watch for`
       },
       {
         id: 'lm-labs',
         type: 'Lab Results',
         date: '01/12/2026',
-        content: `LABS - LM, 01/12/2026
-CBC: WBC 6.8, Hgb 10.2 g/dL (L), Hct 31.4% (L), Platelets 224
-CMP: Na 139, K 4.2, Cr 1.1, eGFR 58, Glucose 98, Albumin 3.1 g/dL (L), Total Protein 5.8 g/dL (L)
-TSH: 2.4 (normal)
-HbA1c: 6.1%`
+        content: `LABORATORY RESULTS
+Patient: LM | Date of Collection: 01/12/2026
+Ordering Provider: [REDACTED], MD (Primary Care)
+Clinical Indication: Routine monitoring, hospice evaluation
+
+COMPLETE BLOOD COUNT:
+WBC: 6.8 K/uL (normal 4.5-11.0)
+RBC: 3.4 M/uL (L) (normal 3.9-5.2)
+Hemoglobin: 10.2 g/dL (L) (normal 12.0-16.0) — consistent with chronic anemia
+Hematocrit: 31.4% (L) (normal 36.0-46.0)
+MCV: 92.4 fL (normal 80-100)
+MCH: 30.0 pg (normal 27-33)
+MCHC: 32.5 g/dL (normal 31.5-35.7)
+RDW: 13.8% (normal 11.5-14.5)
+Platelets: 224 K/uL (normal 150-400)
+
+COMPREHENSIVE METABOLIC PANEL:
+Sodium: 139 mEq/L (normal 136-145)
+Potassium: 4.2 mEq/L (normal 3.5-5.1)
+Chloride: 104 mEq/L (normal 98-107)
+CO2: 24 mEq/L (normal 22-29)
+BUN: 22 mg/dL (normal 7-25)
+Creatinine: 1.1 mg/dL (normal 0.6-1.1) — upper limit of normal
+eGFR: 58 mL/min/1.73m2 — CKD stage 3a
+Glucose: 98 mg/dL (normal 70-100) — good glycemic control (diet-controlled DM)
+Calcium: 8.2 mg/dL (normal 8.5-10.2) (L) — mildly low, clinically insignificant
+Total Protein: 5.8 g/dL (L) (normal 6.3-8.2) — hypoproteinemia consistent with nutritional decline
+Albumin: 3.1 g/dL (L) (normal 3.5-5.0) — low, reflecting nutritional compromise and chronic disease
+Total Bilirubin: 0.7 mg/dL (normal 0.2-1.2)
+AST: 24 U/L (normal 10-40)
+ALT: 18 U/L (normal 7-56)
+Alkaline Phosphatase: 76 U/L (normal 44-147)
+
+ADDITIONAL LABS:
+TSH: 2.4 mIU/L (normal 0.4-4.0) — euthyroid, hypothyroidism not contributing
+HbA1c: 6.1% (excellent glycemic control, appropriate target for age/comorbidities)
+Prealbumin: Not ordered (recommend adding at next draw for nutritional monitoring)
+
+PROVIDER INTERPRETATION:
+Results reflect chronic anemia of chronic disease (normocytic anemia, consistent with prior trend), mild hypoalbuminemia reflecting poor nutritional status, and normal renal function for age. No acute metabolic abnormalities. TSH normal — hypothyroidism not a reversible contributor to cognitive status. HbA1c 6.1% reflects good glucose control on diet alone.
+
+The hypoalbuminemia (3.1 g/dL) is clinically significant in the context of the developing Stage 1 sacral pressure injury — albumin below 3.5 is associated with impaired wound healing. Nutritional interventions ongoing.
+
+These laboratory values are consistent with end-stage dementia with nutritional decline and do not reveal any reversible or treatable conditions that would meaningfully alter the patient's overall trajectory.`
       },
       {
         id: 'lm-goals',
         type: 'Palliative Care Note',
         date: '01/15/2026',
-        content: `GOALS OF CARE NOTE - LM, 01/15/2026
-Participants: Daughter Susan, Memory Care DON, Hospice RN.
-Clinical summary: 82F end-stage Alzheimer's/vascular dementia, FAST 6e, non-verbal, fully dependent ADLs, declining nutrition, stage 1 sacral pressure injury, two falls past 60 days. Weight declined 124 to 122 lbs past month. Prognosis less than 6 months.
-Discussion: Daughter Susan tearful but engaged. Patient previously stated she never wanted to be kept alive by machines and valued comfort and dignity. Susan confirmed patient would not want hospitalization, CPR, or artificial nutrition.
-Advance directives: DNR/DNI confirmed. POLST completed: DNR, no hospitalization, comfort-focused only, no artificial nutrition or hydration. Susan designated healthcare proxy.
-Plan: Hospice enrollment proceeding. Donepezil and memantine discontinued. Mirtazapine continued. PRN comfort medications ordered.`
+        content: `GOALS OF CARE CONFERENCE NOTE
+Patient: LM | Date: 01/15/2026
+Location: Memory Care Facility, Patient Room
+Participants: Susan [REDACTED] (daughter, healthcare proxy), Memory Care Director of Nursing, Hospice RN (intake), [REDACTED] MD (Primary Care, by phone)
+
+CLINICAL SUMMARY PROVIDED TO FAMILY:
+The clinical team provided a comprehensive summary of LM's current status and trajectory to Susan and the facility team. Key points communicated:
+
+1. Cognitive Status: LM is in the end stage of her dementia (FAST 6e). She is non-verbal, does not recognize family members consistently, cannot follow commands, and requires full assistance for all activities of daily living. This represents a significant decline from 12-18 months ago when she could speak in phrases and recognize Susan.
+
+2. Nutritional Decline: She has lost 6 pounds over the past 10 weeks. Her meal intake has declined to approximately 50-60% of offered meals despite assistance and supplementation. Her albumin is 3.1 g/dL, indicating compromised nutritional status. This pattern is typical of end-stage dementia and will continue.
+
+3. Falls: Two falls in the past 2 months. Risk remains elevated given wheelchair dependence, contractures, and cognitive inability to cooperate with safety measures.
+
+4. Pressure Injury: A Stage 1 sacral pressure injury has developed. Despite best practices, progression is possible given immobility, incontinence, and nutritional compromise.
+
+5. Prognosis: Based on FAST 6e staging, weight loss, nutritional decline, and overall functional trajectory, the medical team estimates prognosis of less than 6 months. This estimate is consistent with published data on end-stage dementia survival.
+
+FAMILY RESPONSE AND DISCUSSION:
+Susan was tearful throughout the conference but engaged and asked thoughtful questions. She expressed that she had been observing her mother's decline and "knew in her heart" that this time was coming. She stated that her mother had expressed, before losing capacity, that she "never wanted to be kept alive by machines" and had expressed fear of suffering.
+
+Susan confirmed the following values and preferences expressed by her mother when she had capacity:
+- Did not want CPR or mechanical ventilation
+- Did not want feeding tube (specifically discussed this with primary care 2 years ago)
+- Wanted to remain comfortable and free of pain
+- Wanted to be with family
+- Had strong faith and was not afraid of dying, but feared suffering
+
+DECISIONS MADE:
+1. DNR/DNI: Confirmed. Susan reconfirmed her understanding and agreement.
+2. No artificial nutrition or hydration: Susan confirmed this was consistent with her mother's expressed wishes. No PEG tube will be placed. Oral feeding to continue as long as patient accepts and is safe.
+3. No hospitalization: Family does not want patient transferred to hospital for any reason, including infections, falls, or worsening condition. All care to be provided at memory care facility with hospice support.
+4. Comfort-focused care: All medications to be reviewed for comfort relevance. Donepezil and memantine to be discontinued. Mirtazapine to continue for appetite and sleep. PRN comfort medications (morphine, lorazepam, haloperidol) ordered in anticipation of symptoms.
+
+POLST:
+Updated today and signed. Reflects: DNR, no artificial nutrition, no hospitalization, comfort measures only. Susan signed as healthcare proxy. Copy placed in chart and given to Susan.
+
+HOSPICE ENROLLMENT:
+Susan formally consented to hospice enrollment today. She was educated on hospice services, the role of the hospice team, what to expect as dementia progresses, and how to access 24-hour support. She was provided with educational materials on end-stage dementia.
+
+Susan's questions addressed:
+Q: "Will she be in pain?" A: We cannot know for certain, but we have medications available to manage any signs of pain or discomfort. The hospice team will monitor closely.
+Q: "How will I know when she is close to dying?" A: Hospice nurse will educate on signs and symptoms. Changes in breathing, skin color, and responsiveness are common signs. The team is available 24/7.
+Q: "Should I be there at the end?" A: There is no right or wrong answer. We will do our best to let Susan know when changes occur so she can be present if she chooses.
+
+PLAN:
+- Hospice enrollment effective today
+- Comfort medications ordered
+- Discontinue donepezil, memantine per neurology recommendation
+- Continue mirtazapine, metoprolol, aspirin, calcium, vitamin D
+- Wound care for sacral Stage 1 per wound care nurse protocol
+- Repositioning every 2 hours
+- Oral hygiene BID
+- Music therapy — classical and 1940s-50s music (patient's preference per family)
+- Chaplaincy — offered to Susan, she will consider
+- Bereavement support offered to family
+- Hospice aide 5 days/week for personal care assistance`
       },
     ],
     encounter: `Patient LM, 82-year-old female, admitted to hospice today from memory care facility following significant functional and cognitive decline over the past 6 months. Daughter Susan present throughout admission.
@@ -544,8 +863,9 @@ Falls: Two documented falls this period - 11/22/2025 and 12/18/2025. Second fall
 
 Goals of care: DNR/DNI in place. POLST updated to comfort-focused, no hospitalization, no artificial nutrition. Daughter Susan is healthcare proxy, fully aligned with comfort care goals.
 
-PPS 40%. KPS 40%.`
+PPS 40%. KPS 40%.`,
   },
+
   tr: {
     id: 'tr',
     snapshot: 'Post MCA stroke · Global aphasia · PEG dependent · PPS 30%',

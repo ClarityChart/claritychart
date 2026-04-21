@@ -1,93 +1,454 @@
 export const DEMO_PATIENTS = {
   gd: {
     id: 'gd',
-    snapshot: 'NT-proBNP 8,292 · 2 hospitalizations in 3 weeks · PPS 30%',
     name: 'GD',
     age: 100,
     sex: 'Female',
     diagnosis: 'Chronic diastolic heart failure (HFpEF), end-stage',
     secondaryDx: 'CKD stage 4 (eGFR 20-27), Type 2 diabetes mellitus, hypertension, peripheral vascular disease, prior CVA, anemia of chronic disease',
-    tagline: '100F · End-stage heart failure · SNF',
+    tagline: '100F · End-stage HFpEF · SNF',
     color: '#c4a882',
+    snapshot: 'NT-proBNP 8,292 · 2 hospitalizations in 3 weeks · PPS 30%',
     documents: [
       {
-        id: 'gd-discharge',
+        id: 'gd-discharge1',
         type: 'Discharge Summary',
         date: '02/06/2026',
-        content: `DISCHARGE SUMMARY - GD, DOB 02/14/1926, Age 100
-Admission: 01/26/2026 | Discharge: 02/06/2026
-Principal Dx: Acute decompensated heart failure, HFpEF
-BNP on admission: 8,292 pg/mL. Echo: EF 55%, moderate diastolic dysfunction, moderate MR.
-CKD stage 4 limited aggressive diuresis; creatinine 2.4 admission, peaked 2.9, stabilized 2.6 discharge.
-Discharged to SNF on Lasix 80mg BID, metoprolol succinate 25mg daily. Lisinopril held secondary to CKD.
-Functional: Required max assist all ADLs. Previously independent at home per family.`
+        content: `DISCHARGE SUMMARY
+Patient: GD | DOB: 02/14/1926 | Age: 100 | MRN: [REDACTED]
+Admission Date: 01/26/2026 | Discharge Date: 02/06/2026
+Attending Physician: [REDACTED], MD
+Admitting Diagnosis: Acute decompensated heart failure
+Principal Discharge Diagnosis: Acute decompensated heart failure, HFpEF, NYHA Class IV
+Secondary Diagnoses: CKD stage 4 (baseline eGFR 20-27), Type 2 diabetes mellitus insulin-dependent, hypertension, peripheral vascular disease, remote CVA, anemia of chronic disease
+
+REASON FOR ADMISSION:
+100-year-old female with known HFpEF presenting with 2-week history of progressive dyspnea, orthopnea requiring 3 pillows, and bilateral lower extremity edema. Family reports she has been unable to ambulate more than a few steps without severe dyspnea. She has had markedly decreased oral intake and has lost approximately 6 pounds over the past 2 weeks per family report.
+
+HISTORY OF PRESENT ILLNESS:
+Patient was in her usual state of health until approximately 2 weeks prior to admission when she developed worsening shortness of breath. Her primary care physician increased her furosemide dose from 40mg daily to 80mg daily without adequate response. She presented to the emergency department via EMS after family noted she was unable to complete a sentence without stopping to breathe. On arrival, oxygen saturation was 84% on room air, improving to 94% on 4L nasal cannula. She was in moderate respiratory distress with audible crackles bilaterally.
+
+PHYSICAL EXAMINATION ON ADMISSION:
+Vital Signs: BP 158/92, HR 94 irregular, RR 24, Temp 97.8F, O2 Sat 84% RA (94% on 4L NC)
+Weight: 118 lbs (dry weight estimated 110 lbs per prior records)
+General: Elderly female in moderate respiratory distress, using accessory muscles, unable to complete full sentences
+HEENT: Jugular venous distension visible at 45 degrees, approximately 12 cm
+Cardiovascular: Irregular rate and rhythm, S3 gallop present, no murmurs appreciated, peripheral pulses diminished bilaterally
+Respiratory: Bilateral basilar crackles extending to mid-lung fields, mild expiratory wheeze
+Abdomen: Soft, mild hepatomegaly, no ascites
+Extremities: 3+ pitting edema bilateral lower extremities to the knees, skin intact, chronic venous stasis changes bilateral
+
+DIAGNOSTIC RESULTS ON ADMISSION:
+NT-proBNP: 8,292 pg/mL (markedly elevated)
+Echocardiogram: EF 58% (preserved), Grade II diastolic dysfunction, moderate mitral regurgitation, estimated RVSP 42 mmHg, moderate left atrial enlargement
+CXR: Cardiomegaly, bilateral interstitial edema, small bilateral pleural effusions
+ECG: Atrial fibrillation with controlled ventricular rate, no acute ST changes
+Creatinine: 2.4 mg/dL (baseline 1.8-2.0), BUN 48
+Troponin I: 0.06 ng/mL (mildly elevated, trend stable)
+Hemoglobin: 9.4 g/dL, Hematocrit: 29.2%
+Sodium: 136, Potassium: 4.2, CO2: 22
+Glucose: 168, HbA1c: 7.8%
+Albumin: 2.6 g/dL
+
+HOSPITAL COURSE:
+Patient was admitted to the telemetry unit and placed on continuous monitoring. She was started on IV furosemide 80mg BID with good initial diuretic response, losing approximately 3 liters of fluid over the first 48 hours. Her oxygen requirement improved from 4L NC to 2L NC. Nephrology was consulted given CKD stage 4 with acute-on-chronic kidney injury; creatinine peaked at 2.9 mg/dL on hospital day 3 before stabilizing at 2.6 mg/dL at discharge. Aggressive diuresis was limited by renal function. Cardiomegaly was unable to be further optimized given CKD limiting ACE inhibitor/ARB use and hypotension limiting beta-blocker uptitration. Endocrinology was consulted for diabetes management; insulin regimen was adjusted. Palliative care was consulted on hospital day 6 given overall trajectory and family concerns about prognosis and goals of care. Goals of care discussion held with patient and daughter; patient expressed desire for comfort-focused care and desire to avoid repeated hospitalizations. DNR/DNI status confirmed. POLST updated.
+
+FUNCTIONAL STATUS:
+Patient required maximum assistance for all ADLs throughout hospitalization. She was evaluated by physical therapy who noted significant deconditioning. Patient was unable to safely ambulate and was discharged to SNF for skilled nursing and therapy. Prior to this hospitalization, family reports she was living at home with daughter providing assistance with meals and medications; she was able to ambulate short distances with a walker.
+
+DISCHARGE CONDITION: Stable but guarded. Volume status improved but not at dry weight. Renal function stabilized.
+DISCHARGE DISPOSITION: Skilled nursing facility
+
+DISCHARGE MEDICATIONS:
+- Furosemide 80mg BID (increased from 40mg daily)
+- Metoprolol succinate 25mg daily (held during hospitalization, restarted at lower dose)
+- Lisinopril HELD (CKD, creatinine elevation)
+- Insulin glargine 10 units QHS
+- Insulin lispro sliding scale with meals
+- Aspirin 81mg daily
+- Amlodipine 5mg daily
+- Atorvastatin 40mg daily
+- Pantoprazole 40mg daily
+
+FOLLOW-UP: Primary care within 1 week, Cardiology within 2 weeks
+WEIGHT MONITORING: Daily weights, call if gain >2 lbs in 24 hours or >4 lbs in 72 hours
+FLUID RESTRICTION: 1.5 liters daily
+SODIUM RESTRICTION: <2g daily`
+      },
+      {
+        id: 'gd-discharge2',
+        type: 'Discharge Summary',
+        date: '02/24/2026',
+        content: `DISCHARGE SUMMARY — SECOND ADMISSION
+Patient: GD | DOB: 02/14/1926 | Age: 100
+Admission Date: 02/16/2026 | Discharge Date: 02/24/2026
+Attending Physician: [REDACTED], MD
+Principal Diagnosis: Acute decompensated heart failure, second admission in 3 weeks
+Secondary Diagnoses: HFpEF, CKD stage 4, Type 2 diabetes mellitus, hypertension, PVD, anemia of chronic disease
+
+REASON FOR ADMISSION:
+Patient was readmitted from SNF 10 days after prior discharge with recurrent volume overload. SNF nursing noted she had gained 6 pounds over 5 days despite compliance with fluid restriction. She developed worsening dyspnea at rest, inability to tolerate supine position, and increasing bilateral lower extremity edema. SNF physician increased furosemide to 120mg BID without response prior to transfer.
+
+PHYSICAL EXAMINATION ON ADMISSION:
+Vital Signs: BP 148/86, HR 88 irregular, RR 22, Temp 97.6F, O2 Sat 88% RA (93% on 3L NC)
+Weight: 122 lbs (up 12 lbs from estimated dry weight of 110 lbs)
+General: Frail elderly female in moderate distress, orthopneic, markedly deconditioned
+Cardiovascular: Irregular, JVD elevated, S3 present
+Respiratory: Bilateral crackles to upper lung fields bilaterally, decreased breath sounds at bases
+Extremities: 3+ pitting edema to mid-thigh bilaterally, skin fragile with early weeping changes right lower leg
+
+DIAGNOSTIC RESULTS:
+NT-proBNP: 12,480 pg/mL (significantly elevated above prior admission)
+Creatinine: 2.8 mg/dL (above prior discharge value of 2.6)
+BUN: 56
+Sodium: 134 (L)
+Potassium: 4.6
+Hemoglobin: 8.8 g/dL (decreased from 9.4 at prior admission)
+Albumin: 2.3 g/dL (decreased from 2.6)
+Glucose: 198
+CXR: Worsening cardiomegaly, bilateral pleural effusions larger than prior, pulmonary vascular congestion
+
+HOSPITAL COURSE:
+Patient was admitted to telemetry. IV furosemide 100mg BID initiated. Nephrology consulted again given worsening renal function limiting diuresis. Creatinine peaked at 3.2 on hospital day 2. Diuretic dose was decreased to 80mg BID after creatinine rise. Net fluid removal over hospitalization was approximately 4 liters, with improvement in respiratory status but patient not reaching dry weight given renal limitations. Cardiology evaluated and noted that patient's HFpEF with CKD stage 4 represents a clinical scenario where standard heart failure therapies are significantly limited and prognosis is poor. Palliative care re-engaged. Extended family meeting held on hospital day 6 with patient, daughter, and son present. Patient and family elected to transition to hospice care with comfort-focused goals. DNR/DNI confirmed. POLST updated to reflect no hospitalization preference.
+
+FUNCTIONAL STATUS AT DISCHARGE:
+Total assistance required for all ADLs. Non-ambulatory. New urinary incontinence since prior hospitalization. Patient alert and able to participate in goals of care discussion but fatigued easily.
+
+DISCHARGE TO: Hospice evaluation arranged. Patient returning to SNF with hospice referral in place.
+PROGNOSIS: Poor. Cardiologist documents estimated prognosis of weeks to months given recurrent decompensations, CKD limiting optimization, and overall functional decline.
+
+DISCHARGE MEDICATIONS:
+- Furosemide 80mg BID (for comfort/symptom management)
+- Metoprolol succinate 25mg daily
+- Insulin glargine 10 units QHS
+- Insulin lispro sliding scale
+- Amlodipine 5mg daily
+- Morphine sulfate 2mg q4h PRN dyspnea (new)
+- Lorazepam 0.5mg q6h PRN anxiety/dyspnea (new)
+- Pantoprazole 40mg daily
+- All other medications discontinued per goals of care`
       },
       {
         id: 'gd-hp',
         type: 'History & Physical',
         date: '01/26/2026',
-        content: `H&P - GD, 01/26/2026
-100F. Progressive dyspnea x2 weeks, now at rest. BLE edema, orthopnea x3 pillows. Ambulates <10 feet.
-PMH: HFpEF NYHA III-IV, CKD stage 4 (baseline eGFR 20-27), T2DM insulin-dependent, HTN, PVD, CVA (remote), anemia of chronic disease (baseline Hgb 9.2).
-Meds: Furosemide 40mg daily, metoprolol succinate 25mg, insulin glargine 10u QHS, aspirin 81mg, amlodipine 5mg.
-Exam: BP 148/86, HR 88, RR 22, O2 sat 91% RA. JVD at 45 degrees. Bilateral basilar crackles. 3+ BLE pitting edema to knees.`
+        content: `HISTORY AND PHYSICAL
+Patient: GD | Age: 100 | Sex: Female
+Date: 01/26/2026
+Admitting Physician: [REDACTED], MD
+
+CHIEF COMPLAINT: Shortness of breath, lower extremity swelling
+
+HISTORY OF PRESENT ILLNESS:
+GD is a 100-year-old female with a complex medical history significant for chronic diastolic heart failure (HFpEF) with preserved ejection fraction, CKD stage 4, type 2 diabetes mellitus, hypertension, peripheral vascular disease, remote CVA, and anemia of chronic disease who presents with acute decompensated heart failure. She was previously living at home with her daughter providing assistance. Over the past 2 weeks she has experienced progressive worsening of her baseline dyspnea, now present at rest, with orthopnea requiring 3 pillows to sleep. She reports paroxysmal nocturnal dyspnea on 2 occasions this week. Lower extremity edema has worsened from baseline 1+ to 3+ per daughter's report. She has had decreased appetite and oral intake for approximately 10 days. Daughter brought her to the ED today after noting she was unable to complete a sentence without stopping to catch her breath. She denies chest pain, palpitations, fever, or cough productive of purulent sputum. Her primary care physician had increased furosemide from 40mg to 80mg daily 5 days ago without adequate response.
+
+PAST MEDICAL HISTORY:
+1. Chronic diastolic heart failure (HFpEF) — diagnosed 2018, EF 55-60%, NYHA Class III-IV at baseline
+2. CKD stage 4 — baseline eGFR 20-27, etiology presumed hypertensive/diabetic nephropathy
+3. Type 2 diabetes mellitus — insulin-dependent, HbA1c 7.8% (3 months ago)
+4. Hypertension — poorly controlled on current regimen
+5. Peripheral vascular disease — bilateral lower extremity, ABI 0.72 right, 0.68 left (2023)
+6. CVA — remote (2019), no residual deficits per family
+7. Atrial fibrillation — rate controlled
+8. Anemia of chronic disease — baseline Hgb 9-10 g/dL
+9. Chronic venous stasis — bilateral lower extremities with stasis dermatitis
+
+SURGICAL HISTORY:
+- Cataract surgery bilateral (year unknown)
+- No cardiac procedures
+
+MEDICATIONS ON ADMISSION:
+- Furosemide 80mg daily (recently increased from 40mg)
+- Metoprolol succinate 50mg daily
+- Lisinopril 5mg daily
+- Insulin glargine 12 units QHS
+- Insulin lispro sliding scale TID with meals
+- Aspirin 81mg daily
+- Amlodipine 5mg daily
+- Atorvastatin 40mg daily
+- Pantoprazole 40mg daily
+- Calcium carbonate 500mg BID
+
+ALLERGIES: NKDA
+
+FAMILY HISTORY: Mother with "heart problems," father deceased, cause unknown. Brother with diabetes.
+
+SOCIAL HISTORY:
+- Lives at home with daughter
+- Former smoker, quit 1967 (approximately 15 pack-year history)
+- No alcohol use
+- No illicit drug use
+- Retired seamstress
+
+REVIEW OF SYSTEMS:
+Positive: Dyspnea at rest and exertion, orthopnea, PND, bilateral lower extremity edema, fatigue, decreased appetite, decreased oral intake, weight gain
+Negative: Chest pain, palpitations, fever, chills, cough, hemoptysis, nausea, vomiting, diarrhea, constipation, dysuria, hematuria, syncope, falls
+
+PHYSICAL EXAMINATION:
+Vital Signs: BP 158/92 mmHg, HR 94 beats/min (irregular), RR 24 breaths/min, Temp 97.8°F, O2 Sat 84% RA → 94% on 4L NC
+Weight: 118 lbs | Height: 5'0" | BMI: 23.0
+
+General: Elderly female in moderate respiratory distress. Alert and oriented x3. Able to speak in short phrases only. Appears stated age or older.
+HEENT: Normocephalic, atraumatic. Pupils equal and reactive. Sclerae anicteric. JVD visible at 45 degrees, estimated 12 cm. Mucous membranes moist.
+Cardiovascular: Irregular rate and rhythm. S1, S2 present. S3 gallop audible. No murmurs. PMI not displaced. Peripheral pulses 1+ bilateral lower extremities, 2+ bilateral upper extremities.
+Respiratory: Moderate use of accessory muscles. Bilateral crackles from bases to mid-lung fields. No wheeze. No rub.
+Abdomen: Soft. Mild hepatomegaly — liver palpable 3 cm below right costal margin. No splenomegaly. No ascites by exam. Bowel sounds present.
+Extremities: 3+ pitting edema bilateral lower extremities to knees. Chronic stasis dermatitis changes bilateral. Skin intact. No ulceration. Feet cool to touch.
+Neurological: Alert and oriented. Follows commands. Cranial nerves II-XII grossly intact. No focal deficits appreciated.
+Skin: Pale, warm centrally. No rashes. No jaundice.
+
+ASSESSMENT AND PLAN:
+100-year-old female with HFpEF presenting with acute decompensation in the setting of volume overload. CKD stage 4 significantly limits diuretic titration and standard heart failure therapies. Given her age, multiple comorbidities, and trajectory, prognosis is guarded.
+
+1. Acute decompensated HFpEF: IV furosemide 80mg BID. Daily weights. Strict I&Os. Telemetry monitoring. Cardiology consult placed. Fluid restriction 1.5L/day. Sodium restriction <2g/day.
+2. CKD stage 4, acute-on-chronic: Nephrology consult. Monitor creatinine daily. Avoid nephrotoxins. Hold lisinopril.
+3. Atrial fibrillation: Rate controlled. Continue metoprolol.
+4. Type 2 DM: Endocrinology consult. Hold metformin (CKD). Insulin sliding scale.
+5. Anemia: Monitor. No transfusion unless symptomatic.
+6. Goals of care: Palliative care consult given trajectory and family concerns.`
       },
       {
         id: 'gd-palliative',
         type: 'Palliative Care Note',
         date: '02/03/2026',
-        content: `PALLIATIVE CARE NOTE - GD, 02/03/2026
-Second hospitalization in 3 weeks. Despite optimization, remains volume-overloaded, high-level assist required. Prognosis poor.
-Goals of care: Patient alert, participates. Does not want aggressive intervention. Daughter in agreement.
-DNR/DNI confirmed. POLST updated: DNR, no hospitalization, comfort-focused only.
-Recommendation: Hospice referral - patient meets criteria for end-stage heart failure.`
+        content: `PALLIATIVE CARE CONSULTATION NOTE
+Patient: GD | Age: 100 | Date: 02/03/2026
+Consulting Service: Palliative Care
+Reason for Consult: Goals of care discussion, prognosis counseling, symptom management for end-stage HFpEF
+
+REASON FOR CONSULTATION:
+Patient is a 100-year-old female admitted with acute decompensated HFpEF, her second hospitalization in recent months. Cardiology and primary team have expressed concern that further optimization of heart failure therapy is limited by CKD stage 4, and that patient has poor prognosis. Palliative care consulted to assist with goals of care conversation and advance care planning.
+
+CONSULTATION ASSESSMENT:
+I interviewed the patient and her daughter, [REDACTED], who serves as healthcare proxy. Patient is alert, oriented to person and place, intermittently oriented to year. She is fatigued but participatory in the discussion. She was able to clearly express her values and preferences when asked directly.
+
+PATIENT'S UNDERSTANDING OF ILLNESS:
+Patient states she knows she has "a bad heart" and that her kidneys "don't work right either." When asked what she understands about her prognosis, she said "I know I'm not getting better. I'm 100 years old." She expressed that she has had a good life and does not wish to suffer. She is not afraid of death but is fearful of being in distress or pain.
+
+PATIENT'S VALUES AND PRIORITIES:
+- Wants to be comfortable and free of pain and breathlessness
+- Does not want to be on machines or have her heart restarted
+- Wants to be with family, preferably at home or "somewhere comfortable, not a hospital"
+- Values being able to recognize her family members and participate in conversations, even briefly
+- Does not wish to pursue aggressive interventions that would require prolonged hospitalization
+
+GOALS OF CARE DISCUSSION:
+Extensive discussion held with patient and daughter regarding the nature of end-stage heart failure, the limitations of further medical intervention given CKD, and the trajectory of her illness. Discussed that each hospitalization is becoming more difficult to recover from and that the underlying disease will continue to progress. Discussed the concept of hospice care as a way to focus on quality of life, comfort, and support for both patient and family. Patient and daughter expressed understanding and agreement with transitioning to comfort-focused care.
+
+ADVANCE DIRECTIVES:
+DNR/DNI confirmed — patient states clearly she does not want CPR or intubation.
+POLST: Updated today. Reflects DNR status, no hospitalization preference, comfort-focused measures only. Daughter confirmed as healthcare proxy.
+
+SYMPTOM MANAGEMENT RECOMMENDATIONS:
+1. Dyspnea: Low-dose morphine 2mg PO/SL q4h PRN dyspnea. Consider scheduled dosing if dyspnea becomes continuous.
+2. Anxiety: Lorazepam 0.5mg q6h PRN for anxiety or air hunger.
+3. Continue furosemide for comfort (edema relief, dyspnea management) even in hospice setting.
+4. Continue amlodipine for hypertension management.
+5. Simplify medication regimen — discontinue statin, aspirin, lisinopril per goals of care.
+
+HOSPICE REFERRAL:
+Hospice referral placed today. Patient and daughter educated on what hospice provides. Daughter tearful but expressed relief that "she won't have to fight anymore."
+
+PROGNOSIS:
+Given recurrent decompensations of HFpEF with CKD stage 4, inability to optimize standard therapies, functional decline, and nutritional compromise (albumin 2.3), prognosis is estimated at weeks to months. Patient meets criteria for hospice enrollment based on NT-proBNP >2,000, recurrent hospitalizations, functional decline, and renal failure limiting optimization.
+
+PLAN:
+- Hospice referral in place
+- Comfort-focused medications ordered
+- Family support services offered
+- Chaplaincy consult offered — daughter declined at this time
+- Social work referral placed for discharge planning`
       },
       {
-        id: 'gd-specialist',
+        id: 'gd-vascular',
         type: 'Specialist Note',
         date: '01/08/2026',
-        content: `VASCULAR SURGERY - GD, 01/08/2026
-Right lateral ankle wound, non-healing x6 weeks. PVD background. ABI 0.62 right, 0.71 left.
-Wound: 2.1 cm x 1.8 cm shallow ulceration, granulation tissue, minimal exudate, no active infection.
-Assessment: Venous/mixed arterial-venous ulceration. Revascularization not appropriate. Conservative wound care.`
+        content: `VASCULAR SURGERY CONSULTATION NOTE
+Patient: GD | Age: 100 | Date: 01/08/2026
+Requesting Service: Primary Care
+Reason for Consult: Non-healing right lateral ankle wound, peripheral vascular disease evaluation
+
+HISTORY:
+100-year-old female with known peripheral vascular disease referred for evaluation of non-healing wound right lateral ankle present for approximately 6 weeks. Patient reports wound developed after minor trauma (bumped ankle on bed frame). She has a history of bilateral lower extremity edema and chronic venous stasis. She reports the wound has not improved despite local wound care by her primary care physician. She denies fever or increasing redness. She notes the foot is chronically cool.
+
+PHYSICAL EXAMINATION:
+Right lower extremity: Chronic stasis dermatitis changes with hyperpigmentation and mild induration of the gaiter area bilaterally. Right lateral ankle: Wound measuring 2.1 cm x 1.8 cm x 0.3 cm depth. Wound bed: Approximately 60% granulation tissue, 40% slough. Periwound: Mild erythema, no fluctuance, no purulence, no crepitus. No odor. Minimal serosanguineous exudate. Surrounding skin: Fragile, stasis dermatitis changes.
+Pulses: Right femoral 2+, right popliteal 1+ (diminished), right dorsalis pedis non-palpable by exam, right posterior tibial trace. Left similar.
+Doppler: Right ABI 0.62. Left ABI 0.71. Both consistent with moderate peripheral arterial disease.
+Sensation: Diminished to light touch bilateral feet.
+Temperature: Feet cool bilaterally, right worse than left.
+
+DIAGNOSTIC RESULTS:
+Wound culture obtained — results pending.
+
+IMPRESSION:
+1. Non-healing right lateral ankle wound consistent with mixed venous/arterial ulceration in the setting of bilateral PVD (ABI 0.62 right) and chronic venous insufficiency.
+2. Moderate peripheral arterial disease bilateral lower extremities, right greater than left.
+3. Not a candidate for revascularization given overall medical status, age, and ABI values not in the critical ischemia range.
+
+RECOMMENDATIONS:
+1. Conservative wound care: Wound cleansing with normal saline, application of non-adherent dressing, foam dressing for absorption. Change every 2-3 days or as needed.
+2. Compression therapy is CONTRAINDICATED given ABI <0.8 — would worsen arterial flow.
+3. Leg elevation when possible to reduce venous component.
+4. Monitor wound for signs of infection — if purulence develops or cellulitis extends, will reassess.
+5. Given patient's overall medical status and prognosis, wound healing is unlikely. Goal is wound stabilization and comfort.
+6. Will defer to primary team regarding overall goals of care given patient's age and comorbidities.
+7. Follow-up: As needed if wound status changes significantly.
+
+NOTE: Given patient's complex medical situation and goals of care discussions ongoing, aggressive wound intervention is not appropriate. Focus on comfort and prevention of wound deterioration.`
       },
       {
         id: 'gd-wound',
         type: 'Wound Care Note',
         date: '02/10/2026',
-        content: `WOUND CARE NOTE - GD, SNF, 02/10/2026
-Right lateral ankle: 2.1 x 1.8 cm, depth 0.3 cm. 70% granulation, 30% slough. Minimal serosanguineous exudate. No infection. Foam dressing.
-Pain: 3/10 rest, 6/10 with dressing change. Pre-medicated.`
+        content: `WOUND CARE NOTE — SNF
+Patient: GD | Date: 02/10/2026
+Wound Care Nurse: [REDACTED], RN, CWCN
+
+WOUND ASSESSMENT:
+Location: Right lateral ankle
+Wound Classification: Mixed venous/arterial ulceration
+Duration: Approximately 8 weeks
+
+WOUND MEASUREMENTS:
+Length: 2.2 cm | Width: 1.9 cm | Depth: 0.4 cm
+Tunneling: None
+Undermining: None
+
+WOUND BED:
+Granulation tissue: 55%
+Slough: 35%
+Necrotic tissue: 10% (small area of eschar at wound margin)
+Epithelialization: Minimal at wound edges
+
+PERIWOUND TISSUE:
+Color: Mild erythema, extending approximately 0.5 cm from wound edge
+Temperature: Slightly warm to touch
+Edema: 2+ pitting edema of right lower extremity to knee
+Skin integrity: Fragile skin with chronic stasis dermatitis changes, hemosiderin staining noted
+Maceration: None
+
+WOUND DRAINAGE:
+Amount: Minimal
+Type: Serosanguineous
+Odor: None
+
+PAIN ASSESSMENT:
+Patient rates wound pain as 3/10 at rest, 6/10 with dressing change. Pre-medicated with acetaminophen 650mg 30 minutes prior to dressing change.
+
+INFECTION ASSESSMENT:
+No signs of clinical infection: no purulence, no odor, no significant surrounding erythema, no crepitus, no fever. Wound culture from 01/08/2026 grew coagulase-negative Staphylococcus — considered colonizer, not treated.
+
+CURRENT TREATMENT:
+1. Wound cleansed with sterile normal saline via 35mL syringe, 19g angiocath — irrigation pressure adequate
+2. Slough gently removed with moistened gauze — patient tolerated with mild discomfort
+3. Thin layer of silver sulfadiazine cream applied to wound base (antimicrobial protection)
+4. Non-adherent silicone contact layer applied
+5. Foam dressing applied for absorption
+6. Secured with paper tape — note skin fragility, avoiding adhesive on periwound skin
+7. Heel offloading: Heel positioned off mattress with pillow placed under calf
+
+NUTRITIONAL STATUS:
+Albumin 2.3 g/dL (from 02/03/2026 labs). Wound nurse notified dietitian of impaired healing potential related to hypoalbuminemia. Oral supplement with Wound Healing Formula ordered — patient taking approximately 50% per nursing staff.
+
+NOTES ON HEALING POTENTIAL:
+Wound healing is significantly impaired by: peripheral arterial disease (ABI 0.62), hypoalbuminemia (2.3 g/dL), bilateral lower extremity edema, advanced age, and overall debilitated state. Goals are wound stabilization, infection prevention, and comfort. Complete wound healing is not an expected outcome given clinical context. Patient and family aware.
+
+PLAN:
+- Continue current wound care regimen every 2-3 days
+- Monitor for signs of infection — increase care frequency if infection develops
+- Continue nutritional supplementation
+- Re-evaluate in 1 week
+- Notify MD if wound deteriorates significantly, signs of infection develop, or patient reports increased pain`
       },
       {
         id: 'gd-labs',
         type: 'Lab Results',
         date: '02/14/2026',
-        content: `LABS - GD, 02/14/2026
-NT-proBNP: 8,292 pg/mL (critical H)
-Creatinine: 2.6 mg/dL (H) | eGFR: 22 mL/min (H) | BUN: 52 (H)
-Na: 138 | K: 4.8 (H) | CO2: 21 (L)
-Hgb: 9.1 g/dL (L) | Hct: 28.4% (L)
-Albumin: 2.8 g/dL (L) | Glucose: 142 (H) | A1c: 7.4%
-Troponin I: 0.04 ng/mL (borderline)`
+        content: `LABORATORY RESULTS
+Patient: GD | Date of Collection: 02/14/2026
+Ordering Provider: [REDACTED], MD
+
+COMPLETE BLOOD COUNT:
+WBC: 7.2 K/uL (normal 4.5-11.0)
+RBC: 3.1 M/uL (L) (normal 3.9-5.2)
+Hemoglobin: 9.1 g/dL (L) (normal 12.0-16.0)
+Hematocrit: 28.4% (L) (normal 36.0-46.0)
+MCV: 91.6 fL (normal 80-100)
+MCH: 29.4 pg (normal 27-33)
+MCHC: 32.1 g/dL (normal 31.5-35.7)
+RDW: 15.2% (H) (normal 11.5-14.5)
+Platelets: 198 K/uL (normal 150-400)
+
+COMPREHENSIVE METABOLIC PANEL:
+Sodium: 138 mEq/L (normal 136-145)
+Potassium: 4.8 mEq/L (normal 3.5-5.1) — borderline high, monitor
+Chloride: 102 mEq/L (normal 98-107)
+CO2: 21 mEq/L (L) (normal 22-29) — mild metabolic acidosis
+Anion Gap: 15 (normal 8-16)
+BUN: 52 mg/dL (H) (normal 7-25)
+Creatinine: 2.6 mg/dL (H) (normal 0.6-1.1) — stable from prior, baseline 1.8-2.0
+eGFR: 22 mL/min/1.73m2 (H) — CKD stage 4
+Glucose: 142 mg/dL (H) (normal 70-100)
+Calcium: 8.6 mg/dL (normal 8.5-10.2)
+Total Protein: 5.8 g/dL (L) (normal 6.3-8.2)
+Albumin: 2.8 g/dL (L) (normal 3.5-5.0) — significant hypoalbuminemia
+Total Bilirubin: 0.8 mg/dL (normal 0.2-1.2)
+AST: 28 U/L (normal 10-40)
+ALT: 22 U/L (normal 7-56)
+Alkaline Phosphatase: 82 U/L (normal 44-147)
+
+CARDIAC MARKERS:
+NT-proBNP: 8,292 pg/mL (H) — critical value (normal <125 pg/mL for age <75; markedly elevated, consistent with severe heart failure)
+Troponin I: 0.04 ng/mL (borderline) (normal <0.04) — stable trend, no acute myocardial injury
+
+ADDITIONAL LABS:
+HbA1c: 7.4% (above goal of <7.0% for age)
+Iron: 42 ug/dL (L) (normal 60-170)
+TIBC: 248 ug/dL (normal 250-370)
+Ferritin: 142 ng/mL (normal 12-150)
+Transferrin Saturation: 17% (low-normal) — mixed anemia picture (anemia of chronic disease with iron deficiency component)
+Prealbumin: 9.2 mg/dL (L) (normal 17-40) — severely reduced, poor nutritional status and prognosis marker
+
+URINALYSIS:
+Color: Yellow, clear
+Specific Gravity: 1.018
+pH: 5.5
+Protein: 2+ (abnormal) — consistent with known CKD/proteinuria
+Glucose: 1+ (abnormal) — consistent with diabetes
+Ketones: Negative
+Blood: Negative
+Leukocyte Esterase: Negative
+Nitrites: Negative
+WBC: 2-5/HPF (normal)
+RBC: 0-2/HPF (normal)
+Casts: Occasional granular casts (consistent with CKD)
+
+PROVIDER NOTES:
+NT-proBNP of 8,292 is markedly elevated and consistent with severe decompensated heart failure. Per current HF LCD criteria, NT-proBNP >2,000 pg/mL in the setting of recurrent hospitalizations and functional decline supports hospice eligibility. Hypoalbuminemia and low prealbumin indicate poor nutritional status with impaired synthetic function and poor healing potential. CKD stage 4 (eGFR 22) limits optimization of standard heart failure therapies.`
       },
     ],
-    encounter: `Patient GD, 100-year-old female, admitted to hospice today from SNF following two hospitalizations in three weeks for decompensated heart failure. Daughter present throughout.
+    encounter: `Patient GD, 100-year-old female, admitted to hospice today from skilled nursing facility following two hospitalizations in three weeks for decompensated heart failure. Daughter present throughout admission visit.
 
-On arrival patient is awake but tired, appears frail and cachectic, sitting upright. States she is short of breath with any movement. Fatigue constant. Taking approximately 20-25% of meals, refused most food for two weeks. Lost approximately 8 pounds past month per SNF records.
+On arrival patient is in hospital bed in SNF room, head of bed elevated 45 degrees. She is awake but appears tired and frail. States she is "so tired of going back and forth to the hospital." She is oriented to person and place but not date. Speech is soft, brief sentences.
 
-Respiratory rate 22-24, audible crackles bilateral bases, O2 sat 91% room air. More comfortable upright.
+Respiratory: Respiratory rate 22-24 breaths per minute. O2 saturation 91% on room air. Audible crackles bilateral lung bases on auscultation. Patient more comfortable upright. Denies acute dyspnea at rest today but reports shortness of breath with any activity, including talking for extended periods.
 
-Functional status: total assist for bathing, dressing, transfers, toileting. Cannot ambulate more than a few steps. Continent of bowel, new urinary incontinence since hospital discharge.
+Cardiovascular: Heart rate 88 irregular. 2+ bilateral lower extremity pitting edema to knees. Right lateral ankle wound with foam dressing in place, wound care completed by SNF 2 days ago per nursing staff.
 
-Alert and oriented to person and place. Able to follow conversation and express wishes clearly.
+Nutrition and hydration: Eating approximately 20-25% of meals per SNF nursing. Refused most food for past week. Daughter reports she was eating well before these hospitalizations. Weight today 112 lbs per SNF scale — down approximately 6 pounds from estimated dry weight per last hospitalization record. Appears cachectic with visible temporal and facial wasting.
 
-Skin: right lateral ankle wound approximately 2 cm, granulating but slow to heal. BLE edema 2+ bilaterally.
+Functional status: Total assist for bathing, dressing, grooming, and transfers. Cannot ambulate. Continent of bowel but new urinary incontinence since second hospitalization. Prior to these hospitalizations, daughter reports patient could walk short distances with walker and needed only minimal assistance with ADLs.
 
-Goals of care: DNR, DNI, POLST updated to comfort-focused. Patient does not want to return to hospital. Daughter is healthcare proxy, fully aligned. Both understand hospice philosophy.
+Cognition: Alert. Oriented to person and place. Able to follow conversation and express her wishes. Not oriented to date or year. No acute confusion.
 
-FAST 6c. PPS 30%. KPS 30%. Weight today 112 lbs.`
+Skin: Right lateral ankle wound as noted above. Bilateral stasis changes. No other pressure injuries or wounds. Skin fragile throughout.
+
+Goals of care: Patient and daughter both clearly understand and accept hospice enrollment. DNR/DNI confirmed. POLST updated. Patient states she does not want to go back to the hospital. Daughter is healthcare proxy and fully aligned with comfort-focused goals. Both understand hospice philosophy.
+
+FAST 6c. PPS 30%. KPS 30%. Weight 112 lbs.`,
   },
+
   lm: {
     id: 'lm',
     snapshot: 'FAST 6e · 2 falls this period · MAC declining · Stage 1 sacral wound',

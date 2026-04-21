@@ -152,13 +152,14 @@ CRITICAL REQUIREMENTS:
 1. Write in third-person clinical narrative — never use "I"
 2. Open with a single line identifying the patient by initials, age, primary diagnosis, and visit type
 3. Follow immediately with vital signs as a clean labeled list
-4. Then organize clinical findings under ALL CAPS section headers. Use only headers relevant to information provided. Standard headers: GENERAL APPEARANCE, NEUROLOGICAL/COGNITIVE, PAIN MANAGEMENT, SKIN/INTEGUMENTARY, CARDIOVASCULAR, RESPIRATORY, GASTROINTESTINAL/GENITOURINARY, MOBILITY/FALLS RISK, NUTRITION/HYDRATION, PSYCHOSOCIAL/FAMILY, STAFF COMMUNICATION
-5. Only include sections for which clinical information was provided — never fabricate or assume findings
-6. Use precise, hospice-appropriate clinical language throughout
-7. Preserve all specific numbers, measurements, dates, and clinical observations exactly as provided
-8. Give the most detailed documentation to the section most relevant to the visit scenario type
-9. Do NOT include any conclusion about hospice eligibility, appropriateness, prognosis, or anticipated time of death — these belong exclusively in the CTI and Physician Recertification Note, never in a visit note
-10. Do NOT add disclaimers, meta-commentary, or AI-generated notices
+4. On the next line after vitals, include: 'Active care plans addressed today include: [list the specific topics addressed during this visit, e.g. pain, constipation, falls/safety, anxiety/agitation, grief, wound care, dyspnea, nutrition, caregiver support — based on the scenario and clinical information provided]'
+5. Then organize clinical findings under ALL CAPS section headers. Use only headers relevant to information provided. Standard headers: GENERAL APPEARANCE, NEUROLOGICAL/COGNITIVE, PAIN MANAGEMENT, SKIN/INTEGUMENTARY, CARDIOVASCULAR, RESPIRATORY, GASTROINTESTINAL/GENITOURINARY, MOBILITY/FALLS RISK, NUTRITION/HYDRATION, PSYCHOSOCIAL/FAMILY, STAFF COMMUNICATION
+6. Only include sections for which clinical information was provided — never fabricate or assume findings
+7. Use precise, hospice-appropriate clinical language throughout
+8. Preserve all specific numbers, measurements, dates, and clinical observations exactly as provided
+9. Give the most detailed documentation to the section most relevant to the visit scenario type
+10. Do NOT include any conclusion about hospice eligibility, appropriateness, prognosis, or anticipated time of death — these belong exclusively in the CTI and Physician Recertification Note, never in a visit note
+11. Do NOT add disclaimers, meta-commentary, or AI-generated notices
 11. The note must read as if written by a skilled hospice RN immediately following the visit`;
 
 const LOADING_STEPS = ['Analyzing clinical details', 'Structuring by system', 'Applying hospice-specific language', 'Finalizing note'];

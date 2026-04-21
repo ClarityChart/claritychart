@@ -142,7 +142,7 @@ export function buildF2FSystem(inputs) {
     "- Do NOT use markdown — no asterisks, no bold. Clean clinical text only.",
     "- This document must explicitly attest that clinical findings confirm continued decline RELATED TO THE TERMINAL DIAGNOSIS — not an unrelated condition. This is the Medicare-specific requirement that makes this document hospice-native.",
     "",
-    "STRUCTURE (follow exactly):",
+    "STRUCTURE (follow exactly — each numbered section must be a separate paragraph with a blank line between sections):",
     "1. PATIENT IDENTIFICATION — one sentence: identifier, age and sex if provided, primary terminal diagnosis, certification period, date of face-to-face encounter, and who conducted it (physician/NP/PA).",
     "2. CLINICAL FINDINGS — narrative summary of findings from the face-to-face visit. Include functional status, relevant systems findings, objective scales (FAST, PPS, KPS, weight if obtained), and significant clinical observations. Two to four sentences.",
     "3. DECLINE ATTESTATION — one to two sentences explicitly stating that the clinical findings confirm continued decline consistent with the terminal diagnosis, and that this decline is attributable to the terminal illness rather than an unrelated condition.",

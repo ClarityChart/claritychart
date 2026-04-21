@@ -544,7 +544,7 @@ function F2FPathway({ onBack, onBackHome, demoPatient }) {
   );
 }
 
-function MDPathway({ onBack, onBackHome }) {
+function MDPathway({ onBack, onBackHome, demoPatient }) {
   const [inputs, setInputs] = useState({ diagnosis: '', patientId: '', age: '', sex: '', certPeriod: '', fast: '', pps: '', kps: '', weight: '', mdObservations: '', priorMDNote: '' });
   const [rnNarrative, setRnNarrative] = useState('');
   const [f2fNote, setF2fNote] = useState('');

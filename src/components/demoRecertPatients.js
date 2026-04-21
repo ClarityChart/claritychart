@@ -33,6 +33,135 @@ export const RECERT_DEMO_PATIENTS = {
         sleep: 'Sleeping 20-22 hours per day, increased from 18-20 hours last period. Difficult to arouse for meals — requires sustained tactile stimulation and voice to achieve brief wakefulness for feeding. Alert for 15-30 minutes per meal attempt. Family notes she seems "more distant" even during waking periods compared to last certification period.',
         psychosocial: 'Daughter Susan visiting 2-3 times weekly. Susan reports increased distress this period as she observes further decline — tearful during visits. Chaplain visiting Susan weekly for caregiver support. Susan attended caregiver support group twice this period. Family dynamics stable — no family conflict regarding care decisions. No new psychosocial concerns for patient. Staff notes patient appears to respond with brief eye opening when Susan sings to her (1940s songs patient enjoyed) — this response is the primary family connection at this stage.',
       },
+      priorNote: `LM is an 82-year-old female with end-stage Alzheimer's dementia and vascular dementia followed on hospice through the certification period of 02/16/2026 to 04/15/2026. Her weight declined from 128 lbs to 124 lbs during this period, representing a 4 lb loss over 60 days. Meal intake has been approximately 60-65% of offered meals with full feeding assistance, requiring 30-45 minutes per meal. She continues on nectar-thick liquids per speech pathology recommendation and accepts Ensure Plus BID with moderate compliance. Left MAC measured 22 cm and right MAC 22.5 cm, stable from prior measurements.
+
+She remains fully dependent for all activities of daily living. Two-person assist is required for transfers, though she occasionally participates minimally in stand-pivot transfers. She sleeps approximately 18-20 hours per day with no meaningful participation in care tasks. She is wheelchair dependent with bilateral lower extremity contractures limiting passive range of motion. No falls occurred this certification period. She is non-verbal with occasional moaning vocalizations during cares, does not consistently recognize her daughter, and does not track visually or follow commands. FAST stage remains 6e.
+
+Cardiopulmonary status is unchanged with lungs clear bilaterally and O2 saturation 96% on room air. A Stage 1 pressure injury to the sacrum measuring 3 cm x 2 cm with non-blanchable erythema and intact skin was identified this period. Repositioning every 2 hours is in place with foam dressing for pressure relief and no other skin breakdown noted. Pain assessment using PAINAD reveals scores of 1-2 at rest and 2-3 during cares. Acetaminophen 650mg PRN has been used approximately 3 times weekly with no scheduled pain medications required.
+
+Daughter Susan visits 3-4 times weekly and remains engaged and supportive. Chaplain support has been initiated for Susan this period. Goals of care remain stable: comfort-focused, no hospitalization, no artificial nutrition or hydration.
+
+FAST: 6e. PPS: 40%. KPS: 40%. Weight: 124 lbs.`,on Suite
+// Each patient has data for all three pathways: RN, F2F, and MD
+
+export const RECERT_DEMO_PATIENTS = {
+  lm: {
+    id: 'lm',
+    name: 'LM',
+    age: 82,
+    sex: 'Female',
+    diagnosis: "Alzheimer's dementia with vascular dementia, end-stage",
+    secondaryDx: 'Hypertension, type 2 diabetes mellitus (diet-controlled), osteoporosis, anemia of chronic disease',
+    patientId: 'LM',
+    certPeriod: '04/16/2026 - 06/15/2026',
+    tagline: '82F · End-stage dementia · Memory care',
+    color: '#4a90a4',
+
+    // RN Pathway data
+    rn: {
+      lastBaseline: 'FAST 6e, PPS 40%, KPS 40%, weight 124 lbs, MAC L 22cm R 22.5cm',
+      fast: '6e',
+      pps: '30%',
+      kps: '30%',
+      weight: '118 lbs (down from 124 lbs last period — 6 lb loss)',
+      vitals: 'BP 132/78, HR 74, RR 16, Temp 97.6F, O2 96% RA',
+      domains: {
+        nutritional: 'Weight declined from 124 lbs to 118 lbs this certification period — 6 lb loss over 60 days. Meal intake decreased from approximately 60-65% last period to 40-50% this period despite full feeding assistance. Requiring 45-60 minutes per meal with frequent rest breaks and food refusals. Thickened liquids (nectar-thick) continuing per speech pathology. Ensure Plus BID — accepting approximately 25-30 mL per serving. Left MAC 21.5 cm (down from 22 cm), Right MAC 21.5 cm (down from 22.5 cm). Dietitian notified of declining intake and MAC measurements.',
+        functional: 'Fully dependent all ADLs — no change in level of dependence but quality of participation has declined. Previously would occasionally reach for washcloth or lift arm during dressing; this period shows no purposeful participation in any care tasks. Two-person assist for all transfers. Requires mechanical lift for bed-to-chair transfers this period (previously could participate minimally in stand-pivot). Sleeping 20-22 hours per day (increased from 18-20 hours last period).',
+        cognitive: 'Non-verbal throughout certification period. No intelligible words. Occasional moaning vocalizations, increased frequency this period particularly during morning cares. Does not recognize daughter Susan on any visits this period — daughter confirms patient has shown no recognition response in past 6 weeks. Does not track visual stimuli. Does not follow any commands. No purposeful eye contact or communication attempts observed.',
+        mobility: 'Wheelchair dependent. Bilateral lower extremity contractures worsening — passive range of motion at hips now limited to 20 degrees flexion (was 30 degrees last period). Right knee contracture increasing — extension limited to 20 degrees. Two documented falls this period: Fall 1 (04/28/2026) — found on floor beside wheelchair, no injury, lap belt found unclasped — mechanism unclear. Fall 2 (05/14/2026) — slid during lift transfer, right forearm abrasion, no fracture on X-ray. Two-person assist and mechanical lift now required for all transfers following second fall.',
+        cardiopulmonary: 'Lungs clear to auscultation bilaterally. O2 saturation 96% on room air, unchanged from prior period. Heart rate 74 regular. No new cardiopulmonary symptoms. No edema of upper or lower extremities. No change in cardiovascular or respiratory status this period.',
+        skin: 'Stage 1 sacral pressure injury from prior period progressed to Stage 2 this period. Current wound (05/20/2026 assessment): 3.8 cm x 2.4 cm, depth 0.3 cm, 70% granulation, 30% slough, no signs of infection. Foam dressing with silicone contact layer. Repositioning every 2 hours confirmed. New finding this period: Stage 1 pressure injury right lateral malleolus 1.5 cm x 1.0 cm, non-blanchable erythema, skin intact — identified 06/01/2026. Contributing factors: immobility, incontinence, hypoalbuminemia (albumin 2.8 g/dL this period).',
+        pain: 'Patient unable to self-report pain. PAINAD scores during cares: 2-3 at baseline (mild behavioral indicators — occasional grimacing, vocalizations with position changes). PAINAD score 4-5 during wound care and transfer procedures (moderate — consistent grimacing, vocalizations, brief resistance). Acetaminophen 650mg TID scheduled this period (was PRN last period) — improved tolerance of morning cares per staff observation. PRN morphine 2mg ordered — used 3 times this period for wound care procedures.',
+        sleep: 'Sleeping 20-22 hours per day, increased from 18-20 hours last period. Difficult to arouse for meals — requires sustained tactile stimulation and voice to achieve brief wakefulness for feeding. Alert for 15-30 minutes per meal attempt. Family notes she seems "more distant" even during waking periods compared to last certification period.',
+        psychosocial: 'Daughter Susan visiting 2-3 times weekly. Susan reports increased distress this period as she observes further decline — tearful during visits. Chaplain visiting Susan weekly for caregiver support. Susan attended caregiver support group twice this period. Family dynamics stable — no family conflict regarding care decisions. No new psychosocial concerns for patient. Staff notes patient appears to respond with brief eye opening when Susan sings to her (1940s songs patient enjoyed) — this response is the primary family connection at this stage.',
+      },
+      priorNote: `GD is a 100-year-old female with end-stage chronic diastolic heart failure (HFpEF) followed on hospice through the certification period of 02/16/2026 to 04/15/2026. Her weight declined from 118 lbs to 112 lbs during this period, a 6 lb loss over 60 days. Meal intake has been approximately 25-30% of offered meals, with dyspnea during eating significantly limiting intake. She accepts Ensure BID with partial compliance. Visible cachexia with muscle wasting and temporal wasting is prominent throughout this period.
+
+She requires fully dependent care for all activities of daily living with maximum assistance for all personal care activities. She was previously able to stand briefly for pivot transfers but this period requires total assist. Dyspnea at rest precludes any meaningful participation in cares. She sleeps approximately 14-16 hours per day. She is non-ambulatory with stand-pivot transfers requiring maximum two-person assist. She is incontinent of both urine and bowel. No falls occurred this certification period.
+
+She remains alert and oriented to person and place, participates in care decisions when awake, and clearly expresses her desire for comfort care and her preference not to return to the hospital. Respiratory status shows O2 requirement of 2L nasal cannula with O2 saturation 94% on supplemental oxygen and respiratory rate 20-22 at rest. Audible crackles are present at bilateral lung bases. Bilateral lower extremity edema is 2+ to the knees despite furosemide 80mg BID. NT-proBNP was 8,292 pg/mL at hospice admission.
+
+The right lateral ankle wound measures 2.1 cm x 1.8 cm with 70% granulation and 30% slough, foam dressing in place, no signs of infection, and no new wounds identified this period. Morphine 2mg PRN is being used 1-2 times daily for dyspnea with good response. Lorazepam 0.5mg PRN has been used rarely. Head of bed elevated for orthopnea. Nocturia has been disrupting sleep this period. The patient continues to express readiness and peace regarding her prognosis. Family remains unified around comfort goals with chaplain support weekly.
+
+FAST: 6c. PPS: 30%. KPS: 30%. Weight: 112 lbs.`,on Suite
+// Each patient has data for all three pathways: RN, F2F, and MD
+
+export const RECERT_DEMO_PATIENTS = {
+  lm: {
+    id: 'lm',
+    name: 'LM',
+    age: 82,
+    sex: 'Female',
+    diagnosis: "Alzheimer's dementia with vascular dementia, end-stage",
+    secondaryDx: 'Hypertension, type 2 diabetes mellitus (diet-controlled), osteoporosis, anemia of chronic disease',
+    patientId: 'LM',
+    certPeriod: '04/16/2026 - 06/15/2026',
+    tagline: '82F · End-stage dementia · Memory care',
+    color: '#4a90a4',
+
+    // RN Pathway data
+    rn: {
+      lastBaseline: 'FAST 6e, PPS 40%, KPS 40%, weight 124 lbs, MAC L 22cm R 22.5cm',
+      fast: '6e',
+      pps: '30%',
+      kps: '30%',
+      weight: '118 lbs (down from 124 lbs last period — 6 lb loss)',
+      vitals: 'BP 132/78, HR 74, RR 16, Temp 97.6F, O2 96% RA',
+      domains: {
+        nutritional: 'Weight declined from 124 lbs to 118 lbs this certification period — 6 lb loss over 60 days. Meal intake decreased from approximately 60-65% last period to 40-50% this period despite full feeding assistance. Requiring 45-60 minutes per meal with frequent rest breaks and food refusals. Thickened liquids (nectar-thick) continuing per speech pathology. Ensure Plus BID — accepting approximately 25-30 mL per serving. Left MAC 21.5 cm (down from 22 cm), Right MAC 21.5 cm (down from 22.5 cm). Dietitian notified of declining intake and MAC measurements.',
+        functional: 'Fully dependent all ADLs — no change in level of dependence but quality of participation has declined. Previously would occasionally reach for washcloth or lift arm during dressing; this period shows no purposeful participation in any care tasks. Two-person assist for all transfers. Requires mechanical lift for bed-to-chair transfers this period (previously could participate minimally in stand-pivot). Sleeping 20-22 hours per day (increased from 18-20 hours last period).',
+        cognitive: 'Non-verbal throughout certification period. No intelligible words. Occasional moaning vocalizations, increased frequency this period particularly during morning cares. Does not recognize daughter Susan on any visits this period — daughter confirms patient has shown no recognition response in past 6 weeks. Does not track visual stimuli. Does not follow any commands. No purposeful eye contact or communication attempts observed.',
+        mobility: 'Wheelchair dependent. Bilateral lower extremity contractures worsening — passive range of motion at hips now limited to 20 degrees flexion (was 30 degrees last period). Right knee contracture increasing — extension limited to 20 degrees. Two documented falls this period: Fall 1 (04/28/2026) — found on floor beside wheelchair, no injury, lap belt found unclasped — mechanism unclear. Fall 2 (05/14/2026) — slid during lift transfer, right forearm abrasion, no fracture on X-ray. Two-person assist and mechanical lift now required for all transfers following second fall.',
+        cardiopulmonary: 'Lungs clear to auscultation bilaterally. O2 saturation 96% on room air, unchanged from prior period. Heart rate 74 regular. No new cardiopulmonary symptoms. No edema of upper or lower extremities. No change in cardiovascular or respiratory status this period.',
+        skin: 'Stage 1 sacral pressure injury from prior period progressed to Stage 2 this period. Current wound (05/20/2026 assessment): 3.8 cm x 2.4 cm, depth 0.3 cm, 70% granulation, 30% slough, no signs of infection. Foam dressing with silicone contact layer. Repositioning every 2 hours confirmed. New finding this period: Stage 1 pressure injury right lateral malleolus 1.5 cm x 1.0 cm, non-blanchable erythema, skin intact — identified 06/01/2026. Contributing factors: immobility, incontinence, hypoalbuminemia (albumin 2.8 g/dL this period).',
+        pain: 'Patient unable to self-report pain. PAINAD scores during cares: 2-3 at baseline (mild behavioral indicators — occasional grimacing, vocalizations with position changes). PAINAD score 4-5 during wound care and transfer procedures (moderate — consistent grimacing, vocalizations, brief resistance). Acetaminophen 650mg TID scheduled this period (was PRN last period) — improved tolerance of morning cares per staff observation. PRN morphine 2mg ordered — used 3 times this period for wound care procedures.',
+        sleep: 'Sleeping 20-22 hours per day, increased from 18-20 hours last period. Difficult to arouse for meals — requires sustained tactile stimulation and voice to achieve brief wakefulness for feeding. Alert for 15-30 minutes per meal attempt. Family notes she seems "more distant" even during waking periods compared to last certification period.',
+        psychosocial: 'Daughter Susan visiting 2-3 times weekly. Susan reports increased distress this period as she observes further decline — tearful during visits. Chaplain visiting Susan weekly for caregiver support. Susan attended caregiver support group twice this period. Family dynamics stable — no family conflict regarding care decisions. No new psychosocial concerns for patient. Staff notes patient appears to respond with brief eye opening when Susan sings to her (1940s songs patient enjoyed) — this response is the primary family connection at this stage.',
+      },
+      priorNote: `LM is an 82-year-old female with end-stage Alzheimer's dementia and vascular dementia followed on hospice through the certification period of 02/16/2026 to 04/15/2026. Her weight declined from 128 lbs to 124 lbs during this period, representing a 4 lb loss over 60 days. Meal intake has been approximately 60-65% of offered meals with full feeding assistance, requiring 30-45 minutes per meal. She continues on nectar-thick liquids per speech pathology recommendation and accepts Ensure Plus BID with moderate compliance. Left MAC measured 22 cm and right MAC 22.5 cm, stable from prior measurements.
+
+She remains fully dependent for all activities of daily living. Two-person assist is required for transfers, though she occasionally participates minimally in stand-pivot transfers. She sleeps approximately 18-20 hours per day with no meaningful participation in care tasks. She is wheelchair dependent with bilateral lower extremity contractures limiting passive range of motion. No falls occurred this certification period. She is non-verbal with occasional moaning vocalizations during cares, does not consistently recognize her daughter, and does not track visually or follow commands. FAST stage remains 6e.
+
+Cardiopulmonary status is unchanged with lungs clear bilaterally and O2 saturation 96% on room air. A Stage 1 pressure injury to the sacrum measuring 3 cm x 2 cm with non-blanchable erythema and intact skin was identified this period. Repositioning every 2 hours is in place with foam dressing for pressure relief and no other skin breakdown noted. Pain assessment using PAINAD reveals scores of 1-2 at rest and 2-3 during cares. Acetaminophen 650mg PRN has been used approximately 3 times weekly with no scheduled pain medications required.
+
+Daughter Susan visits 3-4 times weekly and remains engaged and supportive. Chaplain support has been initiated for Susan this period. Goals of care remain stable: comfort-focused, no hospitalization, no artificial nutrition or hydration.
+
+FAST: 6e. PPS: 40%. KPS: 40%. Weight: 124 lbs.`,on Suite
+// Each patient has data for all three pathways: RN, F2F, and MD
+
+export const RECERT_DEMO_PATIENTS = {
+  lm: {
+    id: 'lm',
+    name: 'LM',
+    age: 82,
+    sex: 'Female',
+    diagnosis: "Alzheimer's dementia with vascular dementia, end-stage",
+    secondaryDx: 'Hypertension, type 2 diabetes mellitus (diet-controlled), osteoporosis, anemia of chronic disease',
+    patientId: 'LM',
+    certPeriod: '04/16/2026 - 06/15/2026',
+    tagline: '82F · End-stage dementia · Memory care',
+    color: '#4a90a4',
+
+    // RN Pathway data
+    rn: {
+      lastBaseline: 'FAST 6e, PPS 40%, KPS 40%, weight 124 lbs, MAC L 22cm R 22.5cm',
+      fast: '6e',
+      pps: '30%',
+      kps: '30%',
+      weight: '118 lbs (down from 124 lbs last period — 6 lb loss)',
+      vitals: 'BP 132/78, HR 74, RR 16, Temp 97.6F, O2 96% RA',
+      domains: {
+        nutritional: 'Weight declined from 124 lbs to 118 lbs this certification period — 6 lb loss over 60 days. Meal intake decreased from approximately 60-65% last period to 40-50% this period despite full feeding assistance. Requiring 45-60 minutes per meal with frequent rest breaks and food refusals. Thickened liquids (nectar-thick) continuing per speech pathology. Ensure Plus BID — accepting approximately 25-30 mL per serving. Left MAC 21.5 cm (down from 22 cm), Right MAC 21.5 cm (down from 22.5 cm). Dietitian notified of declining intake and MAC measurements.',
+        functional: 'Fully dependent all ADLs — no change in level of dependence but quality of participation has declined. Previously would occasionally reach for washcloth or lift arm during dressing; this period shows no purposeful participation in any care tasks. Two-person assist for all transfers. Requires mechanical lift for bed-to-chair transfers this period (previously could participate minimally in stand-pivot). Sleeping 20-22 hours per day (increased from 18-20 hours last period).',
+        cognitive: 'Non-verbal throughout certification period. No intelligible words. Occasional moaning vocalizations, increased frequency this period particularly during morning cares. Does not recognize daughter Susan on any visits this period — daughter confirms patient has shown no recognition response in past 6 weeks. Does not track visual stimuli. Does not follow any commands. No purposeful eye contact or communication attempts observed.',
+        mobility: 'Wheelchair dependent. Bilateral lower extremity contractures worsening — passive range of motion at hips now limited to 20 degrees flexion (was 30 degrees last period). Right knee contracture increasing — extension limited to 20 degrees. Two documented falls this period: Fall 1 (04/28/2026) — found on floor beside wheelchair, no injury, lap belt found unclasped — mechanism unclear. Fall 2 (05/14/2026) — slid during lift transfer, right forearm abrasion, no fracture on X-ray. Two-person assist and mechanical lift now required for all transfers following second fall.',
+        cardiopulmonary: 'Lungs clear to auscultation bilaterally. O2 saturation 96% on room air, unchanged from prior period. Heart rate 74 regular. No new cardiopulmonary symptoms. No edema of upper or lower extremities. No change in cardiovascular or respiratory status this period.',
+        skin: 'Stage 1 sacral pressure injury from prior period progressed to Stage 2 this period. Current wound (05/20/2026 assessment): 3.8 cm x 2.4 cm, depth 0.3 cm, 70% granulation, 30% slough, no signs of infection. Foam dressing with silicone contact layer. Repositioning every 2 hours confirmed. New finding this period: Stage 1 pressure injury right lateral malleolus 1.5 cm x 1.0 cm, non-blanchable erythema, skin intact — identified 06/01/2026. Contributing factors: immobility, incontinence, hypoalbuminemia (albumin 2.8 g/dL this period).',
+        pain: 'Patient unable to self-report pain. PAINAD scores during cares: 2-3 at baseline (mild behavioral indicators — occasional grimacing, vocalizations with position changes). PAINAD score 4-5 during wound care and transfer procedures (moderate — consistent grimacing, vocalizations, brief resistance). Acetaminophen 650mg TID scheduled this period (was PRN last period) — improved tolerance of morning cares per staff observation. PRN morphine 2mg ordered — used 3 times this period for wound care procedures.',
+        sleep: 'Sleeping 20-22 hours per day, increased from 18-20 hours last period. Difficult to arouse for meals — requires sustained tactile stimulation and voice to achieve brief wakefulness for feeding. Alert for 15-30 minutes per meal attempt. Family notes she seems "more distant" even during waking periods compared to last certification period.',
+        psychosocial: 'Daughter Susan visiting 2-3 times weekly. Susan reports increased distress this period as she observes further decline — tearful during visits. Chaplain visiting Susan weekly for caregiver support. Susan attended caregiver support group twice this period. Family dynamics stable — no family conflict regarding care decisions. No new psychosocial concerns for patient. Staff notes patient appears to respond with brief eye opening when Susan sings to her (1940s songs patient enjoyed) — this response is the primary family connection at this stage.',
+      },
       priorNote: `RN RECERTIFICATION NARRATIVE — LM — PRIOR PERIOD (02/16/2026 - 04/15/2026)
 
 NUTRITIONAL/WEIGHT

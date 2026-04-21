@@ -1,7 +1,7 @@
 'use client';
 import { useState, useRef } from 'react';
 import { C } from './tokens';
-import { Textarea, Input, Btn, VoiceBtn, DocOutput, TopNav, ErrorBox, Collapsible, ProgressLoader, EditableDraft, BackBtn, ProgressSteps, useUnsavedWarning } from './ui';
+import { Textarea, Input, Btn, VoiceBtn, DocOutput, TopNav, ErrorBox, Collapsible, ProgressLoader, EditableDraft, BackBtn, ProgressSteps, useUnsavedWarning, PageShell } from './ui';
 import { buildNarrativeSystem, buildCTISystem, buildRecordSummarySystem, buildNarrativeEditSystem } from './prompts';
 import { DEMO_PATIENTS, PATIENT_LIST } from './demoPatients';
 

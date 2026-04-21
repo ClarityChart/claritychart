@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { RECERT_DEMO_PATIENTS, RECERT_PATIENT_LIST } from './demoRecertPatients';
 import { C } from './tokens';
 import { Textarea, Input, Btn, VoiceBtn, DocOutput, TopNav, ErrorBox, EditableDraft, BackBtn, ProgressSteps, ProgressLoader, useUnsavedWarning, PageShell } from './ui';
 import { DECLINE_DOMAINS, buildPriorExtractionSystem, buildRNRecertSystem, buildF2FSystem, buildMDRecertSystem } from './recertPrompts';
@@ -15,20 +16,90 @@ const EMPTY_MD = { mdObservations: '', priorMDNote: '' };
 const EMPTY_F2F = { f2fDate: '', f2fConductedBy: '', f2fFindings: '' };
 
 export default function RecertSuite({ onBack }) {
-  const [pathway, setPathway] = useState(null); // null=select, 'rn', 'f2f', 'md'
+  const [mode, setMode] = useState(null); // null=choose, 'demo', 'clinical'
+  const [pathway, setPathway] = useState(null);
+  const [demoPatient, setDemoPatient] = useState(null);
 
-  if (pathway === 'rn') return <RNPathway onBack={() => setPathway(null)} onBackHome={onBack} />;
-  if (pathway === 'f2f') return <F2FPathway onBack={() => setPathway(null)} onBackHome={onBack} />;
-  if (pathway === 'md') return <MDPathway onBack={() => setPathway(null)} onBackHome={onBack} />;
+  // Demo mode pathway routing
+  if (mode === 'demo' && pathway && demoPatient) {
+    const patient = RECERT_DEMO_PATIENTS[demoPatient];
+    if (pathway === 'rn') return <RNPathway onBack={() => setPathway(null)} onBackHome={onBack} demoPatient={patient} />;
+    if (pathway === 'f2f') return <F2FPathway onBack={() => setPathway(null)} onBackHome={onBack} demoPatient={patient} />;
+    if (pathway === 'md') return <MDPathway onBack={() => setPathway(null)} onBackHome={onBack} demoPatient={patient} />;
+  }
 
+  // Demo mode patient selection
+  if (mode === 'demo' && pathway && !demoPatient) {
+    return (
+      <PageShell
+        onHome={onBack}
+        moduleName="Recertification Suite"
+        badge="DEMO MODE"
+        title={`Select Demo Patient — ${pathway === 'rn' ? 'RN' : pathway === 'f2f' ? 'F2F' : 'Physician'} Pathway`}
+        subtitle="Pre-filled clinical data will load automatically"
+        hideProgress={true}
+        onBack={() => setPathway(null)}
+        backLabel="Pathways"
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          {RECERT_PATIENT_LIST.map(id => {
+            const p = RECERT_DEMO_PATIENTS[id];
+            return <DemoPatientCard key={id} patient={p} onClick={() => setDemoPatient(id)} />;
+          })}
+        </div>
+      </PageShell>
+    );
+  }
+
+  // Clinical pathway routing
+  if (mode === 'clinical' && pathway === 'rn') return <RNPathway onBack={() => setPathway(null)} onBackHome={onBack} />;
+  if (mode === 'clinical' && pathway === 'f2f') return <F2FPathway onBack={() => setPathway(null)} onBackHome={onBack} />;
+  if (mode === 'clinical' && pathway === 'md') return <MDPathway onBack={() => setPathway(null)} onBackHome={onBack} />;
+
+  // Mode selector
+  if (!mode) {
+    return (
+      <PageShell
+        onHome={onBack}
+        moduleName="Recertification Suite"
+        badge="RECERTIFICATION SUITE"
+        title="Recertification Suite"
+        subtitle="Choose how you would like to proceed"
+        hideProgress={true}
+      >
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '32px' }}>
+          <ModeCard
+            title="Demo Mode"
+            subtitle="See ClarityChart in action"
+            description="Select from two pre-loaded patient cases. All clinical fields are pre-filled — click through the workflow to see how ClarityChart generates recertification documentation."
+            badge="2 Demo Patients"
+            icon="✦"
+            onClick={() => setMode('demo')}
+          />
+          <ModeCard
+            title="Clinical Mode"
+            subtitle="Enter a real patient"
+            description="Select your clinical role and complete the recertification workflow with real patient data."
+            badge="Clinical Use"
+            icon="◈"
+            onClick={() => setMode('clinical')}
+          />
+        </div>
+      </PageShell>
+    );
+  }
+
+  // Pathway selector (both modes)
   return (
     <PageShell
       onHome={onBack}
       moduleName="Recertification Suite"
-      badge="RECERTIFICATION SUITE"
+      badge={mode === 'demo' ? 'DEMO MODE' : 'CLINICAL MODE'}
       title="Select Your Pathway"
       subtitle="Each clinician completes their portion independently"
       hideProgress={true}
+      onBack={() => setMode(null)}
+      backLabel="Mode Selection"
     >
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         <PathwayCard
@@ -60,7 +131,7 @@ export default function RecertSuite({ onBack }) {
   );
 }
 
-function RNPathway({ onBack, onBackHome }) {
+function RNPathway({ onBack, onBackHome, demoPatient }) {
   const [stage, setStage] = useState(0);
   const [priorNote, setPriorNote] = useState('');
   const [priorSummaries, setPriorSummaries] = useState(null);
@@ -71,6 +142,30 @@ function RNPathway({ onBack, onBackHome }) {
   const [error, setError] = useState('');
 
   const setField = (key, val) => setInputs(p => ({ ...p, [key]: val }));
+
+  // Pre-fill demo data on mount
+  const [demoLoaded, setDemoLoaded] = useState(false);
+  if (demoPatient && !demoLoaded) {
+    const d = demoPatient.rn;
+    setInputs(prev => ({
+      ...prev,
+      diagnosis: demoPatient.diagnosis,
+      patientId: demoPatient.patientId,
+      age: String(demoPatient.age),
+      sex: demoPatient.sex,
+      certPeriod: demoPatient.certPeriod,
+      lastBaseline: d.lastBaseline,
+      fast: d.fast,
+      pps: d.pps,
+      kps: d.kps,
+      weight: d.weight,
+      vitals: d.vitals,
+      ...Object.fromEntries(DECLINE_DOMAINS.map(dom => [dom.key, d.domains[dom.key] || ''])),
+    }));
+    if (d.priorNote) setPriorNote(d.priorNote);
+    setDemoLoaded(true);
+  }
+
   const filledDomains = DECLINE_DOMAINS.filter(d => inputs[d.key]?.trim()).length;
 
   const extractPrior = async () => {
@@ -247,13 +342,34 @@ function RNPathway({ onBack, onBackHome }) {
   );
 }
 
-function F2FPathway({ onBack, onBackHome }) {
+function F2FPathway({ onBack, onBackHome, demoPatient }) {
   const [inputs, setInputs] = useState({ diagnosis: '', patientId: '', age: '', sex: '', certPeriod: '', fast: '', pps: '', kps: '', weight: '', f2fDate: '', f2fConductedBy: '', f2fFindings: '' });
   const [f2fNote, setF2fNote] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const setField = (key, val) => setInputs(p => ({ ...p, [key]: val }));
+
+  const [demoLoaded, setDemoLoaded] = useState(false);
+  if (demoPatient && !demoLoaded) {
+    const d = demoPatient.f2f;
+    setInputs(prev => ({
+      ...prev,
+      diagnosis: demoPatient.diagnosis,
+      patientId: demoPatient.patientId,
+      age: String(demoPatient.age),
+      sex: demoPatient.sex,
+      certPeriod: demoPatient.certPeriod,
+      fast: d.fast,
+      pps: d.pps,
+      kps: d.kps,
+      weight: d.weight,
+      f2fDate: d.f2fDate,
+      f2fConductedBy: d.f2fConductedBy,
+      f2fFindings: d.findings,
+    }));
+    setDemoLoaded(true);
+  }
 
   const generate = async () => {
     if (!inputs.f2fDate.trim() || !inputs.f2fFindings.trim()) { setError('Date and clinical findings are required.'); return; }
@@ -360,6 +476,24 @@ function MDPathway({ onBack, onBackHome }) {
   const [error, setError] = useState('');
 
   const setField = (key, val) => setInputs(p => ({ ...p, [key]: val }));
+
+  const [demoLoaded, setDemoLoaded] = useState(false);
+  if (demoPatient && !demoLoaded) {
+    setInputs(prev => ({
+      ...prev,
+      diagnosis: demoPatient.diagnosis,
+      patientId: demoPatient.patientId,
+      age: String(demoPatient.age),
+      sex: demoPatient.sex,
+      certPeriod: demoPatient.certPeriod,
+      fast: demoPatient.f2f.fast,
+      pps: demoPatient.f2f.pps,
+      kps: demoPatient.f2f.kps,
+      weight: demoPatient.f2f.weight,
+      mdObservations: demoPatient.md.mdObservations || '',
+    }));
+    setDemoLoaded(true);
+  }
 
   const generate = async () => {
     if (!rnNarrative.trim()) { setError('RN Recertification Narrative is required.'); return; }

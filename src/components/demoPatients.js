@@ -868,7 +868,6 @@ PPS 40%. KPS 40%.`,
 
   tr: {
     id: 'tr',
-    snapshot: 'Post MCA stroke · Global aphasia · PEG dependent · PPS 30%',
     name: 'TR',
     age: 88,
     sex: 'Male',
@@ -876,71 +875,344 @@ PPS 40%. KPS 40%.`,
     secondaryDx: 'Atrial fibrillation, hypertension, type 2 diabetes mellitus, prior TIA (2021), dysphagia with PEG tube dependence, stage 2 pressure injury right heel',
     tagline: '88M · Post-stroke debility · Home',
     color: '#4caf82',
+    snapshot: 'Post MCA stroke · Global aphasia · PEG dependent · PPS 30%',
     documents: [
       {
         id: 'tr-discharge',
         type: 'Discharge Summary',
         date: '05/28/2025',
-        content: `DISCHARGE SUMMARY - TR, DOB 06/04/1937, Age 88
-Admission: 05/12/2025 | Discharge: 05/28/2025
-Principal Dx: Acute left MCA ischemic stroke
-Hospital course: Large left MCA infarct involving frontal, parietal, and temporal lobes. Outside tPA window on arrival. Mechanical thrombectomy not pursued given age and comorbidity profile after family discussion. Course complicated by aspiration pneumonia requiring IV antibiotics. PEG tube placed hospital day 8 for dysphagia. Patient remained globally aphasic and right hemiplegic throughout.
-Family meeting held day 12: wife Eleanor and son present. Goals of care discussed - family declined aggressive intervention, requested comfort-focused care with hospice evaluation.
-Discharge status: Global aphasia, right hemiplegia, PEG tube dependent, total assistance all ADLs, incontinent bowel and bladder.
-Disposition: Home with 24-hour caregiver support and hospice evaluation.
-Discharge meds via PEG: Metoprolol 25mg daily, lisinopril 10mg daily, insulin glargine 10u QHS, pantoprazole 40mg daily, acetaminophen 650mg q6h PRN. Apixaban discontinued.`
+        content: `DISCHARGE SUMMARY
+Patient: TR | Age: 88 | Sex: Male | DOB: [REDACTED]
+Admission Date: 05/12/2025 | Discharge Date: 05/28/2025
+Attending Physician: [REDACTED], MD — Neurology
+Principal Diagnosis: Acute left MCA ischemic stroke
+Secondary Diagnoses: Global aphasia, right hemiplegia, atrial fibrillation, hypertension, type 2 diabetes mellitus, aspiration pneumonia (complicating), dysphagia requiring PEG tube placement
+
+REASON FOR ADMISSION:
+88-year-old male with atrial fibrillation (on apixaban), hypertension, type 2 diabetes mellitus, and prior TIA (2021) brought by EMS after wife found him on the floor unresponsive at approximately 07:30. Last known well 22:00 night prior. EMS noted right-sided weakness and absence of speech. NIHSS on arrival 22 (severe stroke). CT head: no hemorrhage. CT angiography: left M1 occlusion.
+
+HOSPITAL COURSE:
+Patient was outside the tPA window on arrival (approximately 9 hours from last known well). Mechanical thrombectomy was discussed with neurology and interventional neuroradiology. Given the age of the stroke (>6 hours) and the patient's overall comorbidity profile including advanced age, diabetes, and atrial fibrillation, the risk-benefit ratio for thrombectomy was unfavorable. A family meeting was held on hospital day 1 with wife Eleanor and son David. The risks of thrombectomy including symptomatic hemorrhagic transformation were reviewed. After discussion of the uncertainty of benefit given stroke timing, the family declined thrombectomy and requested comfort-focused acute care.
+
+Neurology course: Patient remained globally aphasic and with dense right hemiplegia throughout hospitalization. Repeat MRI brain on hospital day 2 confirmed large left MCA infarct involving the left frontal, parietal, and temporal lobes with significant edema. No hemorrhagic transformation. Neurosurgery evaluated for possible hemicraniectomy given edema — family declined after extensive discussion.
+
+Pulmonary course: Patient developed aspiration pneumonia on hospital day 4, confirmed by chest X-ray (right lower lobe infiltrate). IV piperacillin-tazobactam administered for 7 days with clinical improvement. Remained febrile for 3 days before defervescence.
+
+Dysphagia: Speech-language pathology evaluated on hospital day 3. Patient unable to participate in formal swallowing study. Clinical assessment revealed absent volitional cough, pooling of secretions, and absent gag reflex. NPO status maintained throughout. Nutrition via nasogastric tube initially. PEG tube placed on hospital day 8 by gastroenterology without complications. All nutrition and medications now via PEG. Family declined long-term nasogastric tube and after extensive discussion regarding artificial nutrition, agreed to PEG tube for nutrition with understanding this is a comfort measure to prevent starvation.
+
+Goals of care: Palliative care consulted hospital day 5. Extensive family meetings with wife Eleanor and son David over multiple days. Family initially struggled with prognosis. By hospital day 10, after daily family meetings and clearer understanding of the extent of the stroke and poor prognosis for meaningful recovery, family agreed to transition to hospice-level care at home. Apixaban was discontinued given falls risk and goals of care. DNR/DNI confirmed. POLST updated.
+
+Functional status at discharge: Global aphasia — no verbal output. Right hemiplegia — right arm flaccid, right leg minimal movement. Cannot follow commands. Inconsistent visual tracking. Right facial droop. Incontinent of bowel and bladder. PEG tube dependent for all nutrition and medications. Bedridden.
+
+DISCHARGE CONDITION: Medically stable. Neurologically devastated.
+DISCHARGE DISPOSITION: Home with 24-hour caregiver support. Hospice evaluation arranged.
+PROGNOSIS: Poor. Neurology attending documents expected survival of weeks to months given stroke extent and overall medical condition.
+
+DISCHARGE MEDICATIONS (all via PEG):
+- Metoprolol tartrate 25mg BID
+- Lisinopril 10mg daily
+- Insulin glargine 10 units QHS
+- Pantoprazole 40mg daily
+- Acetaminophen 650mg q6h PRN pain/fever
+- Apixaban DISCONTINUED (goals of care, fall risk)
+- Atorvastatin DISCONTINUED (goals of care)
+- Aspirin DISCONTINUED (goals of care)
+
+FOLLOW-UP:
+Hospice to coordinate all follow-up care. Neurology available for phone consultation to hospice team as needed.`
       },
       {
         id: 'tr-neuro',
         type: 'Specialist Note',
         date: '07/15/2025',
-        content: `NEUROLOGY FOLLOW-UP - TR, 07/15/2025, Home visit
-Interval: 10 weeks post left MCA stroke. Minimal functional recovery. Opens eyes spontaneously, tracks movement inconsistently. No speech regained. Right arm remains flaccid. Right leg minimal movement only, unable to bear weight. One aspiration pneumonia hospitalization since discharge (06/28-07/03/2025).
-Exam: Alert, eyes open. No verbal output. Does not follow commands. Right facial droop. Right arm flaccid. Right leg minimal hip flexion only. Left side functional - uses left hand purposefully. PEG site clean.
+        content: `NEUROLOGY FOLLOW-UP NOTE — HOME VISIT
+Patient: TR | Age: 88 | Date: 07/15/2025
+Neurologist: [REDACTED], MD
+Setting: Patient Home
+
+REASON FOR VISIT:
+Follow-up evaluation at patient's home, 10 weeks post left MCA stroke. Requested by hospice team to assess neurological status and prognosis.
+
+INTERVAL HISTORY:
+Per wife Eleanor and hospice nurse present during visit: Patient has had no meaningful neurological recovery since discharge. He has been at home with Eleanor providing primary care and a hired caregiver 8 hours daily. One aspiration pneumonia hospitalization occurred since discharge (06/28–07/03/2025) — Eleanor agreed to that hospitalization as it was early in the home hospice period and she was uncertain about what to expect. She states she will not hospitalize him again. He is currently on hospice for 6 weeks.
+
+Eleanor reports he occasionally opens his eyes to familiar voices and will sometimes turn his head toward her when she speaks, but she is unsure if this is purposeful. He has not produced any verbal output since the stroke. He has had no purposeful movement of his right arm or leg. His left arm moves spontaneously and he occasionally uses it to touch his face or move blankets. She notes he sometimes appears to have facial expressions that suggest discomfort during position changes.
+
+PEG tube functioning well. He is receiving Jevity 1.2 at 60 mL/hour via continuous tube feed. Weight has declined from 175 lbs at hospital discharge to 162 lbs today (13 lb loss in 10 weeks).
+
+PHYSICAL EXAMINATION:
+Vital Signs: BP 138/84, HR 82 (irregular), RR 16, O2 Sat 95% RA, Temp 97.9°F
+Weight: 162 lbs (down from 175 lbs at discharge, 168 lbs at last hospice visit)
+
+General: Elderly male lying in hospital bed in home living room. Eyes closed initially, opens briefly with voice stimulation. No verbal output. Appears comfortable at rest.
+
+Neurological:
+- Consciousness: Eyes open to voice stimulation inconsistently. No purposeful response to commands. Inconsistent visual tracking — follows movement briefly when eyes are open.
+- Speech/Language: Global aphasia confirmed. No verbal output whatsoever. No consistent yes/no responses. Wife reports no communication since stroke.
+- Motor: Right arm completely flaccid. No movement right arm with any stimulation. Right leg: minimal hip flexion movement with noxious stimulation only — functionally flaccid. Left arm: spontaneous movement present, uses left hand purposefully (moves face, blankets). Left leg: some voluntary movement present.
+- Cranial Nerves: Right facial droop. Eyes deviate mildly to left at rest. Pupils 3mm bilaterally, reactive. Corneal reflexes intact. Gag reflex absent (consistent with prior assessment).
+- Reflexes: Right upper and lower extremity hyperreflexia with Babinski. Left reflexes 2+ and symmetric.
+- Tone: Right upper and lower extremity increased tone (spasticity) developing.
+
+PEG tube site: Clean, no erythema, no leakage.
+
+Right heel: Stage 2 pressure injury noted (see wound care note).
+
+ASSESSMENT:
+88-year-old male, 10 weeks post large left MCA ischemic stroke, with no meaningful neurological recovery. Global aphasia and right hemiplegia are permanent given the extent of the infarct. Minimal neurological function preserved. The patient's level of consciousness is difficult to assess precisely — he may have some awareness but cannot communicate or respond purposefully.
+
 PPS: 30%. KPS: 30%.
-Assessment: Minimal neurological recovery expected. Prognosis less than 6 months given age, stroke severity, dysphagia, recurrent aspiration risk. Continue hospice. No further neurological intervention indicated.`
+
+PROGNOSIS:
+Prognosis remains poor. Factors associated with shortened survival include: complete right hemiplegia, global aphasia, inability to swallow, recurrent aspiration pneumonia, weight loss, advanced age, and atrial fibrillation. Expected survival is weeks to a few months. Sudden death from aspiration pneumonia, cardiac arrhythmia, or pulmonary embolism is possible at any time.
+
+RECOMMENDATIONS:
+1. Continue current hospice plan of care
+2. No further neurological intervention indicated
+3. Weight loss concerning — review tube feed rate and formula with dietitian
+4. Pain management: Patient may experience pain but cannot communicate. Recommend scheduled acetaminophen and PRN morphine for signs of discomfort during cares.
+5. Right heel wound: Please see wound care note
+6. Eleanor is doing remarkable caregiving. Please ensure caregiver support resources are in place.
+7. Available for hospice team phone consultation as needed. No further in-person visits planned unless requested.`
       },
       {
         id: 'tr-hp',
         type: 'History & Physical',
         date: '06/05/2025',
-        content: `H&P - HOSPICE ADMISSION - TR, 06/05/2025
-Reason for referral: Post-massive left MCA stroke with global aphasia, right hemiplegia, PEG dependence, poor prognosis.
-PMH: Atrial fibrillation (apixaban discontinued), hypertension, T2DM insulin-dependent, prior TIA (2021), dysphagia with PEG placed 05/20/2025, aspiration pneumonia during acute hospitalization.
-Meds via PEG: Metoprolol 25mg, lisinopril 10mg, insulin glargine 10u QHS, pantoprazole 40mg, acetaminophen 650mg PRN.
-Functional: Global aphasia, right hemiplegia, total assistance all ADLs, PEG tube for all nutrition and medications, incontinent bowel and bladder.
-Exam: BP 142/78, HR 82 irregular, RR 16, Temp 97.6F, O2 sat 95% RA. Weight 168 lbs. Lying in hospital bed at home, eyes open. No verbal output. Right facial droop. Coarse breath sounds bilateral bases. PEG site clean. Stage 2 pressure injury right heel. Right arm flaccid.`
+        content: `HISTORY AND PHYSICAL — HOSPICE ADMISSION
+Patient: TR | Age: 88 | Sex: Male
+Date: 06/05/2025
+Hospice Physician: [REDACTED], MD
+
+REASON FOR HOSPICE ADMISSION:
+Post-massive left MCA stroke with global aphasia, right hemiplegia, PEG tube dependence, recurrent aspiration pneumonia risk, and prognosis of weeks to months. Patient and family requesting comfort-focused home hospice care.
+
+HISTORY OF PRESENT ILLNESS:
+TR is an 88-year-old male admitted to hospice 1 week post discharge from acute hospitalization following a massive left MCA ischemic stroke on 05/12/2025. He is currently at home with his wife Eleanor (age 84) as primary caregiver. The stroke resulted in global aphasia and right hemiplegia. He cannot speak, follow commands, or communicate meaningfully. He is PEG tube dependent for all nutrition and medications following aspiration pneumonia during acute hospitalization. A home hospital bed has been arranged in the living room.
+
+Eleanor provides all personal care with assistance from a hired caregiver 8 hours daily. Son David assists on weekends. The family is fully aware of the prognosis and has confirmed goals of comfort-focused care with no further hospitalization.
+
+PAST MEDICAL HISTORY:
+1. Massive left MCA ischemic stroke — 05/12/2025, resulting in global aphasia and right hemiplegia
+2. Atrial fibrillation — previously on apixaban (discontinued post-stroke given goals of care and fall risk)
+3. Hypertension — on metoprolol and lisinopril
+4. Type 2 diabetes mellitus — insulin-dependent
+5. Prior TIA — 2021, no residual deficits
+6. Aspiration pneumonia — during acute hospitalization 05/2025, treated with piperacillin-tazobactam
+7. PEG tube placement — 05/20/2025
+
+MEDICATIONS (all via PEG):
+- Metoprolol tartrate 25mg BID
+- Lisinopril 10mg daily
+- Insulin glargine 10 units QHS
+- Pantoprazole 40mg daily
+- Acetaminophen 650mg q6h PRN
+
+ALLERGIES: NKDA
+
+SOCIAL HISTORY:
+- Married to Eleanor, 62 years. Eleanor is primary caregiver and healthcare proxy.
+- Son David lives locally, provides weekend support.
+- Retired engineer. College educated. Active prior to stroke — golf, woodworking.
+- No tobacco. Occasional alcohol prior to stroke.
+- Christian faith, active church member prior to stroke.
+
+PHYSICAL EXAMINATION:
+Vital Signs: BP 142/78, HR 82 (irregular), RR 16, Temp 97.6°F, O2 Sat 95% RA
+Weight: 168 lbs (down from 175 lbs at hospital discharge — 7 lb loss in 1 week)
+
+General: Elderly male lying in hospital bed in home living room. Eyes open intermittently with stimulation. No verbal output. Wife Eleanor at bedside, tearful but composed.
+HEENT: Right facial droop present. Eyes deviate mildly to the left. No scleral icterus. Oral mucosa moist with good care by family. PEG tube site: clean, mild erythema at insertion site, no exudate.
+Neck: Supple. No lymphadenopathy.
+Cardiovascular: Irregular rate and rhythm. HR 82. No murmurs. Pulses 2+ bilateral upper extremities, 1+ bilateral lower extremities.
+Respiratory: Coarse breath sounds bilateral lower lobes — secretions. O2 sat 95% RA. No acute respiratory distress.
+Abdomen: PEG tube in place. Site mildly erythematous, clean. Abdomen soft, non-tender. Bowel sounds present.
+Extremities: Right arm flaccid. Left arm with spontaneous movement. Bilateral lower extremities — right leg flaccid, minimal movement. Left leg some voluntary movement. No significant edema. Skin intact. Heels off mattress per family.
+Neurological: Global aphasia confirmed. Does not follow commands. Inconsistent visual tracking. Right facial droop. Right arm and leg functionally flaccid. Left side preserves some voluntary movement.
+
+ASSESSMENT AND PLAN:
+88-year-old male with devastating left MCA stroke, global aphasia, right hemiplegia, PEG dependence, and prognosis of weeks to months. Appropriate for hospice care.
+
+Goals confirmed: DNR/DNI. No hospitalization. Comfort-focused care. Eleanor is healthcare proxy.
+
+Plan:
+1. Comfort medications: Morphine 2mg q4h PRN dyspnea or signs of pain. Lorazepam 0.5mg q6h PRN anxiety or air hunger. Haloperidol 0.5mg q8h PRN agitation.
+2. Continue PEG tube feeds per family wishes (comfort measure).
+3. Oral care q4h — important given aspiration risk and oral secretions.
+4. Skin care — turning q2h, heel protection, pressure redistribution mattress.
+5. Bowel regimen — miralax daily, suppository PRN.
+6. Foley catheter insertion considered — Eleanor declining at this time, managing incontinence with briefs. Will reassess.
+7. Eleanor support — social work referral. Caregiver burnout risk high with 84-year-old primary caregiver.`
       },
       {
         id: 'tr-speech',
         type: 'Specialist Note',
         date: '06/10/2025',
-        content: `SPEECH-LANGUAGE PATHOLOGY - TR, 06/10/2025
-Referral: Dysphagia evaluation, communication assessment post-stroke.
-Swallowing: PEG tube dependent. Oral phase: pooling of secretions, absent volitional cough. Unable to assess pharyngeal phase - patient cannot follow commands. NPO status maintained - aspiration risk too high.
-Communication: Global aphasia confirmed. No verbal output. No consistent yes/no responses. Intermittently tracks movement and responds to familiar voices (tears noted when wife speaks).
-Recommendations: Maintain NPO, all nutrition and meds via PEG. Oral care q4h. Family educated on oral care technique and aspiration precautions. AAC not feasible given severity. Family encouraged to continue meaningful interaction - touch, music, familiar voices.`
+        content: `SPEECH-LANGUAGE PATHOLOGY EVALUATION — HOME VISIT
+Patient: TR | Age: 88 | Date: 06/10/2025
+Speech-Language Pathologist: [REDACTED], MS, CCC-SLP
+Referral from: Hospice RN
+Reason: Dysphagia evaluation, communication assessment, caregiver education
+
+REFERRAL REASON:
+Hospice RN requested SLP evaluation to assess swallowing safety, communication potential, and provide caregiver education for this 88-year-old male with global aphasia and right hemiplegia following left MCA stroke.
+
+SWALLOWING ASSESSMENT:
+History: Patient has been NPO with PEG tube feeding since hospital day 3 (aspiration pneumonia documented on day 4 of acute hospitalization). PEG placed hospital day 8. Family was offered nasogastric tube initially but preferred PEG given expected prolonged course.
+
+Clinical examination: Patient reclined at approximately 30 degrees in hospital bed. Unable to follow commands for formal swallowing assessment. Observed oral phase: absent volitional movements of tongue and lips. Pooling of secretions in oral cavity bilaterally. No volitional cough response. Oral suctioning was performed — patient had no behavioral response.
+
+Attempted bedside trial: 1 mL water via oral syringe administered to assess pharyngeal response. No swallow initiated over 10 seconds. Secretions increased in oral cavity. No cough. Patient showed no distress but no swallow was observed.
+
+Assessment: Patient is NPO with unsafe swallowing. Risk of aspiration with any oral intake is extremely high given absent volitional swallow, absent cough reflex, pooling of secretions, and global aphasia preventing any patient cooperation or complaint of symptoms. Aspiration during acute hospitalization was likely clinically silent.
+
+Recommendation: Maintain NPO status. All nutrition and medications via PEG. Oral care every 4 hours with suction toothbrush and mouth swabs — this is for comfort and oral hygiene, not for nutrition.
+
+Oral feeding decision: Family was counseled extensively on the risks of oral feeding given clinical findings. Wife Eleanor asked about "just giving him small amounts of water or ice." This desire was acknowledged and respected. Discussed the risk of aspiration pneumonia, which could cause discomfort and potential distress. After discussion, Eleanor and son David agreed to continue NPO status with excellent oral care as a compromise — this honors the patient's comfort while minimizing aspiration risk.
+
+COMMUNICATION ASSESSMENT:
+Current status: Global aphasia confirmed. No verbal output observed. No attempts at speech. No reliable yes/no response established despite 20 minutes of structured assessment using multiple modalities (pictures, gestures, pointing, head nods). Patient does not track visual stimuli consistently enough to use eye-gaze communication reliably.
+
+Preserved behaviors: Patient opens eyes to wife's voice. Facial expression changes observed — mild grimacing with position changes, possible calming when wife speaks or touches patient's hand. These are reflexive responses and should not be interpreted as purposeful communication, though they provide emotional information.
+
+AAC assessment: Given cognitive and physical limitations, formal augmentative and alternative communication (AAC) devices are not clinically appropriate at this stage. Eye gaze technology requires reliable, purposeful eye control which is not present.
+
+CAREGIVER EDUCATION:
+Provided to wife Eleanor and son David:
+1. Oral care technique: Demonstrated suction toothbrush technique. Family practiced and demonstrated return competency. Performed at minimum every 4 hours.
+2. Positioning: Head of bed at minimum 30 degrees at all times. No supine positioning — increases aspiration risk with secretions.
+3. Secretion management: How to recognize increased secretion burden. When to use oral suction device (provided by hospice).
+4. Communication with patient: Encouraged to continue speaking normally to patient — hearing is often preserved even when patient cannot respond. Use of touch and music to provide comfort and connection.
+5. Interpreting patient expressions: Reviewed behavioral pain indicators (PAINAD scale) with family for use when assessing comfort.
+
+PLAN:
+- No further formal SLP evaluation indicated
+- Available by phone for hospice team questions
+- Oral care education material left with family
+- Family education documentation completed`
       },
       {
         id: 'tr-wound',
         type: 'Wound Care Note',
         date: '08/20/2025',
-        content: `WOUND CARE NOTE - TR, Home, 08/20/2025
-Location: Right heel. Stage 2 pressure injury. Dimensions: 2.8 cm x 2.2 cm, depth 0.2 cm.
-Wound bed: 80% granulation, 20% slough. Periwound: mild erythema, no infection. Exudate: minimal serosanguineous. No odor.
-Care: Irrigated with normal saline. Slough gently debrided. Foam dressing with silicone contact layer. Heel offloading boot in place.
-Contributing factors: Bedbound, unable to reposition self, nutritional compromise (albumin 3.0), peripheral vascular disease.
-Plan: Reassess every 3 days. Wife instructed on heel offloading and repositioning. Notify MD if wound progresses.`
+        content: `WOUND CARE NOTE — HOME VISIT
+Patient: TR | Age: 88 | Date: 08/20/2025
+Wound Care Nurse: [REDACTED], RN, CWCN
+Hospice Provider: [REDACTED] Hospice
+
+WOUND ASSESSMENT — VISIT #8 (wound first identified 07/02/2025)
+
+WOUND IDENTIFICATION:
+Location: Right heel, posterior
+Classification: Stage 2 Pressure Injury
+Date first identified: 07/02/2025 (approximately 7 weeks ago)
+Mechanism: Pressure from positioning in bed; patient unable to reposition himself
+
+WOUND MEASUREMENTS:
+Today: Length 2.8 cm | Width 2.2 cm | Depth 0.2 cm
+Change from last visit (08/06/2025): Stable — no increase in dimensions
+Sinus tracts: None
+Undermining: None
+
+WOUND BED:
+Granulation tissue: 80% — healthy, red, moist granulation
+Slough: 20% — thin layer of yellow slough in wound center
+Necrotic tissue: None
+Epithelialization: Minimal at wound edges
+
+PERIWOUND TISSUE:
+Color: Mild erythema within 0.5 cm of wound edge — improved from prior visit (was 1.5 cm)
+Temperature: Mildly warm, improved from prior
+Edema: 1+ bilateral lower extremities (mild, unchanged)
+Skin integrity: Surrounding skin intact, mild dryness. No maceration. No satellite lesions.
+Hemosiderin staining: Mild on bilateral lower extremities consistent with prior venous insufficiency.
+
+WOUND DRAINAGE:
+Amount: Minimal
+Type: Serosanguineous — thin, no odor
+Odor: None
+
+PAIN ASSESSMENT:
+Unable to formally assess — patient globally aphasic. Behavioral indicators during wound assessment: mild grimacing with wound manipulation, brief vocalization when foam dressing removed. PAINAD score 2-3 during procedure. Pre-medicated with acetaminophen 650mg and morphine 2mg via PEG 30 minutes prior to visit.
+
+INFECTION ASSESSMENT:
+No signs of clinical infection: no purulence, no expanding erythema, no odor, no fever (Temp 97.8°F today). Wound culture last obtained 07/15/2025 — coagulase-negative Staphylococcus, considered colonizer, not treated. No antibiotic treatment indicated. Wound appears to be on a healing trajectory despite overall clinical condition.
+
+CURRENT TREATMENT PERFORMED:
+1. Right heel positioned off bed surface for examination — patient on air mattress with continuous low air loss
+2. Wound irrigated with 35 mL syringe / 19g angiocath with sterile normal saline — adequate pressure achieved
+3. Slough gently debrided with moistened gauze — minimal slough removed, patient tolerated with mild behavioral response
+4. Wound base moist and clean post-irrigation
+5. Mepilex Border Lite foam dressing with silicone contact layer applied — non-traumatic to wound bed
+6. Heel offloading boot applied — right heel completely off mattress
+7. Caregiver education reinforced on heel offloading technique and boot application
+
+CONTRIBUTING FACTORS AND INTERVENTIONS:
+Immobility: Patient completely bed-bound, cannot reposition. Eleanor performing turns every 2 hours per protocol — documented in caregiver log reviewed today. Son David assisting with turns when present on weekends.
+Nutrition: Weight 158 lbs today (down from 168 lbs at hospice admission — 10 lb loss over 11 weeks). Tube feeds continue at 60 mL/hour Jevity 1.2. Albumin not measured recently — nutritional status likely compromised given weight loss trend. Dietitian phone consultation recommended.
+Moisture: Incontinent — briefs changed every 2 hours and PRN. Skin protectant applied to sacrum and perianal area with each change. No additional moisture-related wounds.
+Friction/Shear: Turn sheet in use. Staff educated on proper technique.
+
+WOUND TRAJECTORY:
+Wound has shown minimal healing over 7 weeks despite appropriate interventions, consistent with patient's overall debilitated state and likely nutritional compromise. However, wound has NOT progressed — no increase in stage, no new infection, and some improvement in periwound erythema. Goals in context of hospice care are wound stabilization, infection prevention, pain management, and quality of life.
+
+CAREGIVER STATUS:
+Eleanor appeared fatigued during today's visit. She reported difficulty sleeping due to needing to turn TR through the night. She expressed no complaints but hospice nurse and this writer both noted signs of caregiver strain. Discussed with Eleanor: Hospice aide available additional hours — Eleanor agreed to increase aide from 5 to 7 days per week. Social worker to call Eleanor this week.
+
+PLAN:
+- Continue current wound care regimen every 2 weeks (wound stable, not requiring more frequent visits)
+- Continue heel offloading boot at all times when in bed
+- Monitor for signs of infection or wound deterioration at each RN visit
+- Dietitian phone consultation regarding tube feed optimization
+- Social worker follow-up with Eleanor for caregiver support
+- Notify hospice MD if wound progresses to Stage 3 or signs of infection develop`
       },
       {
         id: 'tr-labs',
         type: 'Lab Results',
         date: '08/18/2025',
-        content: `LABS - TR, 08/18/2025
-CMP: Na 137, K 4.6, Cr 1.4 (H), eGFR 52, Glucose 148 (H), Albumin 3.0 g/dL (L), Total Protein 5.9 (L), BUN 28
-CBC: WBC 8.2, Hgb 11.4 g/dL (L), Hct 34.8% (L), Platelets 187
-HbA1c: 7.8%
-INR: 1.2 (apixaban discontinued post-stroke)`
+        content: `LABORATORY RESULTS
+Patient: TR | Date of Collection: 08/18/2025
+Ordering Provider: [REDACTED], MD (Hospice Physician)
+Clinical Indication: Monitoring — weight loss, wound healing assessment, tube feed management
+
+COMPLETE BLOOD COUNT:
+WBC: 8.2 K/uL (normal 4.5-11.0)
+RBC: 3.6 M/uL (L) (normal 4.3-5.7)
+Hemoglobin: 11.4 g/dL (L) (normal 13.5-17.5)
+Hematocrit: 34.8% (L) (normal 38.8-50.0) — normocytic anemia, consistent with chronic disease
+MCV: 96.7 fL (normal 80-100)
+MCH: 31.7 pg (normal 27-33)
+Platelets: 187 K/uL (normal 150-400)
+
+COMPREHENSIVE METABOLIC PANEL:
+Sodium: 137 mEq/L (normal 136-145)
+Potassium: 4.6 mEq/L (normal 3.5-5.1) — upper normal range, monitor
+Chloride: 101 mEq/L (normal 98-107)
+CO2: 24 mEq/L (normal 22-29)
+BUN: 28 mg/dL (H) (normal 7-25) — mildly elevated, likely prerenal component given weight loss
+Creatinine: 1.4 mg/dL (H) (normal 0.7-1.2) — mildly elevated, baseline likely 1.0-1.1
+eGFR: 52 mL/min/1.73m2 — CKD stage 3a (new finding vs prior normal)
+Glucose: 148 mg/dL (H) (normal 70-100) — above goal, likely related to tube feed formula
+Calcium: 8.8 mg/dL (normal 8.5-10.2)
+Total Protein: 5.9 g/dL (L) (normal 6.3-8.2)
+Albumin: 3.0 g/dL (L) (normal 3.5-5.0) — significantly low, impairs wound healing
+Total Bilirubin: 1.0 mg/dL (normal 0.2-1.2)
+AST: 32 U/L (normal 10-40)
+ALT: 28 U/L (normal 7-56)
+Alkaline Phosphatase: 78 U/L (normal 44-147)
+
+ADDITIONAL LABS:
+HbA1c: 7.8% — above goal, but target less stringent in hospice context; tube feed formula adjustment may help
+INR: 1.2 (apixaban discontinued post-stroke — INR represents baseline coagulation)
+Prealbumin: 12.4 mg/dL (L) (normal 17-40) — significantly low, poor nutritional marker despite tube feeds at goal rate
+
+PROVIDER INTERPRETATION:
+These results are consistent with progressive nutritional decline despite goal-rate tube feeds. Albumin 3.0 and prealbumin 12.4 indicate significant protein-calorie malnutrition. This contributes to impaired wound healing of the right heel Stage 2 pressure injury and overall debilitation. Mild renal insufficiency has developed (eGFR 52 vs presumed prior normal) — likely combination of prerenal dehydration and progressive renal changes. Mild anemia of chronic disease.
+
+In the context of hospice care, these results confirm the expected trajectory of nutritional decline and organ system compromise following catastrophic stroke. Tube feed formula change to higher protein formula (Promote vs Jevity) recommended and discussed with hospice nurse. No other interventions indicated given goals of care.
+
+Blood glucose of 148 in the context of tube feeds — insulin glargine dose adjusted from 10 to 8 units QHS given overall reduced caloric needs with weight loss.`
       },
     ],
     encounter: `Patient TR, 88-year-old male, admitted to hospice today at home following massive left MCA stroke on 05/12/2025. Wife Eleanor present throughout admission, visibly fatigued but engaged. Son also present.
@@ -957,11 +1229,11 @@ Skin: Stage 2 pressure injury right heel, 2.8 x 2.2 cm, 80% granulation. Heel of
 
 Mobility: Bedbound. Total assistance all ADLs. Two-person assist for repositioning. Incontinent bowel and bladder.
 
-Caregiver status: Wife Eleanor (84) is primary caregiver, reports significant exhaustion. Son providing support on weekends. Family requesting additional aide hours.
+Caregiver status: Wife Eleanor 84 years old, sole caregiver, reports significant exhaustion. Son providing support on weekends. Family requesting additional aide hours.
 
 Goals of care: DNR/DNI. No hospitalization - family adamant following prior aspiration pneumonia admission. Comfort-focused care. Wife is healthcare proxy, fully aligned.
 
-PPS 30%. KPS 30%.`
+PPS 30%. KPS 30%.`,
   },
 
   rb: {

@@ -131,6 +131,83 @@ export default function RecertSuite({ onBack }) {
   );
 }
 
+function ModeCard({ title, subtitle, description, badge, icon, onClick }) {
+  const [hov, setHov] = useState(false);
+  return (
+    <div onClick={onClick} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+      style={{
+        background: hov ? '#344f6e' : '#2d4460',
+        border: `1px solid ${hov ? C.gold : C.border}`,
+        borderTop: `3px solid ${C.gold}`,
+        borderRadius: '6px', padding: '24px', cursor: 'pointer', transition: 'all 0.15s',
+      }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+        <span style={{ fontSize: '24px', color: C.gold }}>{icon}</span>
+        <span style={{ fontSize: '11px', color: C.gold, background: 'rgba(196,168,130,0.1)', border: `1px solid rgba(196,168,130,0.3)`, borderRadius: '10px', padding: '2px 10px', fontFamily: C.mono }}>{badge}</span>
+      </div>
+      <div style={{ fontSize: '18px', color: C.text, fontWeight: '700', marginBottom: '4px', fontFamily: C.serif }}>{title}</div>
+      <div style={{ fontSize: '13px', color: C.gold, fontFamily: C.mono, marginBottom: '10px' }}>{subtitle}</div>
+      <div style={{ fontSize: '14px', color: C.textDim, lineHeight: 1.6 }}>{description}</div>
+      <div style={{ marginTop: '16px', fontSize: '12px', color: hov ? C.gold : C.border, fontFamily: C.mono, letterSpacing: '1px', transition: 'color 0.15s' }}>
+        ENTER {title.toUpperCase()} →
+      </div>
+    </div>
+  );
+}
+
+function DemoPatientCard({ patient, onClick }) {
+  const [hov, setHov] = useState(false);
+  return (
+    <div onClick={onClick} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+      style={{
+        display: 'flex', alignItems: 'center', gap: '20px', padding: '20px 24px',
+        background: hov ? '#344f6e' : '#2d4460',
+        border: `1px solid ${hov ? C.gold : C.border}`,
+        borderRadius: '6px', cursor: 'pointer', transition: 'all 0.15s',
+      }}>
+      <div style={{
+        width: '52px', height: '52px', borderRadius: '6px',
+        background: `${patient.color}28`, border: `1px solid ${patient.color}60`,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontSize: '20px', color: patient.color, fontFamily: C.mono, fontWeight: '700', flexShrink: 0,
+      }}>{patient.name}</div>
+      <div style={{ flex: 1 }}>
+        <div style={{ fontSize: '17px', color: C.text, fontWeight: '600', marginBottom: '4px' }}>{patient.diagnosis}</div>
+        <div style={{ fontSize: '14px', color: C.goldDim, fontFamily: C.mono, marginBottom: '4px' }}>{patient.tagline}</div>
+        <div style={{ fontSize: '13px', color: C.textFaint, fontFamily: C.mono }}>{patient.certPeriod}</div>
+      </div>
+      <div style={{ fontSize: '20px', color: hov ? C.gold : C.border, transition: 'all 0.15s' }}>›</div>
+    </div>
+  );
+}
+
+function PathwayCard({ title, role, description, outputs, color, onClick }) {
+  const [hov, setHov] = useState(false);
+  return (
+    <div onClick={onClick} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+      style={{
+        display: 'flex', alignItems: 'center', gap: '20px', padding: '20px 24px',
+        background: hov ? '#344f6e' : '#2d4460',
+        border: `1px solid ${hov ? C.borderHover : C.border}`,
+        borderRadius: '6px', cursor: 'pointer', transition: 'all 0.15s',
+      }}>
+      <div style={{ width: '4px', alignSelf: 'stretch', background: color, borderRadius: '2px', flexShrink: 0, opacity: 0.8 }} />
+      <div style={{ flex: 1 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' }}>
+          <div style={{ fontSize: '16px', color: C.text, fontWeight: '600' }}>{title}</div>
+          <span style={{ fontSize: '11px', color, background: `${color}18`, border: `1px solid ${color}40`, borderRadius: '10px', padding: '1px 8px', fontFamily: C.mono }}>{role}</span>
+        </div>
+        <div style={{ fontSize: '14px', color: C.textDim, lineHeight: 1.5, marginBottom: '8px' }}>{description}</div>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          {outputs.map(o => <span key={o} style={{ fontSize: '12px', color: C.goldDim, fontFamily: C.mono }}>→ {o}</span>)}
+        </div>
+      </div>
+      <span style={{ color: hov ? C.gold : C.border, fontSize: '20px', transition: 'all 0.15s' }}>›</span>
+    </div>
+  );
+}
+
+
 function RNPathway({ onBack, onBackHome, demoPatient }) {
   const [stage, setStage] = useState(0);
   const [priorNote, setPriorNote] = useState('');

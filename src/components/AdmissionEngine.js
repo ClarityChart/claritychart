@@ -389,12 +389,13 @@ function DemoMode({ onBack, onBackHome }) {
                   ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                       {droppedDocs.map(doc => (
-                        <div key={doc.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 12px', background: 'rgba(196,168,130,0.06)', border: `1px solid ${C.border}`, borderRadius: '2px' }}>
+                        <div key={doc.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 12px', background: 'rgba(196,168,130,0.06)', border: `1px solid ${C.border}`, borderRadius: '6px' }}>
                           <span style={{ fontSize: '16px', color: C.green }}>✓</span>
                           <div style={{ flex: 1 }}>
-                            <div style={{ fontSize: '18px', color: C.text, fontFamily: C.mono }}>{doc.type}</div>
-                            <div style={{ fontSize: '16px', color: C.gold }}>{doc.date}</div>
+                            <div style={{ fontSize: '18px', color: C.text, fontFamily: C.mono, fontWeight: '600' }}>{doc.type}</div>
+                            <div style={{ fontSize: '14px', color: C.goldDim }}>{doc.date}</div>
                           </div>
+                          <button onClick={() => setViewingDoc(doc)} style={{ background: 'rgba(196,168,130,0.1)', border: `1px solid rgba(196,168,130,0.3)`, borderRadius: '4px', color: C.gold, cursor: 'pointer', fontSize: '13px', padding: '3px 10px', fontFamily: C.mono, marginRight: '4px' }}>view</button>
                           <button onClick={() => removeDoc(doc.id)} style={{ background: 'none', border: 'none', color: C.goldDim, cursor: 'pointer', fontSize: '18px', padding: '0 4px' }}>×</button>
                         </div>
                       ))}
@@ -478,6 +479,7 @@ function DemoMode({ onBack, onBackHome }) {
         )}
 
       </div>
+      <DocModal doc={viewingDoc} onClose={() => setViewingDoc(null)} />
     </PageShell>
   );
 }

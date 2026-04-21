@@ -568,7 +568,10 @@ function MDPathway({ onBack, onBackHome, demoPatient }) {
       kps: demoPatient.f2f.kps,
       weight: demoPatient.f2f.weight,
       mdObservations: demoPatient.md.mdObservations || '',
+      priorMDNote: demoPatient.md.priorMDNote || '',
     }));
+    if (demoPatient.md.rnNarrative) setRnNarrative(demoPatient.md.rnNarrative);
+    if (demoPatient.md.f2fNote) setF2fNote(demoPatient.md.f2fNote);
     setDemoLoaded(true);
   }
 

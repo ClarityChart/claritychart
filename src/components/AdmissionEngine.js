@@ -201,7 +201,6 @@ function DemoMode({ onBack, onBackHome }) {
   // Generate narrative
   const generateNarrative = async () => {
     if (!patient) return;
-    setError(''); setLoading(true); setLoadingMsg('Generating Admission Narrative...');
     const docs = buildDocs();
     try {
       const r = await fetch('/api/generate', {

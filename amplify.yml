@@ -3,11 +3,12 @@ frontend:
   phases:
     preBuild:
       commands:
-        - npm ci
+        - npm install --legacy-peer-deps
     build:
       commands:
         - echo "ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY" >> .env.production
-        - echo "Build env check:" && printenv | grep ANTHROPIC
+        - echo "NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL" >> .env.production
+        - echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY" >> .env.production
         - npm run build
   artifacts:
     baseDirectory: .next

@@ -299,7 +299,7 @@ export function EditableDraft({ title, value, onChange, badge }) {
   );
 }
 
-export function TopNav({ onHome, moduleName }) {
+export function TopNav({ onHome, moduleName, onSignOut }) {
   return (
     <div style={{
       position: 'sticky', top: 0, zIndex: 100,
@@ -325,14 +325,26 @@ export function TopNav({ onHome, moduleName }) {
           ← HOME
         </span>
       </button>
-      {moduleName && (
-        <span style={{
-          fontSize: '12px', color: '#c4b898', fontFamily: C.mono,
-          letterSpacing: '2px', textTransform: 'uppercase', fontWeight: '600',
-        }}>
-          {moduleName}
-        </span>
-      )}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        {moduleName && (
+          <span style={{
+            fontSize: '12px', color: '#c4b898', fontFamily: C.mono,
+            letterSpacing: '2px', textTransform: 'uppercase', fontWeight: '600',
+          }}>
+            {moduleName}
+          </span>
+        )}
+        {onSignOut && (
+          <button onClick={onSignOut} style={{
+            background: 'none', border: '1px solid rgba(196,168,130,0.3)',
+            borderRadius: '4px', color: '#9a8c78', cursor: 'pointer',
+            fontFamily: C.mono, fontSize: '11px', letterSpacing: '1px',
+            padding: '4px 10px', transition: 'all 0.15s',
+          }}>
+            SIGN OUT
+          </button>
+        )}
+      </div>
     </div>
   );
 }

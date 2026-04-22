@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { supabase } from './supabase-client';
 import { C } from './tokens';
 import AdmissionEngine from './AdmissionEngine';
 import RNVisitNote from './RNVisitNote';
@@ -52,6 +53,12 @@ function ModCard({ mod, onClick }) {
 export default function ClarityChart() {
   const [view, setView] = useState('home');
 
+  const handleSignOut = async () => {
+    const { supabase } = await import('./supabase-client');
+    await supabase.auth.signOut();
+    window.location.href = '/login';
+  };
+
   if (view === 'admission-engine') return <AdmissionEngine onBack={() => setView('home')} />;
   if (view === 'rn-visit-note') return <RNVisitNote onBack={() => setView('home')} />;
   if (view === 'recert-suite') return <RecertSuite onBack={() => setView('home')} />;
@@ -73,9 +80,17 @@ export default function ClarityChart() {
             <div style={{ fontSize: 'clamp(28px, 3vw, 38px)', color: C.text }}>Clarity<span style={{ color: C.gold }}>Chart</span></div>
             <div style={{ fontSize: '20px', color: '#9a8c78', marginTop: '8px', fontStyle: 'italic', fontFamily: C.sans, fontWeight: '400' }}>Built exclusively for hospice</div>
           </div>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(196,168,130,0.08)', border: `1px solid ${C.border}`, borderRadius: '20px', padding: '5px 14px', fontSize: '15px', color: C.gold, fontFamily: C.mono }}>
-            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: C.green, boxShadow: `0 0 6px ${C.green}` }} />
-            Admission Engine Online
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(196,168,130,0.08)', border: `1px solid ${C.border}`, borderRadius: '20px', padding: '5px 14px', fontSize: '15px', color: C.gold, fontFamily: C.mono }}>
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: C.green, boxShadow: `0 0 6px ${C.green}` }} />
+              Admission Engine Online
+            </div>
+            <button onClick={handleSignOut} style={{
+              background: 'none', border: '1px solid rgba(196,168,130,0.3)',
+              borderRadius: '4px', color: '#9a8c78', cursor: 'pointer',
+              fontFamily: C.mono, fontSize: '12px', letterSpacing: '1px',
+              padding: '5px 12px', transition: 'all 0.15s',
+            }}>SIGN OUT</button>
           </div>
         </header>
 

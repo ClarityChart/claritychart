@@ -8,7 +8,12 @@
     "start": "next start"
   },
   "dependencies": {
+    "@auth/supabase-adapter": "^1.11.2",
+    "@supabase/auth-helpers-nextjs": "^0.15.0",
+    "@supabase/ssr": "^0.10.2",
+    "@supabase/supabase-js": "^2.104.0",
     "next": "^14.2.35",
+    "next-auth": "^4.24.14",
     "react": "^18",
     "react-dom": "^18"
   }

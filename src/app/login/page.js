@@ -43,7 +43,7 @@ export default function LoginPage() {
       email,
       options: {
         shouldCreateUser: false,
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        emailRedirectTo: 'https://main.d11wz2rc2ib1uy.amplifyapp.com/auth/callback',
       },
     });
     if (error) {

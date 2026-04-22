@@ -1,7 +1,12 @@
 'use client';
 import { useState } from 'react';
-import { supabase } from '../../lib/supabase';
+import { createBrowserClient } from '@supabase/ssr';
 import { useRouter } from 'next/navigation';
+
+const supabase = createBrowserClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+);
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -17,7 +22,10 @@ export default function LoginPage() {
     setError('');
     const { error } = await supabase.auth.signInWithOtp({
       email,
-      options: { shouldCreateUser: false },
+      options: {
+        shouldCreateUser: false,
+        channel: 'email',
+      },
     });
     if (error) {
       setError(error.message === 'Signups not allowed for otp'
@@ -70,10 +78,10 @@ export default function LoginPage() {
           <form onSubmit={handleVerifyOtp}>
             <div style={{ textAlign: 'center', marginBottom: '24px' }}>
               <div style={{ fontSize: '32px', marginBottom: '12px' }}>✉</div>
-              <div style={{ fontSize: '15px', color: '#9a8c78', lineHeight: 1.6 }}>A 6-digit code was sent to <strong style={{ color: '#d4b896' }}>{email}</strong></div>
+              <div style={{ fontSize: '15px', color: '#9a8c78', lineHeight: 1.6 }}>A 6-digit code was sent to <strong style={{ color: '#d4b896' }}>{email}</strong>. Check your email and enter the code below.</div>
             </div>
             <div style={{ marginBottom: '24px' }}>
-              <label style={{ display: 'block', fontSize: '13px', color: '#d4b896', fontFamily: 'Courier New, monospace', letterSpacing: '1px', marginBottom: '8px' }}>ENTER CODE</label>
+              <label style={{ display: 'block', fontSize: '13px', color: '#d4b896', fontFamily: 'Courier New, monospace', letterSpacing: '1px', marginBottom: '8px' }}>ENTER 6-DIGIT CODE</label>
               <input type="text" value={otp} onChange={e => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))} placeholder="123456" required maxLength={6} style={{ width: '100%', padding: '12px 16px', background: 'rgba(0,0,0,0.25)', border: '1px solid rgba(196,168,130,0.3)', borderRadius: '6px', color: '#f0e8dc', fontSize: '24px', outline: 'none', boxSizing: 'border-box', textAlign: 'center', letterSpacing: '8px', fontFamily: 'Courier New, monospace' }} />
             </div>
             {error && <div style={{ background: 'rgba(240,128,128,0.15)', border: '1px solid rgba(240,128,128,0.4)', borderRadius: '6px', padding: '12px 16px', color: '#f08080', fontSize: '14px', marginBottom: '20px' }}>{error}</div>}

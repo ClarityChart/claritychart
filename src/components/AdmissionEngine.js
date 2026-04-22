@@ -201,7 +201,7 @@ function DemoMode({ onBack, onBackHome }) {
   // Generate narrative
   const generateNarrative = async () => {
     if (!patient) return;
-    const docs = buildDocs();
+    const docs = recordSummaries ? { summaries: recordSummaries } : buildDocs();
     try {
       const r = await fetch('/api/generate', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },

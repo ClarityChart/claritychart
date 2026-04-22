@@ -1,8 +1,11 @@
 export function buildNarrativeSystem(primaryDx, secondaryDx, docs, encounter) {
-  const docText = Object.entries(docs)
-    .filter(([, v]) => v.trim())
-    .map(([k, v]) => `=== ${k.toUpperCase()} ===\n${v}`)
-    .join('\n\n');
+  // If summaries are provided, use them instead of raw documents
+  const docText = docs.summaries
+    ? `=== RECORD SUMMARIES ===\n${docs.summaries}`
+    : Object.entries(docs)
+        .filter(([, v]) => v.trim())
+        .map(([k, v]) => `=== ${k.toUpperCase()} ===\n${v}`)
+        .join('\n\n');
 
   return `You are a hospice nurse generating an Admission Narrative. Your goal is to produce a detailed, structured clinical document that preserves the nurse's voice and clinical observations while organizing information clearly for the medical record.
 

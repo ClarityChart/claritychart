@@ -25,9 +25,10 @@ export async function middleware(req) {
   const { data: { session } } = await supabase.auth.getSession();
 
   const isLoginPage = req.nextUrl.pathname === '/login';
+  const isPrivacyPage = req.nextUrl.pathname === '/privacy';
   const isAuthCallback = req.nextUrl.pathname.startsWith('/auth/callback');
 
-  if (!session && !isLoginPage && !isAuthCallback) {
+  if (!session && !isLoginPage && !isAuthCallback && !isPrivacyPage) {
     return NextResponse.redirect(new URL('/login', req.url));
   }
 

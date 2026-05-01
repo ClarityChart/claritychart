@@ -91,6 +91,11 @@ export default function LoginPage() {
             <button type="button" onClick={() => { setSent(false); setOtp(''); setError(''); }} style={{ width: '100%', marginTop: '12px', padding: '10px', background: 'none', border: 'none', color: '#9a8c78', cursor: 'pointer', fontSize: '13px', fontFamily: 'Courier New, monospace' }}>Use a different email</button>
           </form>
         )}
+        <div style={{ marginTop: '32px', paddingTop: '20px', borderTop: '1px solid rgba(196,168,130,0.15)', textAlign: 'center' }}>
+          <a href="/privacy" style={{ fontSize: '12px', color: '#6b7280', fontFamily: 'Courier New, monospace', textDecoration: 'none' }}>
+            Privacy Policy
+          </a>
+        </div>
       </div>
     </div>
   );

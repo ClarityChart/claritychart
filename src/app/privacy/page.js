@@ -35,7 +35,7 @@ export default function PrivacyPolicy() {
           },
           {
             title: '7. Data Retention',
-            body: 'User account information (email addresses) is retained for the duration of the user's authorized access to the platform. Authentication logs are retained for a minimum of six years as required by HIPAA. Clinical documentation inputs are not retained by ClarityChart after the session ends — generated documents exist only in the user's browser session and must be copied or saved by the user.'
+            body: 'User account information (email addresses) is retained for the duration of the user\'s authorized access to the platform. Authentication logs are retained for a minimum of six years as required by HIPAA. Clinical documentation inputs are not retained by ClarityChart after the session ends — generated documents exist only in the user\'s browser session and must be copied or saved by the user.'
           },
           {
             title: '8. User Rights',

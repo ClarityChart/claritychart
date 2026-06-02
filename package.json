@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@auth/supabase-adapter": "^1.11.2",
+    "@aws-sdk/client-bedrock-runtime": "^3.1045.0",
     "@supabase/auth-helpers-nextjs": "^0.15.0",
     "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.104.0",

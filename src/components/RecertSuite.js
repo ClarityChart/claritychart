@@ -253,8 +253,15 @@ function RNPathway({ onBack, onBackHome, demoPatient }) {
         body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, system: buildPriorExtractionSystem(), messages: [{ role: 'user', content: 'Extract domain summaries from this prior RN Recertification Narrative:\n\n' + priorNote }] }) });
       const d = await r.json();
       const text = d.content?.[0]?.text || '';
-      const parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
-      setPriorSummaries(parsed); setStage(1);
+      if (text) {
+        try {
+          const parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
+          setPriorSummaries(parsed);
+        } catch (parseErr) {
+          // Could not parse as JSON - proceed without summaries
+        }
+      }
+      setStage(1);
     } catch (e) { setError('Could not extract prior summaries. Proceeding without.'); setStage(1); }
     finally { setExtracting(false); }
   };

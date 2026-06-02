@@ -1,4 +1,5 @@
 'use client';
+import { streamGenerate } from '../lib/streamGenerate';
 import { useState } from 'react';
 import { RECERT_DEMO_PATIENTS, RECERT_PATIENT_LIST } from './demoRecertPatients';
 import { C } from './tokens';
@@ -249,10 +250,11 @@ function RNPathway({ onBack, onBackHome, demoPatient }) {
     if (!priorNote.trim()) { setStage(1); return; }
     setExtracting(true); setError('');
     try {
-      const r = await fetch('/api/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, system: buildPriorExtractionSystem(), messages: [{ role: 'user', content: 'Extract domain summaries from this prior RN Recertification Narrative:\n\n' + priorNote }] }) });
-      const d = await r.json();
-      const text = d.content?.[0]?.text || '';
+      const text = await streamGenerate({
+        system: buildPriorExtractionSystem(),
+        messages: [{ role: 'user', content: 'Extract domain summaries from this prior RN Recertification Narrative:\n\n' + priorNote }],
+        max_tokens: 1000,
+      });
       if (text) {
         try {
           const parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
@@ -271,10 +273,11 @@ function RNPathway({ onBack, onBackHome, demoPatient }) {
     if (filledDomains === 0) { setError('Complete at least one decline domain.'); return; }
     setError(''); setLoading(true);
     try {
-      const r = await fetch('/api/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 4000, system: buildRNRecertSystem(inputs, priorSummaries), messages: [{ role: 'user', content: 'Generate the RN Recertification Narrative now.' }] }) });
-      const d = await r.json();
-      const text = (d.content?.[0]?.text || '').replace(/\*\*/g, '').replace(/\*/g, '');
+      const text = await streamGenerate({
+        system: buildRNRecertSystem(inputs, priorSummaries),
+        messages: [{ role: 'user', content: 'Generate the RN Recertification Narrative now.' }],
+        max_tokens: 4000,
+      });
       if (!text) throw new Error('Empty');
       setRnNarrative(text); setStage(2);
     } catch (e) { setError('Generation failed. Please try again.'); }
@@ -459,10 +462,11 @@ function F2FPathway({ onBack, onBackHome, demoPatient }) {
     if (!inputs.f2fDate.trim() || !inputs.f2fFindings.trim()) { setError('Date and clinical findings are required.'); return; }
     setError(''); setLoading(true);
     try {
-      const r = await fetch('/api/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 2000, system: buildF2FSystem(inputs), messages: [{ role: 'user', content: 'Generate the Face-to-Face Encounter Note now.' }] }) });
-      const d = await r.json();
-      const text = (d.content?.[0]?.text || '').replace(/\*\*/g, '').replace(/\*/g, '');
+      const text = await streamGenerate({
+        system: buildF2FSystem(inputs),
+        messages: [{ role: 'user', content: 'Generate the Face-to-Face Encounter Note now.' }],
+        max_tokens: 2000,
+      });
       if (!text) throw new Error('Empty');
       setF2fNote(text);
     } catch (e) { setError('Generation failed. Please try again.'); }
@@ -586,10 +590,11 @@ function MDPathway({ onBack, onBackHome, demoPatient }) {
     if (!rnNarrative.trim()) { setError('RN Recertification Narrative is required.'); return; }
     setError(''); setLoading(true);
     try {
-      const r = await fetch('/api/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 4000, system: buildMDRecertSystem(inputs, rnNarrative, f2fNote), messages: [{ role: 'user', content: 'Generate the Physician Recertification Note now.' }] }) });
-      const d = await r.json();
-      const text = (d.content?.[0]?.text || '').replace(/\*\*/g, '').replace(/\*/g, '');
+      const text = await streamGenerate({
+        system: buildMDRecertSystem(inputs, rnNarrative, f2fNote),
+        messages: [{ role: 'user', content: 'Generate the Physician Recertification Note now.' }],
+        max_tokens: 4000,
+      });
       if (!text) throw new Error('Empty');
       setMdNote(text);
     } catch (e) { setError('Generation failed. Please try again.'); }

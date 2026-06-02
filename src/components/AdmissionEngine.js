@@ -1,4 +1,5 @@
 'use client';
+import { streamGenerate } from '../lib/streamGenerate';
 import { useState, useRef } from 'react';
 import { C } from './tokens';
 import { Textarea, Input, Btn, VoiceBtn, DocOutput, TopNav, ErrorBox, Collapsible, ProgressLoader, EditableDraft, BackBtn, ProgressSteps, useUnsavedWarning, PageShell, DocModal } from './ui';
@@ -178,16 +179,11 @@ function DemoMode({ onBack, onBackHome }) {
     setLoading(true); setLoadingMsg('Summarizing chart documents...');
     try {
       const docText = droppedDocs.map(d => `=== ${d.type.toUpperCase()} (${d.date}) ===\n${d.content}`).join('\n\n');
-      const r = await fetch('/api/generate', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514', max_tokens: 2000,
-          system: buildRecordSummarySystem(),
-          messages: [{ role: 'user', content: `Summarize these medical records:\n\n${docText}` }]
-        })
+      const text = await streamGenerate({
+        system: buildRecordSummarySystem(),
+        messages: [{ role: 'user', content: `Summarize these medical records:\n\n${docText}` }],
+        max_tokens: 2000,
       });
-      const d = await r.json();
-      const text = (d.content?.[0]?.text || '').replace(/\*\*/g, '').replace(/\*/g, '');
       setRecordSummaries(text);
       setEncounter(patient.encounter);
       setStage('encounter');
@@ -204,16 +200,11 @@ function DemoMode({ onBack, onBackHome }) {
     setError(''); setLoading(true); setLoadingMsg('Generating Admission Narrative...');
     const docs = recordSummaries ? { summaries: recordSummaries } : buildDocs();
     try {
-      const r = await fetch('/api/generate', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514', max_tokens: 4000,
-          system: buildNarrativeSystem(patient.diagnosis, patient.secondaryDx, docs, encounter),
-          messages: [{ role: 'user', content: 'Generate the Admission Narrative now.' }]
-        })
+      const text = await streamGenerate({
+        system: buildNarrativeSystem(patient.diagnosis, patient.secondaryDx, docs, encounter),
+        messages: [{ role: 'user', content: 'Generate the Admission Narrative now.' }],
+        max_tokens: 4000,
       });
-      const d = await r.json();
-      const text = (d.content?.[0]?.text || '').replace(/\*\*/g, '').replace(/\*/g, '');
       if (!text) throw new Error('Empty');
       setNarrative(text); setStage('narrative');
     } catch (e) { setError('Generation failed. Please try again.'); }
@@ -225,16 +216,11 @@ function DemoMode({ onBack, onBackHome }) {
     if (!editRequest.trim()) return;
     setLoading(true); setLoadingMsg('Applying edits...');
     try {
-      const r = await fetch('/api/generate', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514', max_tokens: 4000,
-          system: buildNarrativeEditSystem(narrative, editRequest),
-          messages: [{ role: 'user', content: 'Apply the requested edits now.' }]
-        })
+      const text = await streamGenerate({
+        system: buildNarrativeEditSystem(narrative, editRequest),
+        messages: [{ role: 'user', content: 'Apply the requested edits now.' }],
+        max_tokens: 4000,
       });
-      const d = await r.json();
-      const text = (d.content?.[0]?.text || '').replace(/\*\*/g, '').replace(/\*/g, '');
       if (!text) throw new Error('Empty');
       setNarrative(text); setEditRequest('');
     } catch (e) { setError('Edit failed. Please try again.'); }
@@ -247,16 +233,11 @@ function DemoMode({ onBack, onBackHome }) {
     setLoading(true); setLoadingMsg('Generating Certificate of Terminal Illness...'); setCti(''); setStage('cti');
     const docs = buildDocs();
     try {
-      const r = await fetch('/api/generate', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514', max_tokens: 4000,
-          system: buildCTISystem(patient.diagnosis, patient.secondaryDx, docs, encounter, narrative),
-          messages: [{ role: 'user', content: 'Generate the Certificate of Terminal Illness now.' }]
-        })
+      const text = await streamGenerate({
+        system: buildCTISystem(patient.diagnosis, patient.secondaryDx, docs, encounter, narrative),
+        messages: [{ role: 'user', content: 'Generate the Certificate of Terminal Illness now.' }],
+        max_tokens: 4000,
       });
-      const d = await r.json();
-      const text = (d.content?.[0]?.text || '').replace(/\*\*/g, '').replace(/\*/g, '');
       if (!text) throw new Error('Empty');
       setCti(text);
     } catch (e) { setError('CTI generation failed. Please try again.'); setStage('narrative'); }
@@ -514,16 +495,11 @@ function ClinicalMode({ onBack, onBackHome }) {
         .filter(f => docs[f.key]?.trim())
         .map(f => `=== ${f.label.toUpperCase()} ===\n${docs[f.key]}`)
         .join('\n\n');
-      const r = await fetch('/api/generate', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514', max_tokens: 2000,
-          system: buildRecordSummarySystem(),
-          messages: [{ role: 'user', content: `Summarize these medical records:\n\n${docText}` }]
-        })
+      const text = await streamGenerate({
+        system: buildRecordSummarySystem(),
+        messages: [{ role: 'user', content: `Summarize these medical records:\n\n${docText}` }],
+        max_tokens: 2000,
       });
-      const d = await r.json();
-      const text = (d.content?.[0]?.text || '').replace(/\*\*/g, '').replace(/\*/g, '');
       setRecordSummaries(text);
       setStage(3);
     } catch (e) {
@@ -537,16 +513,11 @@ function ClinicalMode({ onBack, onBackHome }) {
     if (!encounter.trim()) { setError('Encounter narrative is required.'); return; }
     setError(''); setLoading(true); setLoadingMsg('Generating Admission Narrative...');
     try {
-      const r = await fetch('/api/generate', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514', max_tokens: 4000,
-          system: buildNarrativeSystem(primaryDx, secondaryDx, docs, encounter),
-          messages: [{ role: 'user', content: 'Generate the Admission Narrative now.' }]
-        })
+      const text = await streamGenerate({
+        system: buildNarrativeSystem(primaryDx, secondaryDx, docs, encounter),
+        messages: [{ role: 'user', content: 'Generate the Admission Narrative now.' }],
+        max_tokens: 4000,
       });
-      const d = await r.json();
-      const text = (d.content?.[0]?.text || '').replace(/\*\*/g, '').replace(/\*/g, '');
       if (!text) throw new Error('Empty');
       setNarrative(text); setStage(4);
     } catch (e) { setError('Generation failed. Please try again.'); }
@@ -558,16 +529,11 @@ function ClinicalMode({ onBack, onBackHome }) {
     if (!editRequest.trim()) return;
     setLoading(true); setLoadingMsg('Applying edits...');
     try {
-      const r = await fetch('/api/generate', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514', max_tokens: 4000,
-          system: buildNarrativeEditSystem(narrative, editRequest),
-          messages: [{ role: 'user', content: 'Apply the requested edits to the narrative now.' }]
-        })
+      const text = await streamGenerate({
+        system: buildNarrativeEditSystem(narrative, editRequest),
+        messages: [{ role: 'user', content: 'Apply the requested edits to the narrative now.' }],
+        max_tokens: 4000,
       });
-      const d = await r.json();
-      const text = (d.content?.[0]?.text || '').replace(/\*\*/g, '').replace(/\*/g, '');
       if (!text) throw new Error('Empty');
       setNarrative(text); setEditRequest('');
     } catch (e) { setError('Edit failed. Please try again.'); }
@@ -578,16 +544,11 @@ function ClinicalMode({ onBack, onBackHome }) {
   const generateCTI = async () => {
     setLoading(true); setLoadingMsg('Generating Certificate of Terminal Illness...'); setCti(''); setStage(5);
     try {
-      const r = await fetch('/api/generate', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514', max_tokens: 4000,
-          system: buildCTISystem(primaryDx, secondaryDx, docs, encounter, narrative),
-          messages: [{ role: 'user', content: 'Generate the Certificate of Terminal Illness now.' }]
-        })
+      const text = await streamGenerate({
+        system: buildCTISystem(primaryDx, secondaryDx, docs, encounter, narrative),
+        messages: [{ role: 'user', content: 'Generate the Certificate of Terminal Illness now.' }],
+        max_tokens: 4000,
       });
-      const d = await r.json();
-      const text = (d.content?.[0]?.text || '').replace(/\*\*/g, '').replace(/\*/g, '');
       if (!text) throw new Error('Empty');
       setCti(text);
     } catch (e) { setError('CTI generation failed. Please try again.'); setStage(4); }

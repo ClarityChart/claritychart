@@ -1,4 +1,5 @@
 'use client';
+import { streamGenerate } from '../lib/streamGenerate';
 import { useState, useRef } from 'react';
 import { C } from './tokens';
 import { TopNav, ErrorBox, EditableDraft, BackBtn, Btn } from './ui';
@@ -236,18 +237,11 @@ NURSES CLINICAL SUMMARY:
 ${form.narrative}`;
 
     try {
-      const res = await fetch('/api/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 4000,
-          system: SYSTEM_PROMPT,
-          messages: [{ role: 'user', content: userPrompt }]
-        })
+      const text = await streamGenerate({
+        system: SYSTEM_PROMPT,
+        messages: [{ role: 'user', content: userPrompt }],
+        max_tokens: 4000,
       });
-      const data = await res.json();
-      const text = data.content?.[0]?.text || '';
       if (!text) throw new Error('Empty response');
       setNoteOutput(text.replace(/\*\*/g, '').replace(/\*/g, ''));
       setStep(3);

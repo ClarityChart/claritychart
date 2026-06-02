@@ -34,6 +34,15 @@ export async function POST(request) {
     if (session?.user?.email) userId = session.user.email;
   } catch (e) {}
 
+  // Debug — log credential status (not the actual values)
+  console.log(JSON.stringify({
+    event: 'credential_check',
+    hasAccessKey: !!process.env.BEDROCK_ACCESS_KEY_ID,
+    hasSecretKey: !!process.env.BEDROCK_SECRET_ACCESS_KEY,
+    region: process.env.BEDROCK_REGION || 'us-east-1',
+    accessKeyLength: (process.env.BEDROCK_ACCESS_KEY_ID || '').length,
+  }));
+
   try {
     const bedrockBody = {
       anthropic_version: 'bedrock-2023-05-31',

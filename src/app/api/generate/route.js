@@ -42,7 +42,7 @@ export async function POST(request) {
     if (body.system) bedrockBody.system = body.system;
 
     const command = new InvokeModelWithResponseStreamCommand({
-      modelId: 'us.anthropic.claude-haiku-4-5',
+      modelId: 'us.anthropic.claude-haiku-4-5-20251001-v1:0',
       contentType: 'application/json',
       accept: 'application/json',
       body: JSON.stringify(bedrockBody),

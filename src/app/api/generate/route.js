@@ -4,17 +4,18 @@ import { cookies } from 'next/headers';
 
 export const maxDuration = 300;
 
-const bedrock = new BedrockRuntimeClient({
-  region: process.env.BEDROCK_REGION || 'us-east-1',
-  credentials: {
-    accessKeyId: process.env.BEDROCK_ACCESS_KEY_ID,
-    secretAccessKey: process.env.BEDROCK_SECRET_ACCESS_KEY,
-  },
-});
-
 export async function POST(request) {
   const body = await request.json();
   const timestamp = new Date().toISOString();
+
+  // Initialize Bedrock client inside the function so env vars are available at runtime
+  const bedrock = new BedrockRuntimeClient({
+    region: process.env.BEDROCK_REGION || 'us-east-1',
+    credentials: {
+      accessKeyId: process.env.BEDROCK_ACCESS_KEY_ID,
+      secretAccessKey: process.env.BEDROCK_SECRET_ACCESS_KEY,
+    },
+  });
 
   let userId = 'unauthenticated';
   try {

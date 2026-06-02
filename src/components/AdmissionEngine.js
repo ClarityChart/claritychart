@@ -207,7 +207,7 @@ function DemoMode({ onBack, onBackHome }) {
       const r = await fetch('/api/generate', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514', max_tokens: 8000,
+          model: 'claude-sonnet-4-20250514', max_tokens: 4000,
           system: buildNarrativeSystem(patient.diagnosis, patient.secondaryDx, docs, encounter),
           messages: [{ role: 'user', content: 'Generate the Admission Narrative now.' }]
         })
@@ -250,7 +250,7 @@ function DemoMode({ onBack, onBackHome }) {
       const r = await fetch('/api/generate', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514', max_tokens: 8000,
+          model: 'claude-sonnet-4-20250514', max_tokens: 4000,
           system: buildCTISystem(patient.diagnosis, patient.secondaryDx, docs, encounter, narrative),
           messages: [{ role: 'user', content: 'Generate the Certificate of Terminal Illness now.' }]
         })
@@ -540,7 +540,7 @@ function ClinicalMode({ onBack, onBackHome }) {
       const r = await fetch('/api/generate', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514', max_tokens: 8000,
+          model: 'claude-sonnet-4-20250514', max_tokens: 4000,
           system: buildNarrativeSystem(primaryDx, secondaryDx, docs, encounter),
           messages: [{ role: 'user', content: 'Generate the Admission Narrative now.' }]
         })
@@ -581,7 +581,7 @@ function ClinicalMode({ onBack, onBackHome }) {
       const r = await fetch('/api/generate', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514', max_tokens: 8000,
+          model: 'claude-sonnet-4-20250514', max_tokens: 4000,
           system: buildCTISystem(primaryDx, secondaryDx, docs, encounter, narrative),
           messages: [{ role: 'user', content: 'Generate the Certificate of Terminal Illness now.' }]
         })

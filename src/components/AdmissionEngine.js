@@ -184,6 +184,7 @@ function DemoMode({ onBack, onBackHome }) {
         messages: [{ role: 'user', content: `Summarize these medical records:\n\n${docText}` }],
         max_tokens: 2000,
       });
+      console.log('SUMMARIES LENGTH:', text?.length, 'PREVIEW:', text?.substring(0, 100));
       setRecordSummaries(text);
       setEncounter(patient.encounter);
       setStage('encounter');

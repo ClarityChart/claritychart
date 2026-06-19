@@ -515,7 +515,7 @@ function ClinicalMode({ onBack, onBackHome }) {
     setError(''); setLoading(true); setLoadingMsg('Generating Admission Narrative...');
     try {
       const text = await streamGenerate({
-        system: buildNarrativeSystem(primaryDx, secondaryDx, docs, encounter),
+        system: buildNarrativeSystem(primaryDx, secondaryDx, recordSummaries ? { summaries: recordSummaries } : docs, encounter),
         messages: [{ role: 'user', content: 'Generate the Admission Narrative now.' }],
         max_tokens: 4000,
       });

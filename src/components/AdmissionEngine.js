@@ -514,6 +514,7 @@ function ClinicalMode({ onBack, onBackHome }) {
     if (!encounter.trim()) { setError('Encounter narrative is required.'); return; }
     setError(''); setLoading(true); setLoadingMsg('Generating Admission Narrative...');
     try {
+      console.log('NARRATIVE DEBUG - recordSummaries length:', recordSummaries?.length, 'docs keys:', Object.keys(docs).filter(k => docs[k]?.trim()).length);
       const text = await streamGenerate({
         system: buildNarrativeSystem(primaryDx, secondaryDx, recordSummaries ? { summaries: recordSummaries } : docs, encounter),
         messages: [{ role: 'user', content: 'Generate the Admission Narrative now.' }],

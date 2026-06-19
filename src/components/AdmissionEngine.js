@@ -122,6 +122,7 @@ function PatientCard({ id, p, onClick }) {
 
 // v2 rebuild
 function DemoMode({ onBack, onBackHome }) {
+  const summariesRef = useRef('');
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [droppedDocs, setDroppedDocs] = useState([]);
   const [dragging, setDragging] = useState(null);
@@ -188,7 +189,10 @@ function DemoMode({ onBack, onBackHome }) {
       setRecordSummaries(text);
       setEncounter(patient.encounter);
       setStage('encounter');
+      // Store summaries in ref to ensure persistence across re-renders
+      summariesRef.current = text;
     } catch (e) {
+      summariesRef.current = '';
       setRecordSummaries('');
       setEncounter(patient?.encounter || '');
       setStage('encounter');
@@ -199,7 +203,8 @@ function DemoMode({ onBack, onBackHome }) {
   const generateNarrative = async () => {
     if (!patient) return;
     setError(''); setLoading(true); setLoadingMsg('Generating Admission Narrative...');
-    const docs = recordSummaries ? { summaries: recordSummaries } : buildDocs();
+    const effectiveSummaries = summariesRef.current || recordSummaries;
+    const docs = effectiveSummaries ? { summaries: effectiveSummaries } : buildDocs();
     try {
       const text = await streamGenerate({
         system: buildNarrativeSystem(patient.diagnosis, patient.secondaryDx, docs, encounter),

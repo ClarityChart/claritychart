@@ -1,7 +1,7 @@
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
-export const maxDuration = 300;
+export const maxDuration = 300; // cache-bust-v2
 
 export async function POST(request) {
   const body = await request.json();

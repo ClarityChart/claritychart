@@ -1,10 +1,15 @@
-// Generate utility - handles both streaming and JSON responses
-export async function streamGenerate({ system, messages, max_tokens = 4000 }) {
-  const response = await fetch('/api/generate', {
+// Generate utility - calls Anthropic API directly from browser
+export async function streamGenerate({ system, messages, max_tokens = 4000, model = 'claude-sonnet-4-6' }) {
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': process.env.NEXT_PUBLIC_ANTHROPIC_API_KEY,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true',
+    },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-6',
+      model,
       max_tokens,
       system,
       messages,
@@ -16,23 +21,7 @@ export async function streamGenerate({ system, messages, max_tokens = 4000 }) {
     throw new Error(err.error?.message || 'Generation failed');
   }
 
-  const contentType = response.headers.get('content-type') || '';
-  
-  if (contentType.includes('application/json')) {
-    // Standard JSON response (Anthropic API)
-    const data = await response.json();
-    if (data.error) throw new Error(data.error.message || 'Generation failed');
-    return (data.content?.[0]?.text || '').replace(/\*\*/g, '').replace(/\*/g, '');
-  } else {
-    // Streaming response (Bedrock)
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    let fullText = '';
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      fullText += decoder.decode(value, { stream: true });
-    }
-    return fullText.replace(/\*\*/g, '').replace(/\*/g, '');
-  }
+  const data = await response.json();
+  if (data.error) throw new Error(data.error.message || 'Generation failed');
+  return (data.content?.[0]?.text || '').replace(/\*\*/g, '').replace(/\*/g, '');
 }

@@ -1,0 +1,111 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  ClarityChart — Standalone AI Generation Lambda with Function URL.
+
+  WHY NOT API GATEWAY: API Gateway enforces a hard 29-second maximum
+  integration timeout for synchronous requests, identical to Amplify's Lambda
+  limit. Lambda Function URLs have no such restriction — they respect the full
+  Lambda timeout (up to 900 seconds). This stack creates a 300-second Lambda
+  fronted by a Function URL, called directly from the browser.
+
+Parameters:
+  AnthropicApiKey:
+    Type: String
+    NoEcho: true
+    Description: Anthropic API key (stored encrypted in Lambda environment)
+
+  SupabaseUrl:
+    Type: String
+    Description: "Supabase project URL (e.g. https://xxxx.supabase.co)"
+
+  SupabaseAnonKey:
+    Type: String
+    NoEcho: true
+    Description: Supabase public anon key (used to verify user tokens)
+
+  AllowedOrigin:
+    Type: String
+    Description: >
+      App origin for CORS — must match exactly (e.g. https://app.claritychart.com).
+      Use * only for initial testing; lock it down before clinical use.
+
+Resources:
+
+  # ── IAM Role ───────────────────────────────────────────────────────────────
+  GenerateLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: claritychart-generate-lambda-role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+
+  # ── Lambda Function ─────────────────────────────────────────────────────────
+  GenerateLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: claritychart-generate
+      Runtime: nodejs22.x
+      Handler: index.handler
+      Timeout: 300          # 5 minutes — handles longest Anthropic generations
+      MemorySize: 512
+      Role: !GetAtt GenerateLambdaRole.Arn
+      # Placeholder code — replaced by scripts/deploy-generate-lambda.sh
+      Code:
+        ZipFile: |
+          export const handler = async () => ({
+            statusCode: 200,
+            body: JSON.stringify({ text: 'placeholder — run deploy script' }),
+          });
+      Environment:
+        Variables:
+          ANTHROPIC_API_KEY: !Ref AnthropicApiKey
+          SUPABASE_URL: !Ref SupabaseUrl
+          SUPABASE_ANON_KEY: !Ref SupabaseAnonKey
+          ALLOWED_ORIGIN: !Ref AllowedOrigin
+
+  # ── Lambda Function URL ─────────────────────────────────────────────────────
+  # AuthType NONE — security is enforced in-code via Supabase JWT validation.
+  # Every request must carry a valid Bearer token before the Anthropic call runs.
+  GenerateLambdaUrl:
+    Type: AWS::Lambda::Url
+    Properties:
+      AuthType: NONE
+      TargetFunctionArn: !GetAtt GenerateLambda.Arn
+      Cors:
+        AllowCredentials: false
+        AllowHeaders:
+          - content-type
+          - authorization
+        AllowMethods:
+          - POST
+          - OPTIONS
+        AllowOrigins:
+          - !Ref AllowedOrigin
+        MaxAge: 86400
+
+  # Required so the public Internet can invoke a NONE-auth Function URL
+  GenerateLambdaUrlPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt GenerateLambda.Arn
+      Action: lambda:InvokeFunctionUrl
+      Principal: '*'
+      FunctionUrlAuthType: NONE
+
+Outputs:
+  FunctionUrl:
+    Value: !GetAtt GenerateLambdaUrl.FunctionUrl
+    Description: >
+      Lambda Function URL — copy this value and add it as
+      NEXT_PUBLIC_GENERATE_URL in your Amplify environment variables.
+
+  FunctionArn:
+    Value: !GetAtt GenerateLambda.Arn
+    Description: Lambda ARN (used by the deploy script)

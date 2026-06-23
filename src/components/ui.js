@@ -502,8 +502,6 @@ export function useUnsavedWarning(hasContent) {
     return () => window.removeEventListener('beforeunload', handler);
   }, [hasContent]);
 }
-// Mon Apr 20 08:15:32 PDT 2026
-
 // PageShell — consistent wrapper for every stage in every module
 export function PageShell({
   // Navigation

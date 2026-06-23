@@ -1,4 +1,3 @@
-// Generate utility
 export async function streamGenerate({ system, messages, max_tokens = 4000, model = 'claude-sonnet-4-6' }) {
   const response = await fetch('/api/generate', {
     method: 'POST',
@@ -6,18 +5,7 @@ export async function streamGenerate({ system, messages, max_tokens = 4000, mode
     body: JSON.stringify({ model, max_tokens, system, messages }),
   });
 
-  if (!response.ok) {
-    const err = await response.json().catch(() => ({}));
-    throw new Error(err.error?.message || 'Generation failed');
-  }
-
-  const reader = response.body.getReader();
-  const decoder = new TextDecoder();
-  let fullText = '';
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    fullText += decoder.decode(value, { stream: true });
-  }
-  return fullText.replace(/\*\*/g, '').replace(/\*/g, '');
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error?.message || 'Generation failed');
+  return (data.text || '').replace(/\*\*/g, '').replace(/\*/g, '');
 }

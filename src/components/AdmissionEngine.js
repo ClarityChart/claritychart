@@ -18,7 +18,6 @@ const DOC_FIELDS = [
   { key: 'palliativeCare', label: 'Palliative Care / Goals of Care Notes', placeholder: 'Paste palliative care or goals of care notes if available.' },
 ];
 
-// Map document types to form fields
 function docTypeToField(type) {
   const t = type.toLowerCase();
   if (t.includes('discharge')) return 'dischargeSummary';
@@ -31,7 +30,7 @@ function docTypeToField(type) {
 }
 
 export default function AdmissionEngine({ onBack }) {
-  const [mode, setMode] = useState(null); // null=choose, 'demo', 'clinical'
+  const [mode, setMode] = useState(null);
 
   if (mode === 'demo') return <DemoMode onBack={() => setMode(null)} onBackHome={onBack} />;
   if (mode === 'clinical') return <ClinicalMode onBack={() => setMode(null)} onBackHome={onBack} />;
@@ -103,8 +102,8 @@ function PatientCard({ id, p, onClick }) {
       style={{
         display: 'flex', alignItems: 'center', gap: '20px',
         padding: '20px 24px',
-        background: hov ? '#344f6e' : '#2d4460',
-        border: `1px solid ${hov ? 'rgba(196,168,130,0.6)' : 'rgba(196,168,130,0.3)'}`,
+        background: hov ? C.bgCardHover : C.bgCard,
+        border: `1px solid ${hov ? C.borderHover : C.border}`,
         borderRadius: '6px', cursor: 'pointer', transition: 'all 0.15s',
       }}
     >
@@ -115,12 +114,11 @@ function PatientCard({ id, p, onClick }) {
         {p.snapshot && <div style={{ fontSize: '13px', color: 'rgba(196,168,130,0.5)', fontFamily: C.mono }}>{p.snapshot}</div>}
       </div>
       <div style={{ fontSize: '14px', color: 'rgba(196,168,130,0.6)', fontFamily: C.mono }}>{p.documents.length} docs</div>
-      <div style={{ fontSize: '20px', color: hov ? '#d4b896' : 'rgba(196,168,130,0.4)' }}>›</div>
+      <div style={{ fontSize: '20px', color: hov ? C.gold : C.border }}>›</div>
     </div>
   );
 }
 
-// v2 rebuild
 function DemoMode({ onBack, onBackHome }) {
   const summariesRef = useRef('');
   const [selectedPatient, setSelectedPatient] = useState(null);
@@ -135,7 +133,7 @@ function DemoMode({ onBack, onBackHome }) {
   const [loading, setLoading] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState('');
   const [error, setError] = useState('');
-  const [stage, setStage] = useState('select'); // select | build | encounter | narrative | cti
+  const [stage, setStage] = useState('select');
   const [viewingDoc, setViewingDoc] = useState(null);
 
   const patient = selectedPatient ? DEMO_PATIENTS[selectedPatient] : null;
@@ -144,6 +142,7 @@ function DemoMode({ onBack, onBackHome }) {
     setSelectedPatient(id);
     setDroppedDocs([]); setRecordSummaries(''); setEncounter('');
     setNarrative(''); setEditRequest(''); setCti(''); setError('');
+    summariesRef.current = '';
     setStage('build');
   };
 
@@ -164,7 +163,6 @@ function DemoMode({ onBack, onBackHome }) {
     if (patient) setDroppedDocs([...patient.documents]);
   };
 
-  // Build docs object from dropped documents
   const buildDocs = () => {
     const docs = { dischargeSummary: '', hp: '', palliativeCare: '', specialistNote: '', woundCare: '', labs: '', imaging: '' };
     droppedDocs.forEach(doc => {
@@ -174,7 +172,6 @@ function DemoMode({ onBack, onBackHome }) {
     return docs;
   };
 
-  // Stage build -> encounter: summarize records
   const summarizeAndContinue = async () => {
     if (!patient || droppedDocs.length === 0) { setStage('encounter'); return; }
     setLoading(true); setLoadingMsg('Summarizing chart documents...');
@@ -185,12 +182,10 @@ function DemoMode({ onBack, onBackHome }) {
         messages: [{ role: 'user', content: `Summarize these medical records:\n\n${docText}` }],
         max_tokens: 2000,
       });
-      console.log('SUMMARIES LENGTH:', text?.length, 'PREVIEW:', text?.substring(0, 100));
+      summariesRef.current = text;
       setRecordSummaries(text);
       setEncounter(patient.encounter);
       setStage('encounter');
-      // Store summaries in ref to ensure persistence across re-renders
-      summariesRef.current = text;
     } catch (e) {
       summariesRef.current = '';
       setRecordSummaries('');
@@ -199,7 +194,6 @@ function DemoMode({ onBack, onBackHome }) {
     } finally { setLoading(false); setLoadingMsg(''); }
   };
 
-  // Generate narrative
   const generateNarrative = async () => {
     if (!patient) return;
     setError(''); setLoading(true); setLoadingMsg('Generating Admission Narrative...');
@@ -217,7 +211,6 @@ function DemoMode({ onBack, onBackHome }) {
     finally { setLoading(false); setLoadingMsg(''); }
   };
 
-  // Apply edits
   const applyEdits = async () => {
     if (!editRequest.trim()) return;
     setLoading(true); setLoadingMsg('Applying edits...');
@@ -233,7 +226,6 @@ function DemoMode({ onBack, onBackHome }) {
     finally { setLoading(false); setLoadingMsg(''); }
   };
 
-  // Generate CTI
   const generateCTI = async () => {
     if (!patient) return;
     setLoading(true); setLoadingMsg('Generating Certificate of Terminal Illness...'); setCti(''); setStage('cti');
@@ -254,16 +246,13 @@ function DemoMode({ onBack, onBackHome }) {
     setStage('select'); setSelectedPatient(null); setDroppedDocs([]);
     setRecordSummaries(''); setEncounter(''); setNarrative('');
     setEditRequest(''); setCti(''); setError('');
+    summariesRef.current = '';
   };
 
-  const stageLabels = { select: 1, build: 2, encounter: 3, narrative: 4, cti: 5 };
   const stageTitles = ['Patient', 'Documents', 'Encounter', 'Narrative', 'CTI'];
-  const currentStageNum = stageLabels[stage] || 1;
+  const stageIndex = { select: 0, build: 1, encounter: 2, narrative: 3, cti: 4 };
+  const currentStageIndex = stageIndex[stage] ?? 0;
 
-  const demoTitles = ['Documents', 'Encounter', 'Narrative', 'CTI'];
-  const demoStageMap = { select: 0, build: 0, encounter: 1, narrative: 2, cti: 3 };
-  const demoCurrentStep = demoStageMap[stage] !== undefined ? demoStageMap[stage] : 0;
-  if (typeof window !== 'undefined') console.log('Stage:', stage, 'CurrentStep:', demoCurrentStep);
   const demoTitlesDisplay = {
     select: 'Select Demo Patient',
     build: patient?.name + ' — Documents',
@@ -284,12 +273,11 @@ function DemoMode({ onBack, onBackHome }) {
       onHome={onBackHome}
       moduleName="Admission Engine"
       badge="DEMO MODE"
-      steps={stage !== 'select' ? demoTitles : null}
-      currentStep={demoCurrentStep}
+      steps={stageTitles}
+      currentStep={currentStageIndex}
       onStepClick={(i) => {
-        const stageArr = ['build', 'encounter', 'narrative', 'cti'];
-        console.log('Step clicked:', i, 'current:', demoCurrentStep, 'target:', stageArr[i]);
-        if (i < demoCurrentStep) setStage(stageArr[i]);
+        const stageArr = ['select', 'build', 'encounter', 'narrative', 'cti'];
+        if (i < currentStageIndex) setStage(stageArr[i]);
       }}
       title={demoTitlesDisplay[stage]}
       onBack={stage !== 'select' ? () => setStage(demoBackTargets[stage]) : onBack}
@@ -297,23 +285,11 @@ function DemoMode({ onBack, onBackHome }) {
       primaryAction={!loading && demoPrimaryActions[stage]?.action}
       primaryLabel={demoPrimaryActions[stage]?.label}
       primaryDisabled={demoPrimaryActions[stage]?.disabled}
-      secondaryAction={stage === 'narrative' ? reset : stage === 'cti' ? reset : null}
-      secondaryLabel={stage === 'narrative' ? 'New Patient' : stage === 'cti' ? 'New Patient' : null}
+      secondaryAction={stage === 'narrative' || stage === 'cti' ? reset : null}
+      secondaryLabel={stage === 'narrative' || stage === 'cti' ? 'New Patient' : null}
     >
       <style>{`.doc-card{transition:all 0.15s;cursor:grab}.doc-card:hover{border-color:rgba(196,168,130,0.4)!important;background:rgba(196,168,130,0.08)!important}`}</style>
       <div>
-
-        {stage !== 'select' && (
-          <ProgressSteps
-            steps={stageTitles}
-            current={currentStageNum - 1}
-            onStepClick={(i) => {
-              const stageMap = ['select', 'build', 'encounter', 'narrative', 'cti'];
-              if (i + 1 < currentStageNum) setStage(stageMap[i + 1]);
-            }}
-          />
-        )}
-
         <ErrorBox message={error} />
 
         {loading && (
@@ -391,7 +367,6 @@ function DemoMode({ onBack, onBackHome }) {
                 </div>
               </div>
             </div>
-
           </div>
         )}
 
@@ -420,7 +395,6 @@ function DemoMode({ onBack, onBackHome }) {
               <VoiceBtn onTranscript={t => setEncounter(p => p ? p + ' ' + t : t)} />
             </div>
             <Textarea value={encounter} onChange={setEncounter} placeholder="Describe findings from the admission visit..." rows={12} />
-
           </div>
         )}
 
@@ -438,7 +412,6 @@ function DemoMode({ onBack, onBackHome }) {
                 <Btn variant="secondary" onClick={applyEdits} disabled={!editRequest.trim()}>Apply Edits</Btn>
               </div>
             </div>
-
           </div>
         )}
 
@@ -458,19 +431,16 @@ function DemoMode({ onBack, onBackHome }) {
                 </div>
               </div>
             )}
-            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '24px' }}>
-              <BackBtn onClick={() => setStage('narrative')} label="Narrative" />
-              <Btn variant="secondary" onClick={reset}>New Patient</Btn>
-            </div>
           </div>
         )}
-
       </div>
       <DocModal doc={viewingDoc} onClose={() => setViewingDoc(null)} />
     </PageShell>
   );
 }
+
 function ClinicalMode({ onBack, onBackHome }) {
+  const summariesRef = useRef('');
   const [stage, setStage] = useState(1);
   const [primaryDx, setPrimaryDx] = useState('');
   const [secondaryDx, setSecondaryDx] = useState('');
@@ -488,11 +458,11 @@ function ClinicalMode({ onBack, onBackHome }) {
     setStage(1); setPrimaryDx(''); setSecondaryDx('');
     setDocs(EMPTY_DOCS); setRecordSummaries(''); setEncounter('');
     setNarrative(''); setEditRequest(''); setCti(''); setError('');
+    summariesRef.current = '';
   };
 
   const docCount = Object.values(docs).filter(v => v.trim()).length;
 
-  // Stage 2 -> 3: summarize records automatically
   const summarizeAndContinue = async () => {
     if (docCount === 0) { setStage(3); return; }
     setLoading(true); setLoadingMsg('Summarizing uploaded records...');
@@ -506,21 +476,20 @@ function ClinicalMode({ onBack, onBackHome }) {
         messages: [{ role: 'user', content: `Summarize these medical records:\n\n${docText}` }],
         max_tokens: 2000,
       });
+      summariesRef.current = text;
       setRecordSummaries(text);
       setStage(3);
     } catch (e) {
-      console.log('Summarize error:', e);
+      summariesRef.current = '';
       setRecordSummaries('');
       setStage(3);
     } finally { setLoading(false); setLoadingMsg(''); }
   };
 
-  // Stage 3 -> 4: generate admission narrative
-  const generateNarrative = async (summariesOverride) => {
+  const generateNarrative = async () => {
     if (!encounter.trim()) { setError('Encounter narrative is required.'); return; }
     setError(''); setLoading(true); setLoadingMsg('Generating Admission Narrative...');
-    const effectiveSummaries = summariesOverride || recordSummaries;
-    console.log('NARRATIVE DEBUG - effectiveSummaries length:', effectiveSummaries?.length);
+    const effectiveSummaries = summariesRef.current || recordSummaries;
     try {
       const text = await streamGenerate({
         system: buildNarrativeSystem(primaryDx, secondaryDx, effectiveSummaries ? { summaries: effectiveSummaries } : docs, encounter),
@@ -533,7 +502,6 @@ function ClinicalMode({ onBack, onBackHome }) {
     finally { setLoading(false); setLoadingMsg(''); }
   };
 
-  // Stage 4: apply edits to narrative
   const applyEdits = async () => {
     if (!editRequest.trim()) return;
     setLoading(true); setLoadingMsg('Applying edits...');
@@ -549,7 +517,6 @@ function ClinicalMode({ onBack, onBackHome }) {
     finally { setLoading(false); setLoadingMsg(''); }
   };
 
-  // Stage 4 -> 5: generate CTI
   const generateCTI = async () => {
     setLoading(true); setLoadingMsg('Generating Certificate of Terminal Illness...'); setCti(''); setStage(5);
     try {
@@ -566,187 +533,176 @@ function ClinicalMode({ onBack, onBackHome }) {
 
   const stageLabels = ['Diagnosis', 'Records', 'Encounter', 'Narrative', 'CTI'];
 
-  return (
-    <div style={{ minHeight: '100vh', backgroundColor: C.bg, fontFamily: C.serif, color: C.text }}>
-      <style>{`textarea::placeholder,input::placeholder{color:rgba(196,168,130,0.3)}textarea:focus,input:focus{outline:none}::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:rgba(196,168,130,0.2);border-radius:3px}@keyframes bounce{0%,80%,100%{transform:scale(0.6);opacity:0.4}40%{transform:scale(1);opacity:1}}
-        @keyframes voicePulse{0%,100%{box-shadow:0 0 0 2px rgba(220,80,80,0.3)}50%{box-shadow:0 0 0 5px rgba(220,80,80,0.1)}}`}</style>
-      <div style={{ maxWidth: '860px', margin: '0 auto', padding: '0 28px 80px' }}>
+  const clinicalTitles = {
+    1: 'Diagnosis',
+    2: 'Upload Records',
+    3: 'Admission Encounter',
+    4: 'Admission Narrative',
+    5: 'Certificate of Terminal Illness',
+  };
 
-        <div style={{ padding: '28px 0 24px', borderBottom: `1px solid ${C.border}`, marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-          <div>
-            <TopNav onHome={onBack} moduleName='Admission Engine' />
-            <div style={{ fontSize: '16px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '4px' }}>CLINICAL MODE</div>
-            <div style={{ fontSize: 'clamp(30px,2.8vw,36px)', color: '#f0e8dc', fontWeight: '800', letterSpacing: '-0.5px', fontFamily: 'Georgia, serif' }}>
-              {stage === 1 && 'Diagnosis'}
-              {stage === 2 && 'Upload Records'}
-              {stage === 3 && 'Admission Encounter'}
-              {stage === 4 && 'Admission Narrative'}
-              {stage === 5 && 'Certificate of Terminal Illness'}
-            </div>
+  const clinicalPrimary = {
+    1: { action: () => { setError(''); setStage(2); }, label: 'Continue → Records', disabled: !primaryDx.trim() },
+    2: { action: summarizeAndContinue, label: docCount > 0 ? 'Summarize Records & Continue →' : 'Continue → Encounter' },
+    3: { action: generateNarrative, label: 'Generate Admission Narrative →', disabled: !encounter.trim() },
+    4: { action: generateCTI, label: 'Create Certificate of Terminal Illness →' },
+  };
+
+  const clinicalBack = {
+    1: onBack,
+    2: () => setStage(1),
+    3: () => setStage(2),
+    4: () => setStage(1),
+    5: () => setStage(4),
+  };
+
+  const clinicalBackLabel = {
+    1: 'Admission Engine',
+    2: 'Diagnosis',
+    3: 'Records',
+    4: 'Edit Inputs',
+    5: 'Narrative',
+  };
+
+  const clinicalSecondary = {
+    4: { action: reset, label: 'New Admission' },
+    5: { action: reset, label: 'New Admission' },
+  };
+
+  return (
+    <PageShell
+      onHome={onBackHome}
+      moduleName="Admission Engine"
+      badge="CLINICAL MODE"
+      steps={stageLabels}
+      currentStep={stage - 1}
+      onStepClick={(i) => { if (i + 1 < stage) setStage(i + 1); }}
+      title={clinicalTitles[stage]}
+      onBack={clinicalBack[stage]}
+      backLabel={clinicalBackLabel[stage]}
+      primaryAction={!loading && clinicalPrimary[stage]?.action}
+      primaryLabel={clinicalPrimary[stage]?.label}
+      primaryDisabled={clinicalPrimary[stage]?.disabled}
+      secondaryAction={clinicalSecondary[stage]?.action}
+      secondaryLabel={clinicalSecondary[stage]?.label}
+    >
+      <style>{`textarea::placeholder,input::placeholder{color:rgba(196,168,130,0.3)}textarea:focus,input:focus{outline:none}::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:rgba(196,168,130,0.2);border-radius:3px}@keyframes voicePulse{0%,100%{box-shadow:0 0 0 2px rgba(220,80,80,0.3)}50%{box-shadow:0 0 0 5px rgba(220,80,80,0.1)}}`}</style>
+
+      <ErrorBox message={error} />
+
+      {loading && (
+        <ProgressLoader
+          message={loadingMsg}
+          steps={['Analyzing records', 'Generating narrative', 'Creating CTI']}
+          currentStep={loadingMsg.includes('Summariz') ? 0 : loadingMsg.includes('Narrative') ? 1 : loadingMsg.includes('CTI') || loadingMsg.includes('Certificate') ? 2 : 0}
+        />
+      )}
+
+      {stage === 1 && !loading && (
+        <div>
+          <div style={{ background: 'rgba(196,168,130,0.05)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '14px 18px', marginBottom: '24px', fontSize: '17px', color: '#f0e8dc', fontFamily: C.sans, fontWeight: '600', lineHeight: 1.6 }}>
+            The physician determines the primary terminal diagnosis. ClarityChart organizes all documentation around this diagnosis.
           </div>
-          <div style={{ display: 'flex', gap: '10px' }}>
-            {stage > 1 && <Btn variant="ghost" onClick={reset}>Reset</Btn>}
+          <div style={{ fontSize: '15px', color: C.gold, fontFamily: C.mono, letterSpacing: '2px', marginBottom: '8px' }}>PRIMARY TERMINAL DIAGNOSIS <span style={{ color: '#e07070' }}>*</span></div>
+          <Input value={primaryDx} onChange={setPrimaryDx} placeholder="e.g., Chronic diastolic heart failure (HFpEF), end-stage" />
+          <div style={{ fontSize: '17px', color: '#f0e8dc', fontFamily: C.sans, fontWeight: '600', letterSpacing: '2px', marginTop: '22px', marginBottom: '8px' }}>SECONDARY / CONTRIBUTING DIAGNOSES</div>
+          <Textarea value={secondaryDx} onChange={setSecondaryDx} placeholder="e.g., CKD stage 4, Type 2 diabetes mellitus, hypertension..." rows={3} />
+        </div>
+      )}
+
+      {stage === 2 && !loading && (
+        <div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
+            <div style={{ fontSize: '17px', color: C.gold, fontStyle: 'italic' }}>Paste text from available records. All fields optional. Include dates where possible.</div>
+            <div style={{ fontSize: '15px', fontFamily: C.mono, color: docCount > 0 ? C.green : C.goldDim }}>{docCount}/{DOC_FIELDS.length} loaded</div>
+          </div>
+          {DOC_FIELDS.map(({key, label, placeholder}) => (
+            <div key={key} style={{ marginBottom: '20px' }}>
+              <div style={{ fontSize: '15px', fontFamily: C.mono, letterSpacing: '1.5px', color: docs[key]?.trim() ? C.gold : C.textDim, marginBottom: '6px' }}>
+                {docs[key]?.trim() ? '✓ ' : '○ '}{label.toUpperCase()}
+              </div>
+              <Textarea value={docs[key] || ''} onChange={v => setDocs(d => ({...d,[key]:v}))} placeholder={placeholder} rows={docs[key]?.trim() ? 4 : 2} mono />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {stage === 3 && !loading && (
+        <div>
+          <div style={{ background: 'rgba(196,168,130,0.04)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '14px 18px', marginBottom: '24px' }}>
+            <div style={{ fontSize: '16px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '10px' }}>DIAGNOSES</div>
+            <div style={{ fontSize: '17px', color: C.text, marginBottom: '4px' }}><span style={{ color: C.goldDim, fontSize: '15px', fontFamily: C.mono }}>Primary: </span>{primaryDx}</div>
+            {secondaryDx && <div style={{ fontSize: '19px', color: '#c8b8a8', fontWeight: '400', marginTop: '4px' }}><span style={{ color: C.goldDim, fontSize: '15px', fontFamily: C.mono }}>Secondary: </span>{secondaryDx}</div>}
+          </div>
+
+          {recordSummaries && (
+            <div style={{ background: 'rgba(74,144,164,0.06)', border: `1px solid ${C.blueBorder}`, borderRadius: '2px', padding: '16px 18px', marginBottom: '24px' }}>
+              <div style={{ fontSize: '16px', letterSpacing: '2px', color: C.blue, fontFamily: C.mono, marginBottom: '12px' }}>RECORD SUMMARIES</div>
+              {recordSummaries.split('\n').map((line, i) => {
+                const isHeader = line.startsWith('[') && line.endsWith(']');
+                if (isHeader) return <div key={i} style={{ fontSize: '15px', color: C.gold, fontFamily: C.mono, letterSpacing: '1px', marginTop: '14px', marginBottom: '4px' }}>{line}</div>;
+                if (!line.trim()) return <div key={i} style={{ height: '4px' }} />;
+                return <div key={i} style={{ fontSize: '19px', color: '#c8b8a8', fontWeight: '400', lineHeight: 1.6 }}>{line}</div>;
+              })}
+            </div>
+          )}
+
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+            <div style={{ fontSize: '15px', fontFamily: C.mono, letterSpacing: '2px', color: C.gold }}>
+              ADMISSION ENCOUNTER NARRATIVE <span style={{ color: '#e07070' }}>*</span>
+            </div>
+            <VoiceBtn onTranscript={t => setEncounter(p => p ? p + ' ' + t : t)} />
+          </div>
+          <Textarea value={encounter} onChange={setEncounter} placeholder="Describe findings from the admission visit — functional assessment, systems review, goals of care discussion, FAST/PPS/KPS scores, family present..." rows={12} />
+        </div>
+      )}
+
+      {stage === 4 && !loading && (
+        <div>
+          <Collapsible title="Transcribed Encounter Narrative" defaultOpen={false}>
+            <div style={{ background: 'rgba(10,20,32,0.8)', borderRadius: '2px', padding: '14px 16px', maxHeight: '200px', overflowY: 'auto', fontSize: '19px', color: '#c8b8a8', fontWeight: '400', lineHeight: 1.7, fontFamily: C.serif, whiteSpace: 'pre-wrap' }}>
+              {encounter}
+            </div>
+          </Collapsible>
+
+          {narrative && (
+            <div style={{ marginBottom: '28px' }}>
+              <DocOutput title="Admission Narrative — Draft" content={narrative} />
+            </div>
+          )}
+
+          <div style={{ marginBottom: '24px' }}>
+            <div style={{ fontSize: '15px', color: C.gold, fontFamily: C.mono, letterSpacing: '2px', marginBottom: '8px' }}>REQUEST EDITS</div>
+            <div style={{ fontSize: '17px', color: C.gold, marginBottom: '8px', fontStyle: 'italic' }}>
+              Describe any changes needed — the AI will revise the narrative accordingly.
+            </div>
+            <Textarea value={editRequest} onChange={setEditRequest} placeholder="e.g., Change the weight to 118 lbs. Add that patient has a stage 2 sacral wound. Remove the mention of prior hospitalization in 2024..." rows={4} />
+            <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'flex-end' }}>
+              <Btn variant="secondary" onClick={applyEdits} disabled={!editRequest.trim()}>Apply Edits</Btn>
+            </div>
           </div>
         </div>
+      )}
 
-        <ProgressSteps
-            steps={stageLabels}
-            current={Math.min(stage - 1, stageLabels.length - 1)}
-            onStepClick={(i) => { if (i + 1 < stage) setStage(i + 1); }}
-          />
+      {stage === 5 && !loading && (
+        <div>
+          {cti && <DocOutput title="Certificate of Terminal Illness" content={cti} />}
 
-        <ErrorBox message={error} />
-
-        {loading && (
-          <ProgressLoader
-            message={loadingMsg}
-            steps={['Analyzing records', 'Generating narrative', 'Creating CTI']}
-            currentStep={loadingMsg.includes('Summariz') ? 0 : loadingMsg.includes('Narrative') ? 1 : loadingMsg.includes('CTI') || loadingMsg.includes('Certificate') ? 2 : 0}
-          />
-        )}
-
-        {stage === 1 && !loading && (
-          <div>
-            <div style={{ background: 'rgba(196,168,130,0.05)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '14px 18px', marginBottom: '24px', fontSize: '17px', color: '#f0e8dc', fontFamily: C.sans, fontWeight: '600', lineHeight: 1.6 }}>
-              The physician determines the primary terminal diagnosis. ClarityChart organizes all documentation around this diagnosis.
-            </div>
-            <div style={{ fontSize: '15px', color: C.gold, fontFamily: C.mono, letterSpacing: '2px', marginBottom: '8px' }}>PRIMARY TERMINAL DIAGNOSIS <span style={{ color: '#e07070' }}>*</span></div>
-            <Input value={primaryDx} onChange={setPrimaryDx} placeholder="e.g., Chronic diastolic heart failure (HFpEF), end-stage" />
-            <div style={{ fontSize: '17px', color: '#f0e8dc', fontFamily: C.sans, fontWeight: '600', letterSpacing: '2px', marginTop: '22px', marginBottom: '8px' }}>SECONDARY / CONTRIBUTING DIAGNOSES</div>
-            <Textarea value={secondaryDx} onChange={setSecondaryDx} placeholder="e.g., CKD stage 4, Type 2 diabetes mellitus, hypertension..." rows={3} />
-            <div style={{ marginTop: '28px', display: 'flex', justifyContent: 'flex-end' }}>
-              <Btn onClick={() => { if (!primaryDx.trim()) { setError('Primary diagnosis is required.'); return; } setError(''); setStage(2); }}>Continue → Records</Btn>
-            </div>
-          </div>
-        )}
-
-        {stage === 2 && !loading && (
-          <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-              <div style={{ fontSize: '17px', color: C.gold, fontStyle: 'italic' }}>Paste text from available records. All fields optional. Include dates where possible.</div>
-              <div style={{ fontSize: '15px', fontFamily: C.mono, color: docCount > 0 ? C.green : C.goldDim }}>{docCount}/{DOC_FIELDS.length} loaded</div>
-            </div>
-            {DOC_FIELDS.map(({key, label, placeholder}) => (
-              <div key={key} style={{ marginBottom: '20px' }}>
-                <div style={{ fontSize: '15px', fontFamily: C.mono, letterSpacing: '1.5px', color: docs[key]?.trim() ? C.gold : C.textDim, marginBottom: '6px' }}>
-                  {docs[key]?.trim() ? '✓ ' : '○ '}{label.toUpperCase()}
-                </div>
-                <Textarea value={docs[key] || ''} onChange={v => setDocs(d => ({...d,[key]:v}))} placeholder={placeholder} rows={docs[key]?.trim() ? 4 : 2} mono />
-              </div>
-            ))}
-            <div style={{ marginTop: '28px', display: 'flex', justifyContent: 'space-between' }}>
-              <BackBtn onClick={() => setStage(1)} label="Diagnosis" />
-              <Btn onClick={summarizeAndContinue}>
-                {docCount > 0 ? 'Summarize Records & Continue →' : 'Continue → Encounter'}
-              </Btn>
-            </div>
-          </div>
-        )}
-
-        {stage === 3 && !loading && (
-          <div>
-            {/* Diagnoses summary */}
-            <div style={{ background: 'rgba(196,168,130,0.04)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '14px 18px', marginBottom: '24px' }}>
-              <div style={{ fontSize: '16px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '10px' }}>DIAGNOSES</div>
-              <div style={{ fontSize: '17px', color: C.text, marginBottom: '4px' }}><span style={{ color: C.goldDim, fontSize: '15px', fontFamily: C.mono }}>Primary: </span>{primaryDx}</div>
-              {secondaryDx && <div style={{ fontSize: '19px', color: '#c8b8a8', fontWeight: '400', marginTop: '4px' }}><span style={{ color: C.goldDim, fontSize: '15px', fontFamily: C.mono }}>Secondary: </span>{secondaryDx}</div>}
-            </div>
-
-            {/* Record summaries */}
-            {recordSummaries && (
-              <div style={{ background: 'rgba(74,144,164,0.06)', border: `1px solid ${C.blueBorder}`, borderRadius: '2px', padding: '16px 18px', marginBottom: '24px' }}>
-                <div style={{ fontSize: '16px', letterSpacing: '2px', color: C.blue, fontFamily: C.mono, marginBottom: '12px' }}>RECORD SUMMARIES</div>
-                {recordSummaries.split('\n').map((line, i) => {
-                  const isHeader = line.startsWith('[') && line.endsWith(']');
-                  if (isHeader) return <div key={i} style={{ fontSize: '15px', color: C.gold, fontFamily: C.mono, letterSpacing: '1px', marginTop: '14px', marginBottom: '4px' }}>{line}</div>;
-                  if (!line.trim()) return <div key={i} style={{ height: '4px' }} />;
-                  return <div key={i} style={{ fontSize: '19px', color: '#c8b8a8', fontWeight: '400', lineHeight: 1.6 }}>{line}</div>;
+          {narrative && (
+            <div style={{ marginTop: '28px' }}>
+              <div style={{ fontSize: '16px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '12px' }}>ADMISSION NARRATIVE — FOR REFERENCE</div>
+              <div style={{ background: 'rgba(10,20,32,0.7)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '20px 24px', maxHeight: '400px', overflowY: 'auto', fontFamily: C.serif }}>
+                {narrative.split('\n').map((line, i) => {
+                  const isHeader = /^[A-Z][A-Z\s\/\(\)\-,]{4,}$/.test(line.trim()) && line.trim().length > 3;
+                  if (isHeader) return <div key={i} style={{ color: C.gold, fontFamily: C.mono, fontSize: '15px', letterSpacing: '2px', marginTop: '18px', marginBottom: '5px', paddingBottom: '4px', borderBottom: `1px solid rgba(196,168,130,0.12)` }}>{line}</div>;
+                  if (!line.trim()) return <div key={i} style={{ height: '6px' }} />;
+                  return <div key={i} style={{ color: C.textDim, fontSize: '17px', lineHeight: 1.75 }}>{line}</div>;
                 })}
               </div>
-            )}
-
-            {/* Encounter narrative */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-              <div style={{ fontSize: '15px', fontFamily: C.mono, letterSpacing: '2px', color: C.gold }}>
-                ADMISSION ENCOUNTER NARRATIVE <span style={{ color: '#e07070' }}>*</span>
-              </div>
-              <VoiceBtn onTranscript={t => setEncounter(p => p ? p + ' ' + t : t)} />
             </div>
-            <Textarea value={encounter} onChange={setEncounter} placeholder="Describe findings from the admission visit — functional assessment, systems review, goals of care discussion, FAST/PPS/KPS scores, family present..." rows={12} />
-
-            <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'space-between' }}>
-              <BackBtn onClick={() => setStage(2)} label="Records" />
-              <Btn onClick={generateNarrative} disabled={!encounter.trim()} style={{ padding: '12px 32px' }}>Generate Admission Narrative →</Btn>
-            </div>
-          </div>
-        )}
-
-        {stage === 4 && !loading && (
-          <div>
-            {/* Transcribed encounter - collapsible */}
-            <Collapsible title="Transcribed Encounter Narrative" defaultOpen={false}>
-              <div style={{ background: 'rgba(10,20,32,0.8)', borderRadius: '2px', padding: '14px 16px', maxHeight: '200px', overflowY: 'auto', fontSize: '19px', color: '#c8b8a8', fontWeight: '400', lineHeight: 1.7, fontFamily: C.serif, whiteSpace: 'pre-wrap' }}>
-                {encounter}
-              </div>
-            </Collapsible>
-
-            {/* Drafted narrative */}
-            {narrative && (
-              <div style={{ marginBottom: '28px' }}>
-                <DocOutput title="Admission Narrative — Draft" content={narrative} />
-              </div>
-            )}
-
-            {/* Edit request box */}
-            <div style={{ marginBottom: '24px' }}>
-              <div style={{ fontSize: '15px', color: C.gold, fontFamily: C.mono, letterSpacing: '2px', marginBottom: '8px' }}>REQUEST EDITS</div>
-              <div style={{ fontSize: '17px', color: C.gold, marginBottom: '8px', fontStyle: 'italic' }}>
-                Describe any changes needed — the AI will revise the narrative accordingly.
-              </div>
-              <Textarea value={editRequest} onChange={setEditRequest} placeholder="e.g., Change the weight to 118 lbs. Add that patient has a stage 2 sacral wound. Remove the mention of prior hospitalization in 2024..." rows={4} />
-              <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'flex-end' }}>
-                <Btn variant="secondary" onClick={applyEdits} disabled={!editRequest.trim()}>Apply Edits</Btn>
-              </div>
-            </div>
-
-            {/* Three action buttons */}
-            <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: '24px', display: 'flex', justifyContent: 'space-between', gap: '12px' }}>
-              <BackBtn onClick={() => setStage(1)} label="Edit Inputs" />
-              <div style={{ display: 'flex', gap: '12px' }}>
-                <Btn variant="secondary" onClick={reset}>New Admission</Btn>
-                <Btn onClick={generateCTI} style={{ padding: '12px 24px' }}>Create Certificate of Terminal Illness →</Btn>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {stage === 5 && !loading && (
-          <div>
-            {cti && <DocOutput title="Certificate of Terminal Illness" content={cti} />}
-
-            {/* Admission Narrative for reference */}
-            {narrative && (
-              <div style={{ marginTop: '28px' }}>
-                <div style={{ fontSize: '16px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '12px' }}>ADMISSION NARRATIVE — FOR REFERENCE</div>
-                <div style={{ background: 'rgba(10,20,32,0.7)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '20px 24px', maxHeight: '400px', overflowY: 'auto', fontFamily: C.serif }}>
-                  {narrative.split('\n').map((line, i) => {
-                    const isHeader = /^[A-Z][A-Z\s\/\(\)\-,]{4,}$/.test(line.trim()) && line.trim().length > 3;
-                    if (isHeader) return <div key={i} style={{ color: C.gold, fontFamily: C.mono, fontSize: '15px', letterSpacing: '2px', marginTop: '18px', marginBottom: '5px', paddingBottom: '4px', borderBottom: `1px solid rgba(196,168,130,0.12)` }}>{line}</div>;
-                    if (!line.trim()) return <div key={i} style={{ height: '6px' }} />;
-                    return <div key={i} style={{ color: C.textDim, fontSize: '17px', lineHeight: 1.75 }}>{line}</div>;
-                  })}
-                </div>
-              </div>
-            )}
-
-            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '24px' }}>
-              <BackBtn onClick={() => setStage(4)} label="Narrative" />
-              <Btn variant="secondary" onClick={reset}>New Admission</Btn>
-            </div>
-          </div>
-        )}
-
-      </div>
-    </div>
+          )}
+        </div>
+      )}
+    </PageShell>
   );
 }

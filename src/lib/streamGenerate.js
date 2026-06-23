@@ -5,7 +5,13 @@ export async function streamGenerate({ system, messages, max_tokens = 4000, mode
     body: JSON.stringify({ model, max_tokens, system, messages }),
   });
 
-  const data = await response.json();
-  if (!response.ok) throw new Error(data.error?.message || 'Generation failed');
+  let data;
+  try {
+    data = await response.json();
+  } catch (e) {
+    throw new Error(`Server error (HTTP ${response.status}) — check CloudWatch logs`);
+  }
+
+  if (!response.ok) throw new Error(data.error?.message || `HTTP ${response.status}`);
   return (data.text || '').replace(/\*\*/g, '').replace(/\*/g, '');
 }

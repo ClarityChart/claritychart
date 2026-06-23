@@ -23,6 +23,14 @@ export async function POST(request) {
     if (session?.user?.email) userId = session.user.email;
   } catch (e) {}
 
+  console.log(JSON.stringify({
+    event: 'generation_attempt',
+    userId,
+    model: body.model,
+    max_tokens: body.max_tokens,
+    systemLength: body.system?.length ?? 0,
+  }));
+
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -35,12 +43,16 @@ export async function POST(request) {
     });
 
     if (!response.ok) {
-      const err = await response.json().catch(() => ({}));
-      return Response.json({ error: { message: err.error?.message || 'API error' } }, { status: response.status });
+      const errText = await response.text();
+      let errMsg = 'API error';
+      try { errMsg = JSON.parse(errText).error?.message || 'API error'; } catch (_) {}
+      console.error(JSON.stringify({ event: 'anthropic_error', userId, status: response.status, body: errText.slice(0, 500) }));
+      return Response.json({ error: { message: errMsg } }, { status: response.status });
     }
 
     const data = await response.json();
     const text = data.content?.[0]?.text || '';
+    console.log(JSON.stringify({ event: 'generation_success', userId, model: body.model, outputLength: text.length, stop_reason: data.stop_reason }));
     return Response.json({ text });
   } catch (err) {
     console.error(JSON.stringify({ event: 'generation_error', userId, error: err.message }));

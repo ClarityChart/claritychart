@@ -207,7 +207,7 @@ function DemoMode({ onBack, onBackHome }) {
       });
       if (!text) throw new Error('Empty');
       setNarrative(text); setStage('narrative');
-    } catch (e) { setError('Generation failed. Please try again.'); }
+    } catch (e) { setError(e.message || 'Generation failed. Please try again.'); }
     finally { setLoading(false); setLoadingMsg(''); }
   };
 
@@ -222,7 +222,7 @@ function DemoMode({ onBack, onBackHome }) {
       });
       if (!text) throw new Error('Empty');
       setNarrative(text); setEditRequest('');
-    } catch (e) { setError('Edit failed. Please try again.'); }
+    } catch (e) { setError(e.message || 'Edit failed. Please try again.'); }
     finally { setLoading(false); setLoadingMsg(''); }
   };
 
@@ -238,7 +238,7 @@ function DemoMode({ onBack, onBackHome }) {
       });
       if (!text) throw new Error('Empty');
       setCti(text);
-    } catch (e) { setError('CTI generation failed. Please try again.'); setStage('narrative'); }
+    } catch (e) { setError(e.message || 'CTI generation failed. Please try again.'); setStage('narrative'); }
     finally { setLoading(false); setLoadingMsg(''); }
   };
 
@@ -498,7 +498,7 @@ function ClinicalMode({ onBack, onBackHome }) {
       });
       if (!text) throw new Error('Empty');
       setNarrative(text); setStage(4);
-    } catch (e) { setError('Generation failed. Please try again.'); }
+    } catch (e) { setError(e.message || 'Generation failed. Please try again.'); }
     finally { setLoading(false); setLoadingMsg(''); }
   };
 
@@ -513,7 +513,7 @@ function ClinicalMode({ onBack, onBackHome }) {
       });
       if (!text) throw new Error('Empty');
       setNarrative(text); setEditRequest('');
-    } catch (e) { setError('Edit failed. Please try again.'); }
+    } catch (e) { setError(e.message || 'Edit failed. Please try again.'); }
     finally { setLoading(false); setLoadingMsg(''); }
   };
 
@@ -527,7 +527,7 @@ function ClinicalMode({ onBack, onBackHome }) {
       });
       if (!text) throw new Error('Empty');
       setCti(text);
-    } catch (e) { setError('CTI generation failed. Please try again.'); setStage(4); }
+    } catch (e) { setError(e.message || 'CTI generation failed. Please try again.'); setStage(4); }
     finally { setLoading(false); setLoadingMsg(''); }
   };
 

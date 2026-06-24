@@ -36,40 +36,35 @@ export default function AdmissionEngine({ onBack }) {
   if (mode === 'clinical') return <ClinicalMode onBack={() => setMode(null)} onBackHome={onBack} />;
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: C.bg, fontFamily: C.serif, color: C.text }}>
-      <style>{`::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:rgba(196,168,130,0.2);border-radius:3px}`}</style>
-      <div style={{ maxWidth: '860px', margin: '0 auto', padding: '0 28px 80px' }}>
-        <div style={{ padding: '28px 0 24px', borderBottom: `1px solid ${C.border}`, marginBottom: '48px' }}>
-          <button onClick={onBack} style={{ background: 'none', border: 'none', color: C.goldDim, cursor: 'pointer', fontFamily: C.mono, fontSize: '16px', letterSpacing: '2px', padding: 0, marginBottom: '12px', display: 'block' }}>
-            PLATFORM HOME
-          </button>
-          <div style={{ fontSize: '16px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '4px' }}>ADMISSION ENGINE</div>
-          <div style={{ fontSize: 'clamp(30px,2.8vw,36px)', color: '#f0e8dc', fontWeight: '800', letterSpacing: '-0.5px', fontFamily: 'Georgia, serif' }}>New Patient Admission</div>
-          <div style={{ fontSize: '17px', color: C.gold, marginTop: '4px', fontStyle: 'italic' }}>Choose how you would like to proceed</div>
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-          <ModeCard
-            title="Demo Mode"
-            subtitle="See ClarityChart in action"
-            description="Select from three pre-loaded patient cases. Drag chart documents into the workspace and watch ClarityChart generate the Admission Narrative and CTI in real time."
-            badge="3 Demo Patients"
-            badgeColor={C.gold}
-            icon="✦"
-            onClick={() => setMode('demo')}
-          />
-          <ModeCard
-            title="Clinical Mode"
-            subtitle="Enter a real patient"
-            description="Enter physician diagnosis, paste records from the patient chart, and provide the admission encounter narrative. For clinical use with real patient data."
-            badge="Clinical Use"
-            badgeColor={C.green}
-            icon="◈"
-            onClick={() => setMode('clinical')}
-          />
-        </div>
+    <PageShell
+      onHome={onBack}
+      moduleName="Admission Engine"
+      badge="Admission Engine"
+      title="New Patient Admission"
+      subtitle="Choose how you would like to proceed"
+      hideProgress={true}
+    >
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+        <ModeCard
+          title="Demo Mode"
+          subtitle="See ClarityChart in action"
+          description="Select from three pre-loaded patient cases. Drag chart documents into the workspace and watch ClarityChart generate the Admission Narrative and CTI in real time."
+          badge="3 Demo Patients"
+          badgeColor={C.gold}
+          icon="✦"
+          onClick={() => setMode('demo')}
+        />
+        <ModeCard
+          title="Clinical Mode"
+          subtitle="Enter a real patient"
+          description="Enter physician diagnosis, paste records from the patient chart, and provide the admission encounter narrative. For clinical use with real patient data."
+          badge="Clinical Use"
+          badgeColor={C.green}
+          icon="◈"
+          onClick={() => setMode('clinical')}
+        />
       </div>
-    </div>
+    </PageShell>
   );
 }
 
@@ -77,16 +72,16 @@ function ModeCard({ title, subtitle, description, badge, badgeColor, icon, onCli
   const [hov, setHov] = useState(false);
   return (
     <div onClick={onClick} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-      style={{ background: hov ? C.bgCardHover : C.bgCard, border: `1px solid ${hov ? C.borderHover : C.border}`, borderRadius: '2px', padding: '28px 24px', cursor: 'pointer', transition: 'all 0.15s' }}>
+      style={{ background: hov ? C.bgCardHover : C.bgCard, border: `1px solid ${hov ? C.gold : C.border}`, borderTop: `3px solid ${C.gold}`, borderRadius: '8px', padding: '28px 24px', cursor: 'pointer', transition: 'all 0.15s' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
         <div style={{ fontSize: '28px', color: C.gold }}>{icon}</div>
         <span style={{ fontSize: '16px', color: badgeColor, background: `${badgeColor}18`, border: `1px solid ${badgeColor}40`, borderRadius: '10px', padding: '2px 10px', fontFamily: C.mono, letterSpacing: '1px' }}>{badge}</span>
       </div>
-      <div style={{ fontSize: '20px', color: C.text, marginBottom: '4px' }}>{title}</div>
-      <div style={{ fontSize: '17px', color: '#f0e8dc', fontFamily: C.sans, fontWeight: '600', letterSpacing: '1px', marginBottom: '12px' }}>{subtitle}</div>
-      <div style={{ fontSize: '19px', color: '#c8b8a8', fontWeight: '400', lineHeight: 1.6, fontStyle: 'italic' }}>{description}</div>
-      <div style={{ marginTop: '20px', fontSize: '15px', color: hov ? C.gold : C.border, fontFamily: C.mono, letterSpacing: '1px', transition: 'color 0.15s' }}>
-        ENTER {title.toUpperCase()} →
+      <div style={{ fontSize: '18px', color: C.text, fontWeight: '700', fontFamily: C.serif, marginBottom: '3px' }}>{title}</div>
+      <div style={{ fontSize: '13px', color: C.gold, fontFamily: C.mono, letterSpacing: '0.5px', marginBottom: '12px' }}>{subtitle}</div>
+      <div style={{ fontSize: '15px', color: C.textDim, lineHeight: 1.65 }}>{description}</div>
+      <div style={{ marginTop: '20px', fontSize: '12px', color: hov ? C.gold : C.textFaint, fontFamily: C.mono, letterSpacing: '1.5px', transition: 'color 0.15s', textTransform: 'uppercase' }}>
+        Enter {title} →
       </div>
     </div>
   );

@@ -44,6 +44,10 @@ export const C = {
   redDim: 'rgba(240,128,128,0.15)',
   redBorder: 'rgba(240,128,128,0.4)',
 
+  // Faint fills
+  goldFaint: 'rgba(196,168,130,0.05)',
+  navBorder: 'rgba(196,168,130,0.15)',
+
   // Fonts
   sans: "Inter, -apple-system, system-ui, sans-serif",
   serif: "Georgia, 'Times New Roman', serif",

@@ -314,15 +314,15 @@ export function TopNav({ onHome, moduleName, onSignOut }) {
         display: 'flex', alignItems: 'center', gap: '16px',
         background: 'none', border: 'none', cursor: 'pointer', padding: 0,
       }}>
-        <span style={{ fontSize: 'clamp(18px,2vw,22px)', color: '#f0e8d8', fontFamily: C.serif, fontWeight: 'bold' }}>
-          Clarity<span style={{ color: C.goldBorder }}>Chart</span>
+        <span style={{ fontSize: 'clamp(17px,1.8vw,20px)', color: C.text, fontFamily: C.serif }}>
+          Clarity<span style={{ color: C.gold }}>Chart</span>
         </span>
         <span style={{
-          fontSize: '13px', color: C.goldBorder, fontFamily: C.mono,
-          fontWeight: '600', letterSpacing: '1px',
-          paddingLeft: '16px', borderLeft: `2px solid rgba(196,168,130,0.4)`,
+          fontSize: '12px', color: C.textFaint, fontFamily: C.mono,
+          letterSpacing: '1.5px', textTransform: 'uppercase',
+          paddingLeft: '14px', borderLeft: `1px solid rgba(196,168,130,0.25)`,
         }}>
-          ← HOME
+          ← Home
         </span>
       </button>
       <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
@@ -427,7 +427,7 @@ export function ProgressLoader({ steps, currentStep, message }) {
                 <div style={{
                   width: '28px', height: '28px', borderRadius: '50%', flexShrink: 0,
                   border: `2px solid ${done ? C.green : active ? C.gold : C.border}`,
-                  background: done ? C.greenDim : active ? C.goldLight : '#f9fafb',
+                  background: done ? C.greenDim : active ? C.goldLight : C.bgCard,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: '13px', fontWeight: '700',
                   color: done ? C.green : active ? C.gold : C.textFaint,
@@ -555,7 +555,7 @@ export function PageShell({
                 {badge}
               </div>
             )}
-            <div style={{ fontSize: 'clamp(24px,2.8vw,32px)', color: C.text, fontWeight: '800', fontFamily: C.serif, letterSpacing: '-0.5px' }}>
+            <div style={{ fontSize: 'clamp(22px,2.6vw,30px)', color: C.text, fontWeight: '700', fontFamily: C.serif, letterSpacing: '-0.3px' }}>
               {title}
             </div>
             {subtitle && (
@@ -573,8 +573,8 @@ export function PageShell({
         {(onBack || primaryAction) && (
           <div style={{
             position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 50,
-            background: 'rgba(26,37,53,0.97)',
-            borderTop: `2px solid rgba(196,168,130,0.2)`,
+            background: 'rgba(26,37,53,0.98)',
+            borderTop: `1px solid rgba(196,168,130,0.18)`,
             padding: '16px clamp(20px,3vw,48px)',
             display: 'flex', justifyContent: 'space-between', alignItems: 'center',
             backdropFilter: 'blur(8px)',

@@ -137,20 +137,20 @@ function ModeCard({ title, subtitle, description, badge, icon, onClick }) {
   return (
     <div onClick={onClick} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
       style={{
-        background: hov ? '#344f6e' : '#2d4460',
+        background: hov ? C.bgCardHover : C.bgCard,
         border: `1px solid ${hov ? C.gold : C.border}`,
         borderTop: `3px solid ${C.gold}`,
-        borderRadius: '6px', padding: '24px', cursor: 'pointer', transition: 'all 0.15s',
+        borderRadius: '8px', padding: '24px', cursor: 'pointer', transition: 'all 0.15s',
       }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-        <span style={{ fontSize: '24px', color: C.gold }}>{icon}</span>
-        <span style={{ fontSize: '11px', color: C.gold, background: 'rgba(196,168,130,0.1)', border: `1px solid rgba(196,168,130,0.3)`, borderRadius: '10px', padding: '2px 10px', fontFamily: C.mono }}>{badge}</span>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '14px' }}>
+        <span style={{ fontSize: '22px', color: C.gold }}>{icon}</span>
+        <span style={{ fontSize: '11px', color: C.gold, background: 'rgba(196,168,130,0.08)', border: `1px solid rgba(196,168,130,0.3)`, borderRadius: '10px', padding: '2px 10px', fontFamily: C.mono, letterSpacing: '0.5px' }}>{badge}</span>
       </div>
-      <div style={{ fontSize: '18px', color: C.text, fontWeight: '700', marginBottom: '4px', fontFamily: C.serif }}>{title}</div>
-      <div style={{ fontSize: '13px', color: C.gold, fontFamily: C.mono, marginBottom: '10px' }}>{subtitle}</div>
-      <div style={{ fontSize: '14px', color: C.textDim, lineHeight: 1.6 }}>{description}</div>
-      <div style={{ marginTop: '16px', fontSize: '12px', color: hov ? C.gold : C.border, fontFamily: C.mono, letterSpacing: '1px', transition: 'color 0.15s' }}>
-        ENTER {title.toUpperCase()} →
+      <div style={{ fontSize: '17px', color: C.text, fontWeight: '700', marginBottom: '3px', fontFamily: C.serif }}>{title}</div>
+      <div style={{ fontSize: '12px', color: C.goldDim, fontFamily: C.mono, marginBottom: '12px', letterSpacing: '0.5px' }}>{subtitle}</div>
+      <div style={{ fontSize: '14px', color: C.textDim, lineHeight: 1.65 }}>{description}</div>
+      <div style={{ marginTop: '18px', fontSize: '11px', color: hov ? C.gold : C.textFaint, fontFamily: C.mono, letterSpacing: '1.5px', transition: 'color 0.15s', textTransform: 'uppercase' }}>
+        Enter {title} →
       </div>
     </div>
   );
@@ -188,22 +188,22 @@ function PathwayCard({ title, role, description, outputs, color, onClick }) {
     <div onClick={onClick} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
       style={{
         display: 'flex', alignItems: 'center', gap: '20px', padding: '20px 24px',
-        background: hov ? '#344f6e' : '#2d4460',
-        border: `1px solid ${hov ? C.borderHover : C.border}`,
-        borderRadius: '6px', cursor: 'pointer', transition: 'all 0.15s',
+        background: hov ? C.bgCardHover : C.bgCard,
+        border: `1px solid ${hov ? C.goldBorder : C.border}`,
+        borderLeft: `3px solid ${hov ? color : 'rgba(196,168,130,0.2)'}`,
+        borderRadius: '8px', cursor: 'pointer', transition: 'all 0.15s',
       }}>
-      <div style={{ width: '4px', alignSelf: 'stretch', background: color, borderRadius: '2px', flexShrink: 0, opacity: 0.8 }} />
       <div style={{ flex: 1 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' }}>
-          <div style={{ fontSize: '16px', color: C.text, fontWeight: '600' }}>{title}</div>
-          <span style={{ fontSize: '11px', color, background: `${color}18`, border: `1px solid ${color}40`, borderRadius: '10px', padding: '1px 8px', fontFamily: C.mono }}>{role}</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '5px', flexWrap: 'wrap' }}>
+          <div style={{ fontSize: '16px', color: C.text, fontWeight: '600', fontFamily: C.sans }}>{title}</div>
+          <span style={{ fontSize: '11px', color, background: `${color}18`, border: `1px solid ${color}40`, borderRadius: '10px', padding: '1px 9px', fontFamily: C.mono, letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>{role}</span>
         </div>
-        <div style={{ fontSize: '14px', color: C.textDim, lineHeight: 1.5, marginBottom: '8px' }}>{description}</div>
-        <div style={{ display: 'flex', gap: '8px' }}>
+        <div style={{ fontSize: '14px', color: C.textDim, lineHeight: 1.55, marginBottom: '8px' }}>{description}</div>
+        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
           {outputs.map(o => <span key={o} style={{ fontSize: '12px', color: C.goldDim, fontFamily: C.mono }}>→ {o}</span>)}
         </div>
       </div>
-      <span style={{ color: hov ? C.gold : C.border, fontSize: '20px', transition: 'all 0.15s' }}>›</span>
+      <span style={{ color: hov ? C.gold : C.textFaint, fontSize: '20px', flexShrink: 0, transition: 'all 0.15s', transform: hov ? 'translateX(2px)' : 'none', display: 'inline-block' }}>›</span>
     </div>
   );
 }

@@ -2,7 +2,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { C } from './tokens';
 
-const F = {
+export const F = {
   mono: '15px',
   sm: 'clamp(16px, 1.4vw, 18px)',
   base: 'clamp(19px, 1.8vw, 21px)',

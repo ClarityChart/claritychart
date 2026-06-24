@@ -3,7 +3,7 @@ import { streamGenerate } from '../lib/streamGenerate';
 import { useState } from 'react';
 import { RECERT_DEMO_PATIENTS, RECERT_PATIENT_LIST } from './demoRecertPatients';
 import { C } from './tokens';
-import { Textarea, Input, Btn, VoiceBtn, DocOutput, TopNav, ErrorBox, EditableDraft, BackBtn, ProgressSteps, ProgressLoader, useUnsavedWarning, PageShell } from './ui';
+import { Textarea, Input, Btn, VoiceBtn, DocOutput, TopNav, ErrorBox, EditableDraft, BackBtn, ProgressSteps, ProgressLoader, useUnsavedWarning, PageShell, F } from './ui';
 import { DECLINE_DOMAINS, buildPriorExtractionSystem, buildRNRecertSystem, buildF2FSystem, buildMDRecertSystem, buildRNRecertEditSystem, buildF2FEditSystem, buildMDRecertEditSystem } from './recertPrompts';
 
 const EMPTY_INPUTS = {
@@ -146,7 +146,7 @@ function ModeCard({ title, subtitle, description, badge, icon, onClick }) {
         <span style={{ fontSize: '22px', color: C.gold }}>{icon}</span>
         <span style={{ fontSize: '11px', color: C.gold, background: 'rgba(196,168,130,0.08)', border: `1px solid rgba(196,168,130,0.3)`, borderRadius: '10px', padding: '2px 10px', fontFamily: C.mono, letterSpacing: '0.5px' }}>{badge}</span>
       </div>
-      <div style={{ fontSize: '17px', color: C.text, fontWeight: '700', marginBottom: '3px', fontFamily: C.serif }}>{title}</div>
+      <div style={{ fontSize: F.sm, color: C.text, fontWeight: '700', marginBottom: '3px', fontFamily: C.serif }}>{title}</div>
       <div style={{ fontSize: '12px', color: C.goldDim, fontFamily: C.mono, marginBottom: '12px', letterSpacing: '0.5px' }}>{subtitle}</div>
       <div style={{ fontSize: '14px', color: C.textDim, lineHeight: 1.65 }}>{description}</div>
       <div style={{ marginTop: '18px', fontSize: '11px', color: hov ? C.gold : C.textFaint, fontFamily: C.mono, letterSpacing: '1.5px', transition: 'color 0.15s', textTransform: 'uppercase' }}>
@@ -173,7 +173,7 @@ function DemoPatientCard({ patient, onClick }) {
         fontSize: '20px', color: patient.color, fontFamily: C.mono, fontWeight: '700', flexShrink: 0,
       }}>{patient.name}</div>
       <div style={{ flex: 1 }}>
-        <div style={{ fontSize: '17px', color: C.text, fontWeight: '600', marginBottom: '4px' }}>{patient.diagnosis}</div>
+        <div style={{ fontSize: F.sm, color: C.text, fontWeight: '600', marginBottom: '4px' }}>{patient.diagnosis}</div>
         <div style={{ fontSize: '14px', color: C.goldDim, fontFamily: C.mono, marginBottom: '4px' }}>{patient.tagline}</div>
         <div style={{ fontSize: '13px', color: C.textFaint, fontFamily: C.mono }}>{patient.certPeriod}</div>
       </div>
@@ -195,7 +195,7 @@ function PathwayCard({ title, role, description, outputs, color, onClick }) {
       }}>
       <div style={{ flex: 1 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '5px', flexWrap: 'wrap' }}>
-          <div style={{ fontSize: '16px', color: C.text, fontWeight: '600', fontFamily: C.sans }}>{title}</div>
+          <div style={{ fontSize: F.mono, color: C.text, fontWeight: '600', fontFamily: C.sans }}>{title}</div>
           <span style={{ fontSize: '11px', color, background: `${color}18`, border: `1px solid ${color}40`, borderRadius: '10px', padding: '1px 9px', fontFamily: C.mono, letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>{role}</span>
         </div>
         <div style={{ fontSize: '14px', color: C.textDim, lineHeight: 1.55, marginBottom: '8px' }}>{description}</div>
@@ -354,7 +354,7 @@ function RNPathway({ onBack, onBackHome, demoPatient }) {
 
         {stage === 0 && !extracting && (
           <div>
-            <div style={{ background: 'rgba(196,168,130,0.08)', border: `1px solid ${C.goldBorder}`, borderRadius: '6px', padding: '14px 18px', marginBottom: '24px', fontSize: '17px', color: '#f0e8dc', fontFamily: C.sans, fontWeight: '600', lineHeight: 1.6 }}>
+            <div style={{ background: 'rgba(196,168,130,0.08)', border: `1px solid ${C.goldBorder}`, borderRadius: '6px', padding: '14px 18px', marginBottom: '24px', fontSize: F.sm, color: '#f0e8dc', fontFamily: C.sans, fontWeight: '600', lineHeight: 1.6 }}>
               Paste the prior RN Recert note to display last period status above each domain. Skip for first recertifications.
             </div>
             <div style={{ fontSize: '15px', color: C.gold, fontFamily: C.mono, letterSpacing: '2px', marginBottom: '8px' }}>PRIOR RN RECERTIFICATION NARRATIVE</div>
@@ -365,7 +365,7 @@ function RNPathway({ onBack, onBackHome, demoPatient }) {
         {stage === 1 && !loading && (
           <div>
             {priorSummaries && (
-              <div style={{ background: 'rgba(76,175,130,0.06)', border: `1px solid ${C.greenBorder}`, borderRadius: '6px', padding: '12px 18px', marginBottom: '24px', fontSize: '16px', color: C.green, fontFamily: C.mono, display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div style={{ background: 'rgba(76,175,130,0.06)', border: `1px solid ${C.greenBorder}`, borderRadius: '6px', padding: '12px 18px', marginBottom: '24px', fontSize: F.mono, color: C.green, fontFamily: C.mono, display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <span>✓</span><span>Prior note analyzed — last period status shown above each domain</span>
               </div>
             )}
@@ -407,8 +407,8 @@ function RNPathway({ onBack, onBackHome, demoPatient }) {
                     <VoiceBtn onTranscript={t => setField(domain.key, inputs[domain.key] ? inputs[domain.key] + ' ' + t : t)} />
                   </div>
                   {hasPrior && (
-                    <div style={{ background: 'rgba(74,144,164,0.08)', border: `1px solid ${C.blueBorder}`, borderRadius: '6px', padding: '8px 12px', marginBottom: '8px', fontSize: '16px', color: C.blue, fontFamily: C.mono, lineHeight: 1.5 }}>
-                      <span style={{ fontSize: '16px', letterSpacing: '1px', opacity: 0.7 }}>LAST PERIOD: </span>{prior}
+                    <div style={{ background: 'rgba(74,144,164,0.08)', border: `1px solid ${C.blueBorder}`, borderRadius: '6px', padding: '8px 12px', marginBottom: '8px', fontSize: F.mono, color: C.blue, fontFamily: C.mono, lineHeight: 1.5 }}>
+                      <span style={{ fontSize: F.mono, letterSpacing: '1px', opacity: 0.7 }}>LAST PERIOD: </span>{prior}
                     </div>
                   )}
                   <Textarea value={inputs[domain.key] || ''} onChange={v => setField(domain.key, v)} placeholder={domain.placeholder} rows={inputs[domain.key]?.trim() ? 3 : 2} />
@@ -420,7 +420,7 @@ function RNPathway({ onBack, onBackHome, demoPatient }) {
 
         {stage === 2 && !loading && (
           <div>
-            <div style={{ background: 'rgba(196,168,130,0.08)', border: `1px solid ${C.goldBorder}`, borderRadius: '6px', padding: '12px 18px', marginBottom: '16px', fontSize: '17px', color: '#f0e8dc', fontFamily: C.sans, fontWeight: '600', lineHeight: 1.6 }}>
+            <div style={{ background: 'rgba(196,168,130,0.08)', border: `1px solid ${C.goldBorder}`, borderRadius: '6px', padding: '12px 18px', marginBottom: '16px', fontSize: F.sm, color: '#f0e8dc', fontFamily: C.sans, fontWeight: '600', lineHeight: 1.6 }}>
               Review and edit the narrative before finalizing. Use Copy to share with the physician for the recertification note.
             </div>
             <EditableDraft title="RN Recertification Narrative" value={rnNarrative} onChange={setRnNarrative} badge="DRAFT" />
@@ -715,15 +715,15 @@ function MDPathway({ onBack, onBackHome, demoPatient }) {
             </div>
 
             <SectionLabel>RN Recertification Narrative <span style={{ color: '#e07070' }}>*</span></SectionLabel>
-            <div style={{ fontSize: '17px', color: C.gold, marginBottom: '8px', fontStyle: 'italic' }}>Paste the completed RN Recertification Narrative — this is the primary source for the physician note.</div>
+            <div style={{ fontSize: F.sm, color: C.gold, marginBottom: '8px', fontStyle: 'italic' }}>Paste the completed RN Recertification Narrative — this is the primary source for the physician note.</div>
             <Textarea value={rnNarrative} onChange={setRnNarrative} placeholder="Paste RN Recertification Narrative here..." rows={10} />
 
             <SectionLabel>Face-to-Face Encounter Note</SectionLabel>
-            <div style={{ fontSize: '17px', color: C.gold, marginBottom: '8px', fontStyle: 'italic' }}>Optional — paste the F2F note if completed. It will inform the physician recertification argument.</div>
+            <div style={{ fontSize: F.sm, color: C.gold, marginBottom: '8px', fontStyle: 'italic' }}>Optional — paste the F2F note if completed. It will inform the physician recertification argument.</div>
             <Textarea value={f2fNote} onChange={setF2fNote} placeholder="Paste Face-to-Face Encounter Note here (if completed)..." rows={6} />
 
             <SectionLabel>Prior Physician Recertification Note</SectionLabel>
-            <div style={{ fontSize: '17px', color: C.gold, marginBottom: '8px', fontStyle: 'italic' }}>Optional — paste prior physician recert note for interval comparison.</div>
+            <div style={{ fontSize: F.sm, color: C.gold, marginBottom: '8px', fontStyle: 'italic' }}>Optional — paste prior physician recert note for interval comparison.</div>
             <Textarea value={inputs.priorMDNote} onChange={v => setField('priorMDNote', v)} placeholder="Paste prior Physician Recertification Note here (optional)..." rows={5} />
 
             <SectionLabel>Additional Clinical Observations</SectionLabel>
@@ -757,7 +757,7 @@ function MDPathway({ onBack, onBackHome, demoPatient }) {
 
 function SectionLabel({ children }) {
   return (
-    <div style={{ fontSize: '15px', letterSpacing: '3px', color: C.gold, textTransform: 'uppercase', fontFamily: C.mono, borderBottom: `1px solid ${C.border}`, paddingBottom: '8px', marginBottom: '16px', marginTop: '28px' }}>
+    <div style={{ fontSize: F.mono, letterSpacing: '3px', color: C.gold, textTransform: 'uppercase', fontFamily: C.mono, borderBottom: `1px solid ${C.border}`, paddingBottom: '8px', marginBottom: '16px', marginTop: '28px' }}>
       {children}
     </div>
   );
@@ -766,7 +766,7 @@ function SectionLabel({ children }) {
 function Field({ label, children }) {
   return (
     <div>
-      <div style={{ fontSize: '15px', fontFamily: C.mono, letterSpacing: '1px', color: C.goldDim, marginBottom: '6px' }}>
+      <div style={{ fontSize: F.mono, fontFamily: C.mono, letterSpacing: '1px', color: C.goldDim, marginBottom: '6px' }}>
         {label.toUpperCase()}
       </div>
       {children}

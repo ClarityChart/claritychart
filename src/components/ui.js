@@ -443,7 +443,7 @@ export function ProgressLoader({ steps, currentStep, message }) {
                         height: '100%', borderRadius: '3px',
                         background: done ? C.green : active ? C.gold : 'transparent',
                         width: done ? '100%' : '0%',
-                        animation: active ? 'progressFill 1.8s ease-out forwards' : 'none',
+                        animation: active ? 'progressFill 14s ease-out forwards' : 'none',
                         transition: done ? 'none' : 'width 0.5s',
                       }}
                     />

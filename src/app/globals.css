@@ -39,7 +39,7 @@ input:focus, textarea:focus, select:focus {
 
 @keyframes progressFill {
   from { width: 0%; }
-  to { width: 100%; }
+  to { width: 88%; }
 }
 
 @keyframes spin {

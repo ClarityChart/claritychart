@@ -59,9 +59,9 @@ Resources:
       # Placeholder code — replaced by scripts/deploy-generate-lambda.sh
       Code:
         ZipFile: |
-          export const handler = async () => ({
+          exports.handler = async () => ({
             statusCode: 200,
-            body: JSON.stringify({ text: 'placeholder — run deploy script' }),
+            body: JSON.stringify({ text: 'placeholder' }),
           });
       Environment:
         Variables:
@@ -85,7 +85,6 @@ Resources:
           - authorization
         AllowMethods:
           - POST
-          - OPTIONS
         AllowOrigins:
           - !Ref AllowedOrigin
         MaxAge: 86400

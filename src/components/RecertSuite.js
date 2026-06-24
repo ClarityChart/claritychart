@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { RECERT_DEMO_PATIENTS, RECERT_PATIENT_LIST } from './demoRecertPatients';
 import { C } from './tokens';
 import { Textarea, Input, Btn, VoiceBtn, DocOutput, TopNav, ErrorBox, EditableDraft, BackBtn, ProgressSteps, ProgressLoader, useUnsavedWarning, PageShell } from './ui';
-import { DECLINE_DOMAINS, buildPriorExtractionSystem, buildRNRecertSystem, buildF2FSystem, buildMDRecertSystem } from './recertPrompts';
+import { DECLINE_DOMAINS, buildPriorExtractionSystem, buildRNRecertSystem, buildF2FSystem, buildMDRecertSystem, buildRNRecertEditSystem, buildF2FEditSystem, buildMDRecertEditSystem } from './recertPrompts';
 
 const EMPTY_INPUTS = {
   diagnosis: '', patientId: '', age: '', sex: '', certPeriod: '', lastBaseline: '',
@@ -216,7 +216,9 @@ function RNPathway({ onBack, onBackHome, demoPatient }) {
   const [extracting, setExtracting] = useState(false);
   const [inputs, setInputs] = useState({ ...{ diagnosis: '', patientId: '', age: '', sex: '', certPeriod: '', lastBaseline: '', fast: '', pps: '', kps: '', weight: '', vitals: '' }, ...Object.fromEntries(DECLINE_DOMAINS.map(d => [d.key, ''])) });
   const [rnNarrative, setRnNarrative] = useState('');
+  const [editRequest, setEditRequest] = useState('');
   const [loading, setLoading] = useState(false);
+  const [loadingMsg, setLoadingMsg] = useState('');
   const [error, setError] = useState('');
 
   const setField = (key, val) => setInputs(p => ({ ...p, [key]: val }));
@@ -271,7 +273,7 @@ function RNPathway({ onBack, onBackHome, demoPatient }) {
   const generateRN = async () => {
     if (!inputs.diagnosis.trim()) { setError('Diagnosis is required.'); return; }
     if (filledDomains === 0) { setError('Complete at least one decline domain.'); return; }
-    setError(''); setLoading(true);
+    setError(''); setLoading(true); setLoadingMsg('GENERATING RN NARRATIVE...');
     try {
       const text = await streamGenerate({
         system: buildRNRecertSystem(inputs, priorSummaries),
@@ -281,7 +283,22 @@ function RNPathway({ onBack, onBackHome, demoPatient }) {
       if (!text) throw new Error('Empty');
       setRnNarrative(text); setStage(2);
     } catch (e) { setError('Generation failed. Please try again.'); }
-    finally { setLoading(false); }
+    finally { setLoading(false); setLoadingMsg(''); }
+  };
+
+  const applyRNEdits = async () => {
+    if (!editRequest.trim()) return;
+    setLoading(true); setLoadingMsg('APPLYING EDITS...');
+    try {
+      const text = await streamGenerate({
+        system: buildRNRecertEditSystem(rnNarrative, editRequest),
+        messages: [{ role: 'user', content: 'Apply the requested edits now.' }],
+        max_tokens: 4000,
+      });
+      if (!text) throw new Error('Empty');
+      setRnNarrative(text); setEditRequest('');
+    } catch (e) { setError('Edit failed. Please try again.'); }
+    finally { setLoading(false); setLoadingMsg(''); }
   };
 
   const stageLabels = ['Prior Note', 'RN Assessment', 'Review & Done'];
@@ -309,7 +326,7 @@ function RNPathway({ onBack, onBackHome, demoPatient }) {
       secondaryAction={stage === 0 ? () => setStage(1) : null}
       secondaryLabel="Skip — No Prior Note"
       primaryAction={
-        stage === 0 && priorNote.trim() ? extractPrior :
+        stage === 0 ? extractPrior :
         stage === 1 ? generateRN :
         null
       }
@@ -325,11 +342,11 @@ function RNPathway({ onBack, onBackHome, demoPatient }) {
     >
       <div>
 
-        {error && <div style={{ background: 'rgba(224,112,112,0.08)', border: '1px solid rgba(224,112,112,0.3)', borderRadius: '6px', padding: '10px 16px', color: '#e07070', fontSize: '16px', fontFamily: C.mono, marginBottom: '20px' }}>{error}</div>}
+        <ErrorBox message={error} />
 
         {(loading || extracting) && (
           <ProgressLoader
-            message={extracting ? 'ANALYZING PRIOR NOTE...' : 'GENERATING RN NARRATIVE...'}
+            message={extracting ? 'ANALYZING PRIOR NOTE...' : loadingMsg || 'GENERATING RN NARRATIVE...'}
             steps={['Analyzing prior note', 'Processing domains', 'Generating narrative']}
             currentStep={extracting ? 0 : 2}
           />
@@ -342,10 +359,6 @@ function RNPathway({ onBack, onBackHome, demoPatient }) {
             </div>
             <div style={{ fontSize: '15px', color: C.gold, fontFamily: C.mono, letterSpacing: '2px', marginBottom: '8px' }}>PRIOR RN RECERTIFICATION NARRATIVE</div>
             <Textarea value={priorNote} onChange={setPriorNote} placeholder="Paste prior RN Recertification Narrative here..." rows={12} />
-            <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'space-between' }}>
-              <Btn variant="ghost" onClick={() => setStage(1)}>Skip — No Prior Note</Btn>
-              <Btn onClick={extractPrior} disabled={!priorNote.trim()} style={{ padding: '12px 32px' }}>Analyze Prior Note →</Btn>
-            </div>
           </div>
         )}
 
@@ -402,10 +415,6 @@ function RNPathway({ onBack, onBackHome, demoPatient }) {
                 </div>
               );
             })}
-            <div style={{ marginTop: '28px', display: 'flex', justifyContent: 'space-between' }}>
-              <BackBtn onClick={() => setStage(0)} label="Prior Note" />
-              <Btn onClick={generateRN} disabled={!inputs.diagnosis.trim() || filledDomains === 0} style={{ padding: '12px 32px' }}>Generate RN Narrative →</Btn>
-            </div>
           </div>
         )}
 
@@ -415,11 +424,12 @@ function RNPathway({ onBack, onBackHome, demoPatient }) {
               Review and edit the narrative before finalizing. Use Copy to share with the physician for the recertification note.
             </div>
             <EditableDraft title="RN Recertification Narrative" value={rnNarrative} onChange={setRnNarrative} badge="DRAFT" />
-            <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'space-between' }}>
-              <BackBtn onClick={() => setStage(1)} label="Assessment" />
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <Btn variant="secondary" onClick={() => { navigator.clipboard.writeText(rnNarrative); }}>Copy Note</Btn>
-                <Btn variant="secondary" onClick={onBackHome}>Done — Return Home</Btn>
+            <div style={{ marginTop: '28px', marginBottom: '24px' }}>
+              <div style={{ fontSize: '15px', color: C.gold, fontFamily: C.mono, letterSpacing: '2px', marginBottom: '8px' }}>REQUEST EDITS</div>
+              <div style={{ fontSize: '15px', color: C.textDim, marginBottom: '8px', fontStyle: 'italic' }}>Describe any changes needed — the AI will revise the narrative accordingly.</div>
+              <Textarea value={editRequest} onChange={setEditRequest} placeholder="e.g., Change the weight to 115 lbs. Add that patient had a UTI this period. Adjust the skin section..." rows={3} />
+              <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'flex-end' }}>
+                <Btn variant="secondary" onClick={applyRNEdits} disabled={!editRequest.trim()}>Apply Edits</Btn>
               </div>
             </div>
           </div>
@@ -432,7 +442,10 @@ function RNPathway({ onBack, onBackHome, demoPatient }) {
 function F2FPathway({ onBack, onBackHome, demoPatient }) {
   const [inputs, setInputs] = useState({ diagnosis: '', patientId: '', age: '', sex: '', certPeriod: '', fast: '', pps: '', kps: '', weight: '', f2fDate: '', f2fConductedBy: '', f2fFindings: '' });
   const [f2fNote, setF2fNote] = useState('');
+  const [editRequest, setEditRequest] = useState('');
   const [loading, setLoading] = useState(false);
+  const [loadingMsg, setLoadingMsg] = useState('');
+  const [stage, setStage] = useState(0);
   const [error, setError] = useState('');
 
   const setField = (key, val) => setInputs(p => ({ ...p, [key]: val }));
@@ -454,13 +467,14 @@ function F2FPathway({ onBack, onBackHome, demoPatient }) {
       f2fDate: d.f2fDate,
       f2fConductedBy: d.f2fConductedBy,
       f2fFindings: d.findings,
+      rnNarrativeRef: demoPatient.md?.rnNarrative || '',
     }));
     setDemoLoaded(true);
   }
 
   const generate = async () => {
     if (!inputs.f2fDate.trim() || !inputs.f2fFindings.trim()) { setError('Date and clinical findings are required.'); return; }
-    setError(''); setLoading(true);
+    setError(''); setLoading(true); setLoadingMsg('GENERATING FACE-TO-FACE NOTE...');
     try {
       const text = await streamGenerate({
         system: buildF2FSystem(inputs),
@@ -468,41 +482,59 @@ function F2FPathway({ onBack, onBackHome, demoPatient }) {
         max_tokens: 2000,
       });
       if (!text) throw new Error('Empty');
-      setF2fNote(text);
+      setF2fNote(text); setStage(1);
     } catch (e) { setError('Generation failed. Please try again.'); }
-    finally { setLoading(false); }
+    finally { setLoading(false); setLoadingMsg(''); }
   };
 
-  const reset = () => { setInputs({ diagnosis: '', patientId: '', age: '', sex: '', certPeriod: '', fast: '', pps: '', kps: '', weight: '', f2fDate: '', f2fConductedBy: '', f2fFindings: '' }); setF2fNote(''); setError(''); };
+  const applyF2FEdits = async () => {
+    if (!editRequest.trim()) return;
+    setLoading(true); setLoadingMsg('APPLYING EDITS...');
+    try {
+      const text = await streamGenerate({
+        system: buildF2FEditSystem(f2fNote, editRequest),
+        messages: [{ role: 'user', content: 'Apply the requested edits now.' }],
+        max_tokens: 2000,
+      });
+      if (!text) throw new Error('Empty');
+      setF2fNote(text); setEditRequest('');
+    } catch (e) { setError('Edit failed. Please try again.'); }
+    finally { setLoading(false); setLoadingMsg(''); }
+  };
+
+  const reset = () => { setInputs({ diagnosis: '', patientId: '', age: '', sex: '', certPeriod: '', fast: '', pps: '', kps: '', weight: '', f2fDate: '', f2fConductedBy: '', f2fFindings: '', rnNarrativeRef: '' }); setF2fNote(''); setEditRequest(''); setStage(0); setError(''); };
 
   return (
     <PageShell
       onHome={onBackHome}
       moduleName="Recertification Suite"
       badge="F2F PATHWAY"
+      steps={['Clinical Data', 'F2F Note']}
+      currentStep={stage}
+      onStepClick={(i) => { if (i < stage) setStage(i); }}
       title="Face-to-Face Encounter Note"
-      subtitle="Physician · Nurse Practitioner · Physician Assistant"
-      onBack={onBack}
-      backLabel="Pathways"
-      primaryAction={!f2fNote && !loading ? generate : null}
+      subtitle={stage === 0 ? 'Physician · Nurse Practitioner · Physician Assistant' : null}
+      onBack={stage === 1 ? () => setStage(0) : onBack}
+      backLabel={stage === 1 ? 'Edit Data' : 'Pathways'}
+      primaryAction={stage === 0 && !loading ? generate : null}
       primaryLabel="Generate F2F Note →"
       primaryDisabled={!inputs.f2fDate?.trim() || !inputs.f2fFindings?.trim()}
-      secondaryAction={f2fNote ? reset : null}
+      secondaryAction={stage === 1 ? reset : null}
       secondaryLabel="New F2F Note"
     >
       <div>
 
-        {error && <div style={{ background: 'rgba(224,112,112,0.08)', border: '1px solid rgba(224,112,112,0.3)', borderRadius: '6px', padding: '10px 16px', color: '#e07070', fontSize: '16px', fontFamily: C.mono, marginBottom: '20px' }}>{error}</div>}
+        <ErrorBox message={error} />
 
         {loading && (
           <ProgressLoader
-            message="GENERATING FACE-TO-FACE NOTE..."
+            message={loadingMsg || 'GENERATING FACE-TO-FACE NOTE...'}
             steps={['Processing clinical findings', 'Generating F2F note']}
             currentStep={1}
           />
         )}
 
-        {!f2fNote && !loading && (
+        {stage === 0 && !loading && (
           <div>
             <SectionLabel>Patient Information</SectionLabel>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
@@ -522,10 +554,19 @@ function F2FPathway({ onBack, onBackHome, demoPatient }) {
             </div>
 
             <SectionLabel>RN Recertification Narrative</SectionLabel>
-            <div style={{ fontSize: '17px', color: C.gold, marginBottom: '8px', fontStyle: 'italic' }}>
-              Optional — paste the RN Recert narrative for reference when documenting F2F findings.
-            </div>
-            <Textarea value={inputs.rnNarrativeRef || ''} onChange={v => setField('rnNarrativeRef', v)} placeholder="Paste RN Recertification Narrative here for reference (optional)..." rows={6} />
+            {demoPatient ? (
+              <div style={{ background: 'rgba(74,144,164,0.06)', border: `1px solid ${C.blueBorder}`, borderRadius: '4px', padding: '14px 18px', maxHeight: '220px', overflowY: 'auto' }}>
+                <div style={{ fontSize: '11px', letterSpacing: '2px', color: C.blue, fontFamily: C.mono, marginBottom: '10px' }}>RN RECERTIFICATION NARRATIVE — PRE-LOADED</div>
+                <div style={{ fontSize: '14px', color: C.textDim, lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>{inputs.rnNarrativeRef}</div>
+              </div>
+            ) : (
+              <>
+                <div style={{ fontSize: '15px', color: C.textDim, marginBottom: '8px', fontStyle: 'italic' }}>
+                  Optional — paste the RN Recert narrative for reference when documenting F2F findings.
+                </div>
+                <Textarea value={inputs.rnNarrativeRef || ''} onChange={v => setField('rnNarrativeRef', v)} placeholder="Paste RN Recertification Narrative here for reference (optional)..." rows={6} />
+              </>
+            )}
 
             <SectionLabel>Encounter Details</SectionLabel>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px' }}>
@@ -539,15 +580,20 @@ function F2FPathway({ onBack, onBackHome, demoPatient }) {
             </div>
             <Textarea value={inputs.f2fFindings} onChange={v => setField('f2fFindings', v)} placeholder="Describe clinical findings confirming continued decline related to the terminal diagnosis — functional status, systems findings, significant observations..." rows={10} />
 
-            <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'flex-end' }}>
-              <Btn onClick={generate} disabled={!inputs.f2fDate.trim() || !inputs.f2fFindings.trim()} style={{ padding: '12px 32px' }}>Generate F2F Note →</Btn>
-            </div>
           </div>
         )}
 
-        {f2fNote && !loading && (
+        {stage === 1 && !loading && (
           <div>
             <DocOutput title="Face-to-Face Encounter Note" content={f2fNote} />
+            <div style={{ marginTop: '28px', marginBottom: '24px' }}>
+              <div style={{ fontSize: '15px', color: C.gold, fontFamily: C.mono, letterSpacing: '2px', marginBottom: '8px' }}>REQUEST EDITS</div>
+              <div style={{ fontSize: '15px', color: C.textDim, marginBottom: '8px', fontStyle: 'italic' }}>Describe any changes needed — the AI will revise the note accordingly.</div>
+              <Textarea value={editRequest} onChange={setEditRequest} placeholder="e.g., Change the weight to 110 lbs. Add that patient requested to pause conversation due to dyspnea..." rows={3} />
+              <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'flex-end' }}>
+                <Btn variant="secondary" onClick={applyF2FEdits} disabled={!editRequest.trim()}>Apply Edits</Btn>
+              </div>
+            </div>
           </div>
         )}
       </div>
@@ -560,7 +606,10 @@ function MDPathway({ onBack, onBackHome, demoPatient }) {
   const [rnNarrative, setRnNarrative] = useState('');
   const [f2fNote, setF2fNote] = useState('');
   const [mdNote, setMdNote] = useState('');
+  const [editRequest, setEditRequest] = useState('');
   const [loading, setLoading] = useState(false);
+  const [loadingMsg, setLoadingMsg] = useState('');
+  const [stage, setStage] = useState(0);
   const [error, setError] = useState('');
 
   const setField = (key, val) => setInputs(p => ({ ...p, [key]: val }));
@@ -588,7 +637,7 @@ function MDPathway({ onBack, onBackHome, demoPatient }) {
 
   const generate = async () => {
     if (!rnNarrative.trim()) { setError('RN Recertification Narrative is required.'); return; }
-    setError(''); setLoading(true);
+    setError(''); setLoading(true); setLoadingMsg('GENERATING PHYSICIAN RECERTIFICATION NOTE...');
     try {
       const text = await streamGenerate({
         system: buildMDRecertSystem(inputs, rnNarrative, f2fNote),
@@ -596,41 +645,59 @@ function MDPathway({ onBack, onBackHome, demoPatient }) {
         max_tokens: 4000,
       });
       if (!text) throw new Error('Empty');
-      setMdNote(text);
+      setMdNote(text); setStage(1);
     } catch (e) { setError('Generation failed. Please try again.'); }
-    finally { setLoading(false); }
+    finally { setLoading(false); setLoadingMsg(''); }
   };
 
-  const reset = () => { setInputs({ diagnosis: '', patientId: '', age: '', sex: '', certPeriod: '', fast: '', pps: '', kps: '', weight: '', mdObservations: '', priorMDNote: '' }); setRnNarrative(''); setF2fNote(''); setMdNote(''); setError(''); };
+  const applyMDEdits = async () => {
+    if (!editRequest.trim()) return;
+    setLoading(true); setLoadingMsg('APPLYING EDITS...');
+    try {
+      const text = await streamGenerate({
+        system: buildMDRecertEditSystem(mdNote, editRequest),
+        messages: [{ role: 'user', content: 'Apply the requested edits now.' }],
+        max_tokens: 4000,
+      });
+      if (!text) throw new Error('Empty');
+      setMdNote(text); setEditRequest('');
+    } catch (e) { setError('Edit failed. Please try again.'); }
+    finally { setLoading(false); setLoadingMsg(''); }
+  };
+
+  const reset = () => { setInputs({ diagnosis: '', patientId: '', age: '', sex: '', certPeriod: '', fast: '', pps: '', kps: '', weight: '', mdObservations: '', priorMDNote: '' }); setRnNarrative(''); setF2fNote(''); setMdNote(''); setEditRequest(''); setStage(0); setError(''); };
 
   return (
     <PageShell
       onHome={onBackHome}
       moduleName="Recertification Suite"
       badge="PHYSICIAN PATHWAY"
+      steps={['Clinical Data', 'Physician Note']}
+      currentStep={stage}
+      onStepClick={(i) => { if (i < stage) setStage(i); }}
       title="Physician Recertification Note"
-      subtitle="Paste RN narrative and F2F note — generate physician recertification"
-      onBack={onBack}
-      backLabel="Pathways"
-      primaryAction={!mdNote && !loading ? generate : null}
+      subtitle={stage === 0 ? 'Paste RN narrative and F2F note — generate physician recertification' : null}
+      onBack={stage === 1 ? () => setStage(0) : onBack}
+      backLabel={stage === 1 ? 'Edit Data' : 'Pathways'}
+      primaryAction={stage === 0 && !loading ? generate : null}
       primaryLabel="Generate Physician Recert Note →"
       primaryDisabled={!rnNarrative.trim()}
-      secondaryAction={mdNote ? reset : null}
+      secondaryAction={stage === 1 ? reset : null}
       secondaryLabel="New Note"
     >
       <div>
 
-        {error && <div style={{ background: 'rgba(224,112,112,0.08)', border: '1px solid rgba(224,112,112,0.3)', borderRadius: '6px', padding: '10px 16px', color: '#e07070', fontSize: '16px', fontFamily: C.mono, marginBottom: '20px' }}>{error}</div>}
+        <ErrorBox message={error} />
 
         {loading && (
           <ProgressLoader
-            message="GENERATING PHYSICIAN RECERTIFICATION NOTE..."
+            message={loadingMsg || 'GENERATING PHYSICIAN RECERTIFICATION NOTE...'}
             steps={['Processing RN narrative', 'Synthesizing F2F note', 'Generating physician recert']}
             currentStep={2}
           />
         )}
 
-        {!mdNote && !loading && (
+        {stage === 0 && !loading && (
           <div>
             <SectionLabel>Patient Information</SectionLabel>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
@@ -667,15 +734,20 @@ function MDPathway({ onBack, onBackHome, demoPatient }) {
               <VoiceBtn onTranscript={t => setField('mdObservations', inputs.mdObservations ? inputs.mdObservations + ' ' + t : t)} />
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <Btn onClick={generate} disabled={!rnNarrative.trim()} style={{ padding: '12px 32px' }}>Generate Physician Recert Note →</Btn>
-            </div>
           </div>
         )}
 
-        {mdNote && !loading && (
+        {stage === 1 && !loading && (
           <div>
             <DocOutput title="Physician Recertification Note" content={mdNote} />
+            <div style={{ marginTop: '28px', marginBottom: '24px' }}>
+              <div style={{ fontSize: '15px', color: C.gold, fontFamily: C.mono, letterSpacing: '2px', marginBottom: '8px' }}>REQUEST EDITS</div>
+              <div style={{ fontSize: '15px', color: C.textDim, marginBottom: '8px', fontStyle: 'italic' }}>Describe any changes needed — the AI will revise the note accordingly.</div>
+              <Textarea value={editRequest} onChange={setEditRequest} placeholder="e.g., Strengthen the decline evidence section. Adjust the closing prognostic statement. Add the NT-proBNP value..." rows={3} />
+              <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'flex-end' }}>
+                <Btn variant="secondary" onClick={applyMDEdits} disabled={!editRequest.trim()}>Apply Edits</Btn>
+              </div>
+            </div>
           </div>
         )}
       </div>

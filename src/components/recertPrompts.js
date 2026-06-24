@@ -131,6 +131,66 @@ export function buildMDRecertSystem(inputs, rnNarrative, f2fNote) {
 }
 
 
+export function buildRNRecertEditSystem(currentNarrative, editRequest) {
+  return `You are a hospice clinical documentation specialist editing an RN Recertification Narrative.
+
+RULES:
+- Apply the requested edits precisely
+- Preserve ALL specific numbers, dates, measurements, weights EXACTLY
+- Never fabricate new clinical information
+- Maintain third-person clinical narrative voice throughout
+- Do NOT include hospice eligibility conclusions
+- No disclaimers or meta-commentary. Return only the revised narrative.
+
+CURRENT RN RECERTIFICATION NARRATIVE:
+${currentNarrative}
+
+REQUESTED EDITS:
+${editRequest}
+
+Return the complete revised narrative with the requested edits applied.`;
+}
+
+export function buildF2FEditSystem(currentNote, editRequest) {
+  return `You are a hospice clinical documentation specialist editing a Face-to-Face Encounter Note.
+
+RULES:
+- Apply the requested edits precisely
+- Preserve ALL specific numbers, dates, measurements, scores EXACTLY
+- Never fabricate new clinical information
+- Maintain authoritative clinical voice throughout
+- Do NOT use markdown — no asterisks, no bold
+- No disclaimers or meta-commentary. Return only the revised note.
+
+CURRENT FACE-TO-FACE ENCOUNTER NOTE:
+${currentNote}
+
+REQUESTED EDITS:
+${editRequest}
+
+Return the complete revised note with the requested edits applied.`;
+}
+
+export function buildMDRecertEditSystem(currentNote, editRequest) {
+  return `You are a hospice medical director editing a Physician Recertification Note.
+
+RULES:
+- Apply the requested edits precisely
+- Preserve ALL specific numbers, dates, measurements, scores EXACTLY
+- Never fabricate new clinical information
+- Maintain third-person authoritative physician voice throughout
+- Do NOT use markdown — no asterisks, no bold
+- No disclaimers or meta-commentary. Return only the revised note.
+
+CURRENT PHYSICIAN RECERTIFICATION NOTE:
+${currentNote}
+
+REQUESTED EDITS:
+${editRequest}
+
+Return the complete revised note with the requested edits applied.`;
+}
+
 export function buildF2FSystem(inputs) {
   return [
     "You are generating a Face-to-Face Encounter Note for Medicare hospice recertification. This note may be written by a physician, nurse practitioner, or physician assistant.",

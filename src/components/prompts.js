@@ -16,6 +16,8 @@ NON-NEGOTIABLE RULES:
 - Do NOT include hospice eligibility conclusions — that belongs in the CTI only
 - No disclaimers or meta-commentary
 - Use the section headers below in ALL CAPS exactly as listed
+- Do NOT use # (hashtag) before section headers — headers appear on their own line in ALL CAPS only
+- Do NOT use --- (horizontal dividers or separator lines) anywhere in the document
 - Preserve the nurse's clinical voice — direct, observational, specific
 - Labs should be presented as simple labeled values, not reformatted into prose
 - Imaging impressions should be quoted directly with numbered findings where available
@@ -45,7 +47,7 @@ PAST MEDICAL HISTORY
 Simple comma-separated list of all diagnoses. No elaboration or prose.
 
 NURSING ASSESSMENT
-Systems-based clinical assessment in third-person nurse voice. Cover: cognitive/neurological status (orientation, communication, safety awareness), pain assessment (patient report and family observations), respiratory (breath sounds, work of breathing, oxygen), cardiovascular (heart rhythm, edema, pulses), gastrointestinal/genitourinary (bowel sounds, continence, bladder), skin integrity. Be direct and specific — preserve exact clinical observations from the encounter narrative.
+Write a single flowing paragraph in third-person nurse voice summarizing all relevant assessment findings. Do not use sub-headers or a systems-based list format — integrate findings across systems into a unified clinical narrative. Cover cognitive/neurological status (orientation, communication, safety awareness), pain assessment (patient and family report), respiratory status (breath sounds, work of breathing, oxygen use), cardiovascular status (rhythm, edema, pulses), gastrointestinal/genitourinary function (bowel sounds, continence, bladder), and skin integrity. Be direct and specific — preserve exact clinical observations from the encounter narrative.
 
 VITAL SIGNS
 Present as simple labeled list:
@@ -70,10 +72,12 @@ ${encounter}`;
 
 
 export function buildCTISystem(primaryDx, secondaryDx, docs, encounter, narrative) {
-  const docText = Object.entries(docs)
-    .filter(([, v]) => v.trim())
-    .map(([k, v]) => `=== ${k.toUpperCase()} ===\n${v}`)
-    .join('\n\n');
+  const docText = docs.summaries
+    ? `=== RECORD SUMMARIES ===\n${docs.summaries}`
+    : Object.entries(docs)
+        .filter(([, v]) => v.trim())
+        .map(([k, v]) => `=== ${k.toUpperCase()} ===\n${v}`)
+        .join('\n\n');
 
   return `You are a hospice medical director writing an initial hospice certification note (Certificate of Terminal Illness) that is legally compliant and physician-level, aligned with Medicare CMS standards.
 
@@ -158,6 +162,28 @@ For each document summarized, use this format:
 [Summary text]
 
 Only summarize documents that have content. Do not fabricate summaries for empty fields.`;
+}
+
+export function buildCTIEditSystem(currentCTI, editRequest) {
+  return `You are a hospice medical director editing a Certificate of Terminal Illness (CTI).
+
+RULES:
+- Apply the requested edits precisely
+- Preserve ALL specific numbers, dates, lab values, measurements EXACTLY
+- Never fabricate new clinical information
+- Maintain third-person authoritative physician voice throughout
+- Never use section headers or titles of any kind
+- Never use markdown — no asterisks, no bold, no bullet points
+- All content flows in full, concise paragraphs
+- No disclaimers or meta-commentary. Return only the revised CTI.
+
+CURRENT CTI:
+${currentCTI}
+
+REQUESTED EDITS:
+${editRequest}
+
+Return the complete revised CTI with the requested edits applied.`;
 }
 
 export function buildNarrativeEditSystem(currentNarrative, editRequest) {

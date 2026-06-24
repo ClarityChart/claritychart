@@ -3,7 +3,7 @@ import { streamGenerate } from '../lib/streamGenerate';
 import { useState, useRef } from 'react';
 import { C } from './tokens';
 import { Textarea, Input, Btn, VoiceBtn, DocOutput, TopNav, ErrorBox, Collapsible, ProgressLoader, EditableDraft, BackBtn, ProgressSteps, useUnsavedWarning, PageShell, DocModal } from './ui';
-import { buildNarrativeSystem, buildCTISystem, buildRecordSummarySystem, buildNarrativeEditSystem } from './prompts';
+import { buildNarrativeSystem, buildCTISystem, buildRecordSummarySystem, buildNarrativeEditSystem, buildCTIEditSystem } from './prompts';
 import { DEMO_PATIENTS, PATIENT_LIST } from './demoPatients';
 
 const EMPTY_DOCS = { dischargeSummary: '', hp: '', palliativeCare: '', specialistNote: '', woundCare: '', labs: '', imaging: '' };
@@ -34,6 +34,7 @@ export default function AdmissionEngine({ onBack }) {
 
   if (mode === 'demo') return <DemoMode onBack={() => setMode(null)} onBackHome={onBack} />;
   if (mode === 'clinical') return <ClinicalMode onBack={() => setMode(null)} onBackHome={onBack} />;
+  if (mode === 'physician-cti') return <PhysicianCTIMode onBack={() => setMode(null)} onBackHome={onBack} />;
 
   return (
     <PageShell
@@ -44,7 +45,7 @@ export default function AdmissionEngine({ onBack }) {
       subtitle="Choose how you would like to proceed"
       hideProgress={true}
     >
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px' }}>
         <ModeCard
           title="Demo Mode"
           subtitle="See ClarityChart in action"
@@ -62,6 +63,15 @@ export default function AdmissionEngine({ onBack }) {
           badgeColor={C.green}
           icon="◈"
           onClick={() => setMode('clinical')}
+        />
+        <ModeCard
+          title="Physician CTI Mode"
+          subtitle="CTI from completed narrative"
+          description="Enter diagnosis, paste chart records, then provide the completed Admission Narrative. ClarityChart generates the physician CTI with full edit support."
+          badge="Physician"
+          badgeColor={C.blue}
+          icon="◉"
+          onClick={() => setMode('physician-cti')}
         />
       </div>
     </PageShell>
@@ -430,6 +440,175 @@ function DemoMode({ onBack, onBackHome }) {
         )}
       </div>
       <DocModal doc={viewingDoc} onClose={() => setViewingDoc(null)} />
+    </PageShell>
+  );
+}
+
+function PhysicianCTIMode({ onBack, onBackHome }) {
+  const [stage, setStage] = useState(1);
+  const [primaryDx, setPrimaryDx] = useState('');
+  const [secondaryDx, setSecondaryDx] = useState('');
+  const [docs, setDocs] = useState(EMPTY_DOCS);
+  const [admissionNarrative, setAdmissionNarrative] = useState('');
+  const [cti, setCti] = useState('');
+  const [ctiEditRequest, setCtiEditRequest] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [loadingMsg, setLoadingMsg] = useState('');
+  const [error, setError] = useState('');
+
+  const reset = () => {
+    setStage(1); setPrimaryDx(''); setSecondaryDx('');
+    setDocs(EMPTY_DOCS); setAdmissionNarrative(''); setCti('');
+    setCtiEditRequest(''); setError('');
+  };
+
+  const docCount = Object.values(docs).filter(v => v.trim()).length;
+
+  const generateCTI = async () => {
+    setError(''); setLoading(true); setLoadingMsg('Generating Certificate of Terminal Illness...'); setCti(''); setStage(4);
+    try {
+      const text = await streamGenerate({
+        system: buildCTISystem(primaryDx, secondaryDx, docs, '', admissionNarrative),
+        messages: [{ role: 'user', content: 'Generate the Certificate of Terminal Illness now.' }],
+        max_tokens: 4000,
+      });
+      if (!text) throw new Error('Empty');
+      setCti(text);
+    } catch (e) { setError(e.message || 'CTI generation failed. Please try again.'); setStage(3); }
+    finally { setLoading(false); setLoadingMsg(''); }
+  };
+
+  const applyEdits = async () => {
+    if (!ctiEditRequest.trim()) return;
+    setLoading(true); setLoadingMsg('Applying edits...');
+    try {
+      const text = await streamGenerate({
+        system: buildCTIEditSystem(cti, ctiEditRequest),
+        messages: [{ role: 'user', content: 'Apply the requested edits now.' }],
+        max_tokens: 4000,
+      });
+      if (!text) throw new Error('Empty');
+      setCti(text); setCtiEditRequest('');
+    } catch (e) { setError(e.message || 'Edit failed. Please try again.'); }
+    finally { setLoading(false); setLoadingMsg(''); }
+  };
+
+  const stageLabels = ['Diagnosis', 'Records', 'Narrative', 'CTI'];
+
+  const titles = {
+    1: 'Diagnosis',
+    2: 'Chart Records',
+    3: 'Admission Narrative',
+    4: 'Certificate of Terminal Illness',
+  };
+
+  const primaryActions = {
+    1: { action: () => { setError(''); setStage(2); }, label: 'Continue → Records', disabled: !primaryDx.trim() },
+    2: { action: () => setStage(3), label: 'Continue → Narrative' },
+    3: { action: generateCTI, label: 'Generate Certificate of Terminal Illness →', disabled: !admissionNarrative.trim() },
+  };
+
+  const backActions = {
+    1: onBack,
+    2: () => setStage(1),
+    3: () => setStage(2),
+    4: () => setStage(3),
+  };
+
+  const backLabels = {
+    1: 'Admission Engine',
+    2: 'Diagnosis',
+    3: 'Records',
+    4: 'Narrative',
+  };
+
+  return (
+    <PageShell
+      onHome={onBackHome}
+      moduleName="Admission Engine"
+      badge="PHYSICIAN CTI MODE"
+      steps={stageLabels}
+      currentStep={stage - 1}
+      onStepClick={(i) => { if (i + 1 < stage) setStage(i + 1); }}
+      title={titles[stage]}
+      onBack={backActions[stage]}
+      backLabel={backLabels[stage]}
+      primaryAction={!loading && primaryActions[stage]?.action}
+      primaryLabel={primaryActions[stage]?.label}
+      primaryDisabled={primaryActions[stage]?.disabled}
+      secondaryAction={stage === 4 ? reset : null}
+      secondaryLabel={stage === 4 ? 'New Admission' : null}
+    >
+      <ErrorBox message={error} />
+
+      {loading && (
+        <ProgressLoader
+          message={loadingMsg}
+          steps={['Processing records', 'Generating CTI']}
+          currentStep={loadingMsg.includes('CTI') || loadingMsg.includes('Certificate') ? 1 : 0}
+        />
+      )}
+
+      {stage === 1 && !loading && (
+        <div>
+          <div style={{ background: 'rgba(196,168,130,0.05)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '14px 18px', marginBottom: '24px', fontSize: '17px', color: '#f0e8dc', fontFamily: C.sans, fontWeight: '600', lineHeight: 1.6 }}>
+            Enter the physician-determined terminal diagnosis. ClarityChart will generate the CTI using the completed Admission Narrative and chart records.
+          </div>
+          <div style={{ fontSize: '15px', color: C.gold, fontFamily: C.mono, letterSpacing: '2px', marginBottom: '8px' }}>PRIMARY TERMINAL DIAGNOSIS <span style={{ color: '#e07070' }}>*</span></div>
+          <Input value={primaryDx} onChange={setPrimaryDx} placeholder="e.g., Chronic diastolic heart failure (HFpEF), end-stage" />
+          <div style={{ fontSize: '15px', fontFamily: C.mono, letterSpacing: '2px', color: C.textDim, marginTop: '22px', marginBottom: '8px' }}>SECONDARY / CONTRIBUTING DIAGNOSES</div>
+          <Textarea value={secondaryDx} onChange={setSecondaryDx} placeholder="e.g., CKD stage 4, Type 2 diabetes mellitus, hypertension..." rows={3} />
+        </div>
+      )}
+
+      {stage === 2 && !loading && (
+        <div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
+            <div style={{ fontSize: '17px', color: C.gold, fontStyle: 'italic' }}>Paste relevant chart records. All fields optional — records improve CTI accuracy.</div>
+            <div style={{ fontSize: '15px', fontFamily: C.mono, color: docCount > 0 ? C.green : C.goldDim }}>{docCount}/{DOC_FIELDS.length} loaded</div>
+          </div>
+          {DOC_FIELDS.map(({key, label, placeholder}) => (
+            <div key={key} style={{ marginBottom: '20px' }}>
+              <div style={{ fontSize: '15px', fontFamily: C.mono, letterSpacing: '1.5px', color: docs[key]?.trim() ? C.gold : C.textDim, marginBottom: '6px' }}>
+                {docs[key]?.trim() ? '✓ ' : '○ '}{label.toUpperCase()}
+              </div>
+              <Textarea value={docs[key] || ''} onChange={v => setDocs(d => ({...d,[key]:v}))} placeholder={placeholder} rows={docs[key]?.trim() ? 4 : 2} mono />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {stage === 3 && !loading && (
+        <div>
+          <div style={{ background: 'rgba(196,168,130,0.04)', border: `1px solid ${C.border}`, borderRadius: '2px', padding: '14px 18px', marginBottom: '24px' }}>
+            <div style={{ fontSize: '16px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '10px' }}>DIAGNOSES</div>
+            <div style={{ fontSize: '17px', color: C.text, marginBottom: '4px' }}><span style={{ color: C.goldDim, fontSize: '15px', fontFamily: C.mono }}>Primary: </span>{primaryDx}</div>
+            {secondaryDx && <div style={{ fontSize: '19px', color: '#c8b8a8', fontWeight: '400', marginTop: '4px' }}><span style={{ color: C.goldDim, fontSize: '15px', fontFamily: C.mono }}>Secondary: </span>{secondaryDx}</div>}
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+            <div style={{ fontSize: '15px', fontFamily: C.mono, letterSpacing: '2px', color: C.gold }}>
+              ADMISSION NARRATIVE <span style={{ color: '#e07070' }}>*</span>
+            </div>
+            <VoiceBtn onTranscript={t => setAdmissionNarrative(p => p ? p + ' ' + t : t)} />
+          </div>
+          <div style={{ fontSize: '15px', color: C.textDim, marginBottom: '12px' }}>Paste the completed RN Admission Narrative, or dictate it directly.</div>
+          <Textarea value={admissionNarrative} onChange={setAdmissionNarrative} placeholder="Paste the completed admission narrative here..." rows={16} />
+        </div>
+      )}
+
+      {stage === 4 && !loading && (
+        <div>
+          {cti && <DocOutput title="Certificate of Terminal Illness" content={cti} />}
+          <div style={{ marginTop: '28px', marginBottom: '24px' }}>
+            <div style={{ fontSize: '15px', color: C.gold, fontFamily: C.mono, letterSpacing: '2px', marginBottom: '8px' }}>REQUEST EDITS</div>
+            <div style={{ fontSize: '17px', color: C.textDim, marginBottom: '8px', fontStyle: 'italic' }}>Describe any changes needed — the AI will revise the CTI accordingly.</div>
+            <Textarea value={ctiEditRequest} onChange={setCtiEditRequest} placeholder="e.g., Change the EF to 35%. Add that patient has a history of COPD. Adjust the prognostic statement..." rows={4} />
+            <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'flex-end' }}>
+              <Btn variant="secondary" onClick={applyEdits} disabled={!ctiEditRequest.trim()}>Apply Edits</Btn>
+            </div>
+          </div>
+        </div>
+      )}
     </PageShell>
   );
 }

@@ -11,6 +11,9 @@ node_modules/
 .env.local
 .env
 
+# deploy script contains secrets — never commit
+scripts/deploy-generate-lambda.sh
+
 # misc
 .DS_Store
 *.pem

@@ -135,6 +135,7 @@ function DemoMode({ onBack, onBackHome }) {
   const [narrative, setNarrative] = useState('');
   const [editRequest, setEditRequest] = useState('');
   const [cti, setCti] = useState('');
+  const [ctiEditRequest, setCtiEditRequest] = useState('');
   const [loading, setLoading] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState('');
   const [error, setError] = useState('');
@@ -146,7 +147,7 @@ function DemoMode({ onBack, onBackHome }) {
   const selectPatient = (id) => {
     setSelectedPatient(id);
     setDroppedDocs([]); setRecordSummaries(''); setEncounter('');
-    setNarrative(''); setEditRequest(''); setCti(''); setError('');
+    setNarrative(''); setEditRequest(''); setCti(''); setCtiEditRequest(''); setError('');
     summariesRef.current = '';
     setStage('build');
   };
@@ -247,10 +248,25 @@ function DemoMode({ onBack, onBackHome }) {
     finally { setLoading(false); setLoadingMsg(''); }
   };
 
+  const applyCTIEdits = async () => {
+    if (!ctiEditRequest.trim()) return;
+    setLoading(true); setLoadingMsg('Applying edits...');
+    try {
+      const text = await streamGenerate({
+        system: buildCTIEditSystem(cti, ctiEditRequest),
+        messages: [{ role: 'user', content: 'Apply the requested edits now.' }],
+        max_tokens: 4000,
+      });
+      if (!text) throw new Error('Empty');
+      setCti(text); setCtiEditRequest('');
+    } catch (e) { setError(e.message || 'Edit failed. Please try again.'); }
+    finally { setLoading(false); setLoadingMsg(''); }
+  };
+
   const reset = () => {
     setStage('select'); setSelectedPatient(null); setDroppedDocs([]);
     setRecordSummaries(''); setEncounter(''); setNarrative('');
-    setEditRequest(''); setCti(''); setError('');
+    setEditRequest(''); setCti(''); setCtiEditRequest(''); setError('');
     summariesRef.current = '';
   };
 
@@ -423,6 +439,21 @@ function DemoMode({ onBack, onBackHome }) {
         {stage === 'cti' && !loading && (
           <div>
             {cti && <DocOutput title="Certificate of Terminal Illness" content={cti} />}
+            {cti && (
+              <div style={{ marginBottom: '28px' }}>
+                <div style={{ fontSize: '15px', color: C.gold, fontFamily: C.mono, letterSpacing: '2px', marginBottom: '8px' }}>REQUEST EDITS</div>
+                <div style={{ fontSize: '15px', color: C.textDim, marginBottom: '8px', fontStyle: 'italic' }}>Describe any changes needed — the AI will revise the CTI accordingly.</div>
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
+                  <div style={{ flex: 1 }}>
+                    <Textarea value={ctiEditRequest} onChange={setCtiEditRequest} placeholder="e.g., Change the EF to 35%. Add that patient has a history of COPD. Adjust the prognostic statement..." rows={3} />
+                  </div>
+                  <VoiceBtn onTranscript={t => setCtiEditRequest(p => p ? p + ' ' + t : t)} />
+                </div>
+                <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'flex-end' }}>
+                  <Btn variant="secondary" onClick={applyCTIEdits} disabled={!ctiEditRequest.trim()}>Apply Edits</Btn>
+                </div>
+              </div>
+            )}
             {narrative && (
               <div style={{ marginTop: '28px' }}>
                 <div style={{ fontSize: '16px', letterSpacing: '2px', color: C.gold, fontWeight: '700', textTransform: 'uppercase', fontFamily: C.mono, marginBottom: '12px' }}>ADMISSION NARRATIVE — FOR REFERENCE</div>
@@ -624,6 +655,7 @@ function ClinicalMode({ onBack, onBackHome }) {
   const [narrative, setNarrative] = useState('');
   const [editRequest, setEditRequest] = useState('');
   const [cti, setCti] = useState('');
+  const [ctiEditRequest, setCtiEditRequest] = useState('');
   const [loading, setLoading] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState('');
   const [error, setError] = useState('');
@@ -631,7 +663,7 @@ function ClinicalMode({ onBack, onBackHome }) {
   const reset = () => {
     setStage(1); setPrimaryDx(''); setSecondaryDx('');
     setDocs(EMPTY_DOCS); setRecordSummaries(''); setEncounter('');
-    setNarrative(''); setEditRequest(''); setCti(''); setError('');
+    setNarrative(''); setEditRequest(''); setCti(''); setCtiEditRequest(''); setError('');
     summariesRef.current = '';
   };
 
@@ -702,6 +734,21 @@ function ClinicalMode({ onBack, onBackHome }) {
       if (!text) throw new Error('Empty');
       setCti(text);
     } catch (e) { setError(e.message || 'CTI generation failed. Please try again.'); setStage(4); }
+    finally { setLoading(false); setLoadingMsg(''); }
+  };
+
+  const applyCTIEdits = async () => {
+    if (!ctiEditRequest.trim()) return;
+    setLoading(true); setLoadingMsg('Applying edits...');
+    try {
+      const text = await streamGenerate({
+        system: buildCTIEditSystem(cti, ctiEditRequest),
+        messages: [{ role: 'user', content: 'Apply the requested edits now.' }],
+        max_tokens: 4000,
+      });
+      if (!text) throw new Error('Empty');
+      setCti(text); setCtiEditRequest('');
+    } catch (e) { setError(e.message || 'Edit failed. Please try again.'); }
     finally { setLoading(false); setLoadingMsg(''); }
   };
 
@@ -861,6 +908,21 @@ function ClinicalMode({ onBack, onBackHome }) {
       {stage === 5 && !loading && (
         <div>
           {cti && <DocOutput title="Certificate of Terminal Illness" content={cti} />}
+          {cti && (
+            <div style={{ marginBottom: '28px' }}>
+              <div style={{ fontSize: '15px', color: C.gold, fontFamily: C.mono, letterSpacing: '2px', marginBottom: '8px' }}>REQUEST EDITS</div>
+              <div style={{ fontSize: '15px', color: C.textDim, marginBottom: '8px', fontStyle: 'italic' }}>Describe any changes needed — the AI will revise the CTI accordingly.</div>
+              <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
+                <div style={{ flex: 1 }}>
+                  <Textarea value={ctiEditRequest} onChange={setCtiEditRequest} placeholder="e.g., Change the EF to 35%. Add that patient has a history of COPD. Adjust the prognostic statement..." rows={3} />
+                </div>
+                <VoiceBtn onTranscript={t => setCtiEditRequest(p => p ? p + ' ' + t : t)} />
+              </div>
+              <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'flex-end' }}>
+                <Btn variant="secondary" onClick={applyCTIEdits} disabled={!ctiEditRequest.trim()}>Apply Edits</Btn>
+              </div>
+            </div>
+          )}
 
           {narrative && (
             <div style={{ marginTop: '28px' }}>

@@ -79,10 +79,6 @@ export default function ClarityChart() {
             <div style={{ fontSize: '18px', color: C.textFaint, marginTop: '8px', fontStyle: 'italic' }}>Built exclusively for hospice</div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '7px', background: C.goldFaint, border: `1px solid ${C.navBorder}`, borderRadius: '20px', padding: '6px 16px', fontSize: '14px', color: C.textDim, fontFamily: C.mono }}>
-              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: C.green, boxShadow: `0 0 6px ${C.green}`, flexShrink: 0 }} />
-              All systems online
-            </div>
             <button
               onClick={handleSignOut}
               onMouseEnter={() => setSignOutHov(true)}

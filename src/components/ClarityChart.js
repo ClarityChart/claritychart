@@ -22,7 +22,7 @@ function ModCard({ mod, onClick }) {
       onMouseLeave={() => setHov(false)}
       style={{
         display: 'flex', alignItems: 'center', gap: '14px',
-        padding: '14px 16px', width: '100%',
+        padding: '16px 18px', width: '100%',
         background: hov && active ? C.bgCardHover : 'transparent',
         border: `1px solid ${hov && active ? C.goldBorder : 'transparent'}`,
         borderRadius: '6px', cursor: active ? 'pointer' : 'default',
@@ -31,21 +31,21 @@ function ModCard({ mod, onClick }) {
       }}
     >
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: '16px', fontWeight: active ? '600' : 'normal', color: active ? C.text : C.textDim, marginBottom: '3px', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+        <div style={{ fontSize: 'clamp(17px, 1.5vw, 19px)', fontWeight: active ? '600' : 'normal', color: active ? C.text : C.textDim, marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
           {mod.label}
-          <span style={{ fontSize: '11px', color: sc.c, background: sc.bg, border: `1px solid ${sc.b}`, borderRadius: '10px', padding: '1px 8px', fontFamily: C.mono, letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>
+          <span style={{ fontSize: '13px', color: sc.c, background: sc.bg, border: `1px solid ${sc.b}`, borderRadius: '10px', padding: '1px 8px', fontFamily: C.mono, letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>
             {sc.l}
           </span>
         </div>
-        <div style={{ fontSize: '14px', color: C.goldDim, fontStyle: 'italic' }}>{mod.desc}</div>
+        <div style={{ fontSize: '16px', color: C.goldDim, fontStyle: 'italic' }}>{mod.desc}</div>
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', alignItems: 'flex-end', flexShrink: 0 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', alignItems: 'flex-end', flexShrink: 0 }}>
         {mod.outputs.map(o => (
-          <span key={o} style={{ fontSize: '12px', color: C.goldDim, fontFamily: C.mono, whiteSpace: 'nowrap' }}>→ {o}</span>
+          <span key={o} style={{ fontSize: '14px', color: C.goldDim, fontFamily: C.mono, whiteSpace: 'nowrap' }}>→ {o}</span>
         ))}
       </div>
       {active && (
-        <span style={{ color: hov ? C.gold : C.textFaint, fontSize: '20px', flexShrink: 0, transition: 'all 0.15s', transform: hov ? 'translateX(2px)' : 'none', display: 'inline-block' }}>›</span>
+        <span style={{ color: hov ? C.gold : C.textFaint, fontSize: '22px', flexShrink: 0, transition: 'all 0.15s', transform: hov ? 'translateX(2px)' : 'none', display: 'inline-block' }}>›</span>
       )}
     </button>
   );
@@ -67,22 +67,19 @@ export default function ClarityChart() {
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: C.bg, fontFamily: C.sans, color: C.text }}>
-      {/* Subtle grid pattern */}
-      <div style={{ position: 'fixed', inset: 0, backgroundImage: `linear-gradient(${C.navBorder} 1px,transparent 1px),linear-gradient(90deg,${C.navBorder} 1px,transparent 1px)`, backgroundSize: '48px 48px', pointerEvents: 'none', opacity: 0.6 }} />
-
-      <div style={{ position: 'relative', maxWidth: '1020px', margin: '0 auto', padding: '0 32px 64px' }}>
+      <div style={{ maxWidth: '1060px', margin: '0 auto', padding: '0 32px 64px' }}>
 
         {/* Header */}
-        <header style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', padding: '40px 0 28px', borderBottom: `1px solid ${C.border}`, marginBottom: '40px' }}>
+        <header style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', padding: '40px 0 28px', borderBottom: `1px solid ${C.border}`, marginBottom: '44px' }}>
           <div>
-            <div style={{ fontSize: '11px', letterSpacing: '4px', color: C.textFaint, fontFamily: C.mono, textTransform: 'uppercase', marginBottom: '8px' }}>Clinical Documentation Platform</div>
+            <div style={{ fontSize: '13px', letterSpacing: '4px', color: C.textFaint, fontFamily: C.mono, textTransform: 'uppercase', marginBottom: '6px' }}>Clinical Documentation Platform</div>
             <div style={{ fontSize: 'clamp(30px, 3.2vw, 42px)', color: C.text, fontFamily: C.serif, lineHeight: 1.1 }}>
               Clarity<span style={{ color: C.gold }}>Chart</span>
             </div>
-            <div style={{ fontSize: '16px', color: C.textFaint, marginTop: '8px', fontStyle: 'italic' }}>Built exclusively for hospice</div>
+            <div style={{ fontSize: '18px', color: C.textFaint, marginTop: '8px', fontStyle: 'italic' }}>Built exclusively for hospice</div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '7px', background: C.goldFaint, border: `1px solid ${C.navBorder}`, borderRadius: '20px', padding: '6px 14px', fontSize: '13px', color: C.textDim, fontFamily: C.mono }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '7px', background: C.goldFaint, border: `1px solid ${C.navBorder}`, borderRadius: '20px', padding: '6px 16px', fontSize: '14px', color: C.textDim, fontFamily: C.mono }}>
               <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: C.green, boxShadow: `0 0 6px ${C.green}`, flexShrink: 0 }} />
               All systems online
             </div>
@@ -96,46 +93,46 @@ export default function ClarityChart() {
                 borderRadius: '4px',
                 color: signOutHov ? C.textDim : C.textFaint,
                 cursor: 'pointer',
-                fontFamily: C.mono, fontSize: '11px', letterSpacing: '1.5px',
-                padding: '6px 12px', transition: 'all 0.15s', textTransform: 'uppercase',
+                fontFamily: C.mono, fontSize: '12px', letterSpacing: '1.5px',
+                padding: '6px 14px', transition: 'all 0.15s', textTransform: 'uppercase',
               }}>Sign Out</button>
           </div>
         </header>
 
         {/* Module section label */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
-          <div style={{ fontSize: '11px', letterSpacing: '3px', color: C.goldDim, fontFamily: C.mono, textTransform: 'uppercase', fontWeight: '700' }}>Documentation Modules</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '18px' }}>
+          <div style={{ fontSize: '13px', letterSpacing: '3px', color: C.goldDim, fontFamily: C.mono, textTransform: 'uppercase', fontWeight: '700' }}>Documentation Modules</div>
           <div style={{ flex: 1, height: '1px', background: C.navBorder }} />
         </div>
 
         {/* Modules grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '18px' }}>
 
           {/* Admission Pathway */}
           <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: '8px', overflow: 'hidden' }}>
-            <div style={{ padding: '16px 20px 14px', borderBottom: `1px solid ${C.navBorder}`, display: 'flex', alignItems: 'center', gap: '12px', background: C.goldFaint }}>
-              <div style={{ width: '30px', height: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(196,168,130,0.1)', border: `1px solid ${C.goldBorder}`, borderRadius: '6px', fontSize: '14px', color: C.gold, flexShrink: 0 }}>✦</div>
+            <div style={{ padding: '18px 22px 16px', borderBottom: `1px solid ${C.navBorder}`, display: 'flex', alignItems: 'center', gap: '14px', background: C.goldFaint }}>
+              <div style={{ width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(196,168,130,0.1)', border: `1px solid ${C.goldBorder}`, borderRadius: '6px', fontSize: '18px', color: C.gold, flexShrink: 0 }}>✦</div>
               <div>
-                <div style={{ fontSize: '15px', color: C.text, fontWeight: '600', fontFamily: C.sans }}> Admission Pathway</div>
-                <div style={{ fontSize: '12px', color: C.goldDim, fontFamily: C.mono, marginTop: '1px' }}>New patient enrollment</div>
+                <div style={{ fontSize: 'clamp(17px, 1.5vw, 19px)', color: C.text, fontWeight: '600' }}>Admission Pathway</div>
+                <div style={{ fontSize: '14px', color: C.goldDim, fontFamily: C.mono, marginTop: '2px' }}>New patient enrollment</div>
               </div>
             </div>
-            <div style={{ padding: '8px 10px 12px' }}>
+            <div style={{ padding: '10px 12px 14px' }}>
               <ModCard mod={{ label: 'Admission Engine', desc: 'Narrative + CTI from uploaded records', status: 'complete', outputs: ['Admission Narrative', 'CTI'] }} onClick={() => setView('admission-engine')} />
-              <div style={{ fontSize: '11px', color: C.textFaint, fontFamily: C.mono, letterSpacing: '1px', padding: '2px 16px 0', textTransform: 'uppercase' }}>Records → Encounter → Narrative + CTI</div>
+              <div style={{ fontSize: '13px', color: C.textFaint, fontFamily: C.mono, letterSpacing: '1px', padding: '4px 18px 0', textTransform: 'uppercase' }}>Records → Encounter → Narrative + CTI</div>
             </div>
           </div>
 
           {/* Ongoing Care Pathway */}
           <div style={{ background: C.bgCard, border: `1px solid ${C.border}`, borderRadius: '8px', overflow: 'hidden' }}>
-            <div style={{ padding: '16px 20px 14px', borderBottom: `1px solid rgba(90,170,192,0.15)`, display: 'flex', alignItems: 'center', gap: '12px', background: C.goldFaint }}>
-              <div style={{ width: '30px', height: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: C.blueDim, border: `1px solid ${C.blueBorder}`, borderRadius: '6px', fontSize: '14px', color: C.blue, flexShrink: 0 }}>◎</div>
+            <div style={{ padding: '18px 22px 16px', borderBottom: `1px solid rgba(90,170,192,0.15)`, display: 'flex', alignItems: 'center', gap: '14px', background: C.goldFaint }}>
+              <div style={{ width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: C.blueDim, border: `1px solid ${C.blueBorder}`, borderRadius: '6px', fontSize: '18px', color: C.blue, flexShrink: 0 }}>◎</div>
               <div>
-                <div style={{ fontSize: '15px', color: C.text, fontWeight: '600', fontFamily: C.sans }}>Ongoing Care Pathway</div>
-                <div style={{ fontSize: '12px', color: C.blue, fontFamily: C.mono, marginTop: '1px' }}>Visit notes · Recertification</div>
+                <div style={{ fontSize: 'clamp(17px, 1.5vw, 19px)', color: C.text, fontWeight: '600' }}>Ongoing Care Pathway</div>
+                <div style={{ fontSize: '14px', color: C.blue, fontFamily: C.mono, marginTop: '2px' }}>Visit notes · Recertification</div>
               </div>
             </div>
-            <div style={{ padding: '8px 10px 12px' }}>
+            <div style={{ padding: '10px 12px 14px' }}>
               {[
                 { label: 'RN Visit Note', desc: '10 clinical scenarios, voice or text', status: 'complete', outputs: ['Structured Visit Note'] },
                 { label: 'Recertification Suite', desc: 'RN → F2F → Physician pipeline', status: 'complete', outputs: ['RN Recert', 'Physician Recert'] },
@@ -149,15 +146,15 @@ export default function ClarityChart() {
                   ) : null}
                 />
               ))}
-              <div style={{ fontSize: '11px', color: C.textFaint, fontFamily: C.mono, letterSpacing: '1px', padding: '2px 16px 0', textTransform: 'uppercase' }}>Visit Notes → RN Recert → MD Recert</div>
+              <div style={{ fontSize: '13px', color: C.textFaint, fontFamily: C.mono, letterSpacing: '1px', padding: '4px 18px 0', textTransform: 'uppercase' }}>Visit Notes → RN Recert → MD Recert</div>
             </div>
           </div>
         </div>
 
         {/* Footer */}
         <div style={{ borderTop: `1px solid ${C.navBorder}`, marginTop: '52px', paddingTop: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ fontSize: '11px', color: 'rgba(196,168,130,0.3)', fontFamily: C.mono, letterSpacing: '1.5px', textTransform: 'uppercase' }}>ClarityChart · Hospice Documentation Platform · Beta</div>
-          <div style={{ fontSize: '11px', color: 'rgba(196,168,130,0.3)', fontFamily: C.mono, letterSpacing: '1px', textTransform: 'uppercase' }}>For Clinical Use · Not for Diagnostic Decisions</div>
+          <div style={{ fontSize: '13px', color: 'rgba(196,168,130,0.3)', fontFamily: C.mono, letterSpacing: '1.5px', textTransform: 'uppercase' }}>ClarityChart · Hospice Documentation Platform · Beta</div>
+          <div style={{ fontSize: '13px', color: 'rgba(196,168,130,0.3)', fontFamily: C.mono, letterSpacing: '1px', textTransform: 'uppercase' }}>For Clinical Use · Not for Diagnostic Decisions</div>
         </div>
       </div>
     </div>

@@ -6,10 +6,39 @@ import AdmissionEngine from './AdmissionEngine';
 import RNVisitNote from './RNVisitNote';
 import RecertSuite from './RecertSuite';
 
+function OutputTag({ label }) {
+  return (
+    <span style={{
+      fontSize: '13px', color: C.gold,
+      background: 'rgba(196,168,130,0.12)',
+      border: `1px solid ${C.goldBorder}`,
+      borderRadius: '4px', padding: '3px 10px',
+      fontFamily: C.mono, whiteSpace: 'nowrap', fontWeight: '500',
+    }}>
+      {label}
+    </span>
+  );
+}
+
+function FlowLine({ steps, outputs }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 18px 4px', flexWrap: 'wrap' }}>
+      {steps.map((step, i) => (
+        <span key={step} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ fontSize: '13px', color: C.textFaint, fontFamily: C.mono }}>{step}</span>
+          <span style={{ fontSize: '13px', color: 'rgba(196,168,130,0.35)' }}>›</span>
+        </span>
+      ))}
+      <span style={{ display: 'inline-flex', gap: '6px', flexWrap: 'wrap' }}>
+        {outputs.map(o => <OutputTag key={o} label={o} />)}
+      </span>
+    </div>
+  );
+}
+
 function ModCard({ mod, onClick }) {
   const [hov, setHov] = useState(false);
   const active = mod.status === 'complete';
-  const notAvailable = mod.status !== 'complete';
   const sc = {
     soon: { l: 'Coming Soon', c: C.blue, bg: C.blueDim, b: C.blueBorder },
     queued: { l: 'Planned', c: 'rgba(138,138,154,0.8)', bg: 'rgba(138,138,154,0.08)', b: 'rgba(138,138,154,0.2)' },
@@ -27,28 +56,21 @@ function ModCard({ mod, onClick }) {
         border: `1px solid ${hov && active ? C.goldBorder : 'transparent'}`,
         borderRadius: '6px', cursor: active ? 'pointer' : 'default',
         textAlign: 'left', transition: 'all 0.15s',
-        opacity: notAvailable ? 0.4 : 1,
+        opacity: active ? 1 : 0.4,
       }}
     >
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '5px', flexWrap: 'wrap' }}>
-          <span style={{ fontSize: 'clamp(17px, 1.5vw, 19px)', fontWeight: '600', color: active ? C.text : C.textDim }}>
+          <span style={{ fontSize: '19px', fontWeight: '600', color: active ? C.text : C.textDim }}>
             {mod.label}
           </span>
           {sc && (
-            <span style={{ fontSize: '12px', color: sc.c, background: sc.bg, border: `1px solid ${sc.b}`, borderRadius: '10px', padding: '1px 8px', fontFamily: C.mono, letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>
+            <span style={{ fontSize: '12px', color: sc.c, background: sc.bg, border: `1px solid ${sc.b}`, borderRadius: '10px', padding: '1px 8px', fontFamily: C.mono, whiteSpace: 'nowrap' }}>
               {sc.l}
             </span>
           )}
         </div>
-        <div style={{ fontSize: '15px', color: C.textFaint }}>{mod.desc}</div>
-        <div style={{ display: 'flex', gap: '6px', marginTop: '8px', flexWrap: 'wrap' }}>
-          {mod.outputs.map(o => (
-            <span key={o} style={{ fontSize: '12px', color: C.textFaint, background: 'rgba(196,168,130,0.07)', border: `1px solid rgba(196,168,130,0.18)`, borderRadius: '4px', padding: '2px 8px', fontFamily: C.mono, whiteSpace: 'nowrap' }}>
-              {o}
-            </span>
-          ))}
-        </div>
+        <div style={{ fontSize: '16px', color: C.textFaint }}>{mod.desc}</div>
       </div>
       {active && (
         <span style={{ color: hov ? C.gold : C.textFaint, fontSize: '22px', flexShrink: 0, transition: 'all 0.15s', transform: hov ? 'translateX(2px)' : 'none', display: 'inline-block' }}>›</span>
@@ -102,8 +124,8 @@ export default function ClarityChart() {
         </header>
 
         {/* Module section label */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '18px' }}>
-          <div style={{ fontSize: '13px', letterSpacing: '3px', color: C.goldDim, fontFamily: C.mono, textTransform: 'uppercase', fontWeight: '700' }}>Documentation Modules</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
+          <div style={{ fontSize: '14px', letterSpacing: '3px', color: C.goldDim, fontFamily: C.mono, textTransform: 'uppercase', fontWeight: '700' }}>Documentation Modules</div>
           <div style={{ flex: 1, height: '1px', background: C.navBorder }} />
         </div>
 
@@ -115,20 +137,19 @@ export default function ClarityChart() {
             <div style={{ padding: '18px 22px 16px', borderBottom: `1px solid ${C.navBorder}`, display: 'flex', alignItems: 'center', gap: '14px', background: C.goldFaint }}>
               <div style={{ width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(196,168,130,0.1)', border: `1px solid ${C.goldBorder}`, borderRadius: '6px', fontSize: '18px', color: C.gold, flexShrink: 0 }}>✦</div>
               <div>
-                <div style={{ fontSize: 'clamp(17px, 1.5vw, 19px)', color: C.text, fontWeight: '600' }}>Admission Pathway</div>
-                <div style={{ fontSize: '14px', color: C.goldDim, fontFamily: C.mono, marginTop: '2px' }}>New patient enrollment</div>
+                <div style={{ fontSize: '20px', color: C.text, fontWeight: '600' }}>Admission Pathway</div>
+                <div style={{ fontSize: '15px', color: C.goldDim, fontFamily: C.mono, marginTop: '2px' }}>New patient enrollment</div>
               </div>
             </div>
-            <div style={{ padding: '10px 12px 14px' }}>
-              <ModCard mod={{ label: 'Admission Engine', desc: 'Narrative + CTI from uploaded records', status: 'complete', outputs: ['Admission Narrative', 'CTI'] }} onClick={() => setView('admission-engine')} />
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 18px 2px' }}>
-                {['Records', 'Encounter', 'Narrative + CTI'].map((step, i, arr) => (
-                  <span key={step} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                    <span style={{ fontSize: '12px', color: C.textFaint, fontFamily: C.mono }}>{step}</span>
-                    {i < arr.length - 1 && <span style={{ fontSize: '11px', color: 'rgba(196,168,130,0.25)' }}>›</span>}
-                  </span>
-                ))}
-              </div>
+            <div style={{ padding: '10px 12px 16px' }}>
+              <ModCard
+                mod={{ label: 'Admission Engine', desc: 'Generate documentation from chart records and encounter notes', status: 'complete' }}
+                onClick={() => setView('admission-engine')}
+              />
+              <FlowLine
+                steps={['Chart Records', 'Encounter Notes']}
+                outputs={['Admission Narrative', 'CTI']}
+              />
             </div>
           </div>
 
@@ -137,32 +158,22 @@ export default function ClarityChart() {
             <div style={{ padding: '18px 22px 16px', borderBottom: `1px solid rgba(90,170,192,0.15)`, display: 'flex', alignItems: 'center', gap: '14px', background: C.goldFaint }}>
               <div style={{ width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: C.blueDim, border: `1px solid ${C.blueBorder}`, borderRadius: '6px', fontSize: '18px', color: C.blue, flexShrink: 0 }}>◎</div>
               <div>
-                <div style={{ fontSize: 'clamp(17px, 1.5vw, 19px)', color: C.text, fontWeight: '600' }}>Ongoing Care Pathway</div>
-                <div style={{ fontSize: '14px', color: C.blue, fontFamily: C.mono, marginTop: '2px' }}>Visit notes · Recertification</div>
+                <div style={{ fontSize: '20px', color: C.text, fontWeight: '600' }}>Ongoing Care Pathway</div>
+                <div style={{ fontSize: '15px', color: C.blue, fontFamily: C.mono, marginTop: '2px' }}>Visit notes · Recertification</div>
               </div>
             </div>
-            <div style={{ padding: '10px 12px 14px' }}>
-              {[
-                { label: 'RN Visit Note', desc: '10 clinical scenarios, voice or text', status: 'complete', outputs: ['Structured Visit Note'] },
-                { label: 'Recertification Suite', desc: 'RN → F2F → Physician pipeline', status: 'complete', outputs: ['RN Recert', 'Physician Recert'] },
-              ].map(mod => (
-                <ModCard
-                  key={mod.label}
-                  mod={mod}
-                  onClick={mod.status === 'complete' ? () => setView(
-                    mod.label === 'RN Visit Note' ? 'rn-visit-note' :
-                    mod.label === 'Recertification Suite' ? 'recert-suite' : null
-                  ) : null}
-                />
-              ))}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 18px 2px' }}>
-                {['Visit Notes', 'RN Recert', 'MD Recert'].map((step, i, arr) => (
-                  <span key={step} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                    <span style={{ fontSize: '12px', color: C.textFaint, fontFamily: C.mono }}>{step}</span>
-                    {i < arr.length - 1 && <span style={{ fontSize: '11px', color: 'rgba(196,168,130,0.25)' }}>›</span>}
-                  </span>
-                ))}
-              </div>
+            <div style={{ padding: '10px 12px 16px' }}>
+              <ModCard
+                mod={{ label: 'RN Visit Note', desc: '10 clinical scenarios, voice or text input', status: 'complete' }}
+                onClick={() => setView('rn-visit-note')}
+              />
+              <FlowLine steps={['Clinical Scenario', 'Visit Details']} outputs={['Structured Visit Note']} />
+              <div style={{ height: '1px', background: C.navBorder, margin: '10px 18px' }} />
+              <ModCard
+                mod={{ label: 'Recertification Suite', desc: 'Sequential RN → F2F → Physician workflow', status: 'complete' }}
+                onClick={() => setView('recert-suite')}
+              />
+              <FlowLine steps={['Decline Assessment', 'F2F Encounter']} outputs={['RN Recert Narrative', 'Physician Recert Note']} />
             </div>
           </div>
         </div>

@@ -9,8 +9,8 @@ import RecertSuite from './RecertSuite';
 function ModCard({ mod, onClick }) {
   const [hov, setHov] = useState(false);
   const active = mod.status === 'complete';
+  const notAvailable = mod.status !== 'complete';
   const sc = {
-    complete: { l: 'Ready', c: C.green, bg: C.greenDim, b: C.greenBorder },
     soon: { l: 'Coming Soon', c: C.blue, bg: C.blueDim, b: C.blueBorder },
     queued: { l: 'Planned', c: 'rgba(138,138,154,0.8)', bg: 'rgba(138,138,154,0.08)', b: 'rgba(138,138,154,0.2)' },
   }[mod.status];
@@ -27,22 +27,28 @@ function ModCard({ mod, onClick }) {
         border: `1px solid ${hov && active ? C.goldBorder : 'transparent'}`,
         borderRadius: '6px', cursor: active ? 'pointer' : 'default',
         textAlign: 'left', transition: 'all 0.15s',
-        opacity: mod.status === 'queued' ? 0.4 : 1,
+        opacity: notAvailable ? 0.4 : 1,
       }}
     >
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: 'clamp(17px, 1.5vw, 19px)', fontWeight: active ? '600' : 'normal', color: active ? C.text : C.textDim, marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-          {mod.label}
-          <span style={{ fontSize: '13px', color: sc.c, background: sc.bg, border: `1px solid ${sc.b}`, borderRadius: '10px', padding: '1px 8px', fontFamily: C.mono, letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>
-            {sc.l}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '5px', flexWrap: 'wrap' }}>
+          <span style={{ fontSize: 'clamp(17px, 1.5vw, 19px)', fontWeight: '600', color: active ? C.text : C.textDim }}>
+            {mod.label}
           </span>
+          {sc && (
+            <span style={{ fontSize: '12px', color: sc.c, background: sc.bg, border: `1px solid ${sc.b}`, borderRadius: '10px', padding: '1px 8px', fontFamily: C.mono, letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>
+              {sc.l}
+            </span>
+          )}
         </div>
-        <div style={{ fontSize: '16px', color: C.goldDim, fontStyle: 'italic' }}>{mod.desc}</div>
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', alignItems: 'flex-end', flexShrink: 0 }}>
-        {mod.outputs.map(o => (
-          <span key={o} style={{ fontSize: '14px', color: C.goldDim, fontFamily: C.mono, whiteSpace: 'nowrap' }}>→ {o}</span>
-        ))}
+        <div style={{ fontSize: '15px', color: C.textFaint }}>{mod.desc}</div>
+        <div style={{ display: 'flex', gap: '6px', marginTop: '8px', flexWrap: 'wrap' }}>
+          {mod.outputs.map(o => (
+            <span key={o} style={{ fontSize: '12px', color: C.textFaint, background: 'rgba(196,168,130,0.07)', border: `1px solid rgba(196,168,130,0.18)`, borderRadius: '4px', padding: '2px 8px', fontFamily: C.mono, whiteSpace: 'nowrap' }}>
+              {o}
+            </span>
+          ))}
+        </div>
       </div>
       {active && (
         <span style={{ color: hov ? C.gold : C.textFaint, fontSize: '22px', flexShrink: 0, transition: 'all 0.15s', transform: hov ? 'translateX(2px)' : 'none', display: 'inline-block' }}>›</span>
@@ -115,7 +121,14 @@ export default function ClarityChart() {
             </div>
             <div style={{ padding: '10px 12px 14px' }}>
               <ModCard mod={{ label: 'Admission Engine', desc: 'Narrative + CTI from uploaded records', status: 'complete', outputs: ['Admission Narrative', 'CTI'] }} onClick={() => setView('admission-engine')} />
-              <div style={{ fontSize: '13px', color: C.textFaint, fontFamily: C.mono, letterSpacing: '1px', padding: '4px 18px 0', textTransform: 'uppercase' }}>Records → Encounter → Narrative + CTI</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 18px 2px' }}>
+                {['Records', 'Encounter', 'Narrative + CTI'].map((step, i, arr) => (
+                  <span key={step} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                    <span style={{ fontSize: '12px', color: C.textFaint, fontFamily: C.mono }}>{step}</span>
+                    {i < arr.length - 1 && <span style={{ fontSize: '11px', color: 'rgba(196,168,130,0.25)' }}>›</span>}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -142,7 +155,14 @@ export default function ClarityChart() {
                   ) : null}
                 />
               ))}
-              <div style={{ fontSize: '13px', color: C.textFaint, fontFamily: C.mono, letterSpacing: '1px', padding: '4px 18px 0', textTransform: 'uppercase' }}>Visit Notes → RN Recert → MD Recert</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 18px 2px' }}>
+                {['Visit Notes', 'RN Recert', 'MD Recert'].map((step, i, arr) => (
+                  <span key={step} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                    <span style={{ fontSize: '12px', color: C.textFaint, fontFamily: C.mono }}>{step}</span>
+                    {i < arr.length - 1 && <span style={{ fontSize: '11px', color: 'rgba(196,168,130,0.25)' }}>›</span>}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </div>
